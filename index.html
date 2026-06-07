@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>H &amp; A Hampers – Gifted with Love</title>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream:    #fdf6ee;
+      --warm:     #f5e6d3;
+      --rose:     #c9856b;
+      --rose-dk:  #a8624a;
+      --gold:     #c9a96e;
+      --gold-dk:  #a8853d;
+      --brown:    #5c3d2e;
+      --text:     #3a2a1e;
+      --muted:    #7a6050;
+      --white:    #ffffff;
+      --shadow:   rgba(92,61,46,0.12);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Georgia', serif; background: var(--cream); color: var(--text); }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    button { cursor: pointer; font-family: inherit; }
+
+    /* ── Utility ── */
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    .btn {
+      display: inline-block; padding: 12px 28px; border-radius: 30px;
+      font-size: 0.95rem; letter-spacing: 0.04em; transition: all 0.25s;
+      border: none;
+    }
+    .btn-primary { background: var(--rose); color: var(--white); }
+    .btn-primary:hover { background: var(--rose-dk); transform: translateY(-1px); box-shadow: 0 4px 14px var(--shadow); }
+    .btn-outline { background: transparent; border: 2px solid var(--rose); color: var(--rose); }
+    .btn-outline:hover { background: var(--rose); color: var(--white); }
+    .section-title {
+      font-size: 2rem; color: var(--brown); text-align: center;
+      margin-bottom: 8px; font-weight: normal;
+    }
+    .section-sub { text-align: center; color: var(--muted); margin-bottom: 48px; font-size: 1rem; }
+
+    /* ── Announcement Bar ── */
+    .announcement {
+      background: var(--brown); color: var(--warm);
+      text-align: center; padding: 9px 16px; font-size: 0.85rem; letter-spacing: 0.06em;
+    }
+
+    /* ── Header / Nav ── */
+    header {
+      background: var(--white); position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 12px var(--shadow);
+    }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 10px 24px; max-width: 1160px; margin: 0 auto; }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-svg { width: 60px; height: 60px; flex-shrink: 0; }
+    .logo-text { display: flex; flex-direction: column; }
+    .logo-main { font-size: 1.7rem; color: var(--brown); font-weight: bold; letter-spacing: 0.02em; }
+    .logo-main span { color: var(--rose); }
+    .logo-tagline { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-top: -2px; }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 0.9rem; color: var(--muted); letter-spacing: 0.05em; transition: color 0.2s; text-transform: uppercase; }
+    .nav-links a:hover { color: var(--rose); }
+    .nav-actions { display: flex; align-items: center; gap: 16px; }
+    .cart-btn {
+      position: relative; background: var(--warm); border: none;
+      padding: 10px 18px; border-radius: 30px; display: flex; align-items: center; gap: 8px;
+      color: var(--brown); font-size: 0.9rem; transition: all 0.2s;
+    }
+    .cart-btn:hover { background: var(--rose); color: var(--white); }
+    .cart-count {
+      background: var(--rose); color: white; border-radius: 50%;
+      width: 20px; height: 20px; font-size: 0.72rem; display: flex; align-items: center; justify-content: center;
+      font-weight: bold;
+    }
+    .hamburger { display: none; background: none; border: none; font-size: 1.5rem; color: var(--brown); }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, var(--warm) 0%, #ffe8d6 50%, var(--cream) 100%);
+      padding: 90px 24px 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '🎁'; position: absolute; font-size: 180px; opacity: 0.06;
+      right: 5%; top: 50%; transform: translateY(-50%); pointer-events: none;
+    }
+    .hero-inner { max-width: 620px; }
+    .hero-badge {
+      display: inline-block; background: var(--gold); color: var(--white);
+      padding: 5px 14px; border-radius: 20px; font-size: 0.78rem; letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 20px;
+    }
+    .hero h1 { font-size: 3rem; color: var(--brown); line-height: 1.2; margin-bottom: 18px; font-weight: normal; }
+    .hero h1 strong { color: var(--rose); font-weight: bold; }
+    .hero p { font-size: 1.1rem; color: var(--muted); line-height: 1.7; margin-bottom: 32px; }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    /* ── Features Strip ── */
+    .features { background: var(--brown); padding: 24px; }
+    .features-grid { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; }
+    .feature-item { display: flex; align-items: center; gap: 10px; color: var(--warm); font-size: 0.88rem; }
+    .feature-icon { font-size: 1.3rem; }
+
+    /* ── Categories ── */
+    .categories { padding: 80px 0; }
+    .cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .cat-card {
+      border-radius: 16px; overflow: hidden; position: relative; cursor: pointer;
+      height: 220px; display: flex; align-items: flex-end;
+      box-shadow: 0 4px 16px var(--shadow); transition: transform 0.3s;
+    }
+    .cat-card:hover { transform: translateY(-4px); }
+    .cat-bg {
+      position: absolute; inset: 0; background-size: cover; background-position: center;
+      transition: transform 0.4s;
+    }
+    .cat-card:hover .cat-bg { transform: scale(1.05); }
+    .cat-bg-1 { background: linear-gradient(160deg, #f7c59f, #e07b54); }
+    .cat-bg-2 { background: linear-gradient(160deg, #f9e4b7, #c9a96e); }
+    .cat-bg-3 { background: linear-gradient(160deg, #dce8f0, #8ab4c9); }
+    .cat-emoji { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-60%); font-size: 60px; opacity: 0.35; }
+    .cat-info {
+      position: relative; z-index: 2; padding: 20px;
+      background: linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+      width: 100%;
+    }
+    .cat-info h3 { color: white; font-size: 1.15rem; margin-bottom: 4px; }
+    .cat-info p { color: rgba(255,255,255,0.85); font-size: 0.82rem; font-style: italic; }
+
+    /* ── Products ── */
+    .products { padding: 80px 0; background: var(--white); }
+    .filter-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; flex-wrap: wrap; }
+    .filter-tab {
+      padding: 8px 20px; border-radius: 30px; font-size: 0.85rem; border: 2px solid var(--warm);
+      background: transparent; color: var(--muted); transition: all 0.2s;
+    }
+    .filter-tab.active, .filter-tab:hover { background: var(--rose); border-color: var(--rose); color: white; }
+    .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .product-card {
+      border-radius: 14px; overflow: hidden; background: var(--cream);
+      box-shadow: 0 2px 12px var(--shadow); transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+    }
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 8px 24px var(--shadow); }
+    .product-img {
+      height: 200px; display: flex; align-items: center; justify-content: center;
+      font-size: 64px; position: relative; overflow: hidden;
+    }
+    .product-badge {
+      position: absolute; top: 10px; left: 10px;
+      background: var(--gold); color: white; padding: 3px 10px;
+      border-radius: 20px; font-size: 0.72rem; letter-spacing: 0.06em;
+    }
+    .product-wishlist {
+      position: absolute; top: 10px; right: 10px;
+      background: white; border: none; width: 32px; height: 32px;
+      border-radius: 50%; font-size: 1rem; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 6px var(--shadow); transition: all 0.2s;
+    }
+    .product-wishlist:hover { background: var(--rose); }
+    .product-body { padding: 16px; }
+    .product-body h4 { font-size: 0.95rem; color: var(--brown); margin-bottom: 4px; font-weight: normal; }
+    .product-body p { font-size: 0.8rem; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
+    .product-footer { display: flex; align-items: center; justify-content: space-between; }
+    .price { font-size: 1.1rem; color: var(--rose); font-weight: bold; }
+    .price-orig { font-size: 0.8rem; color: var(--muted); text-decoration: line-through; margin-left: 4px; }
+    .add-btn {
+      background: var(--rose); color: white; border: none;
+      padding: 7px 14px; border-radius: 20px; font-size: 0.8rem; transition: all 0.2s;
+    }
+    .add-btn:hover { background: var(--rose-dk); transform: scale(1.05); }
+
+    /* Product image backgrounds */
+    .p-bg-1 { background: linear-gradient(135deg, #fde8d8, #f5c3a8); }
+    .p-bg-2 { background: linear-gradient(135deg, #fef3d4, #f5dfa0); }
+    .p-bg-3 { background: linear-gradient(135deg, #e8f4f8, #b8d8e8); }
+    .p-bg-4 { background: linear-gradient(135deg, #f0e8f4, #d4b8e0); }
+    .p-bg-5 { background: linear-gradient(135deg, #fde8d8, #e8c4a8); }
+    .p-bg-6 { background: linear-gradient(135deg, #e8f4e8, #b8d8b8); }
+    .p-bg-7 { background: linear-gradient(135deg, #fff3d4, #f5e0a0); }
+    .p-bg-8 { background: linear-gradient(135deg, #fce8f0, #e8b8cc); }
+
+    /* ── Personalization Banner ── */
+    .personalize {
+      padding: 70px 24px; text-align: center;
+      background: linear-gradient(135deg, var(--brown) 0%, #7a5040 100%);
+      color: var(--white);
+    }
+    .personalize h2 { font-size: 2rem; margin-bottom: 12px; font-weight: normal; }
+    .personalize p { color: var(--warm); margin-bottom: 28px; font-size: 1rem; max-width: 520px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+    .btn-gold { background: var(--gold); color: var(--white); }
+    .btn-gold:hover { background: var(--gold-dk); transform: translateY(-1px); }
+
+    /* ── Testimonials ── */
+    .testimonials { padding: 80px 0; }
+    .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .testi-card {
+      background: var(--white); border-radius: 14px; padding: 28px;
+      box-shadow: 0 2px 12px var(--shadow);
+    }
+    .stars { color: var(--gold); font-size: 1rem; margin-bottom: 12px; }
+    .testi-text { color: var(--muted); font-style: italic; line-height: 1.7; margin-bottom: 16px; font-size: 0.9rem; }
+    .testi-author { display: flex; align-items: center; gap: 10px; }
+    .testi-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--warm); display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+    }
+    .testi-name { font-size: 0.85rem; color: var(--brown); font-weight: bold; }
+    .testi-loc { font-size: 0.75rem; color: var(--muted); }
+
+    /* ── About ── */
+    .about { padding: 80px 0; background: var(--warm); }
+    .about-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .about-visual {
+      height: 360px; border-radius: 20px;
+      background: linear-gradient(160deg, var(--rose) 0%, var(--gold) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 100px; box-shadow: 0 8px 32px var(--shadow);
+    }
+    .about-text h2 { font-size: 2rem; color: var(--brown); margin-bottom: 16px; font-weight: normal; }
+    .about-text p { color: var(--muted); line-height: 1.8; margin-bottom: 14px; }
+    .about-stats { display: flex; gap: 32px; margin-top: 28px; }
+    .stat { text-align: center; }
+    .stat-num { font-size: 2rem; color: var(--rose); font-weight: bold; }
+    .stat-lbl { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    /* ── Contact ── */
+    .contact { padding: 80px 0; }
+    .contact-inner { display: grid; grid-template-columns: 1fr 1.4fr; gap: 60px; align-items: start; }
+    .contact-info h2 { font-size: 2rem; color: var(--brown); margin-bottom: 14px; font-weight: normal; }
+    .contact-info p { color: var(--muted); line-height: 1.7; margin-bottom: 28px; }
+    .contact-items { display: flex; flex-direction: column; gap: 16px; }
+    .contact-item { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 0.9rem; }
+    .contact-icon { font-size: 1.3rem; width: 40px; height: 40px; background: var(--warm); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .contact-form { background: var(--white); border-radius: 16px; padding: 36px; box-shadow: 0 4px 20px var(--shadow); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 0.83rem; color: var(--brown); margin-bottom: 6px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 11px 14px; border-radius: 8px; font-family: inherit;
+      border: 1.5px solid var(--warm); background: var(--cream); color: var(--text);
+      font-size: 0.9rem; transition: border-color 0.2s; outline: none;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--rose); }
+    .form-group textarea { resize: vertical; min-height: 110px; }
+
+    /* ── Cart Sidebar ── */
+    .cart-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .cart-overlay.open { opacity: 1; pointer-events: all; }
+    .cart-sidebar {
+      position: fixed; top: 0; right: -420px; width: 400px; height: 100vh;
+      background: var(--white); z-index: 201; transition: right 0.35s ease;
+      display: flex; flex-direction: column; box-shadow: -4px 0 24px var(--shadow);
+    }
+    .cart-sidebar.open { right: 0; }
+    .cart-header { padding: 20px 24px; background: var(--brown); color: white; display: flex; justify-content: space-between; align-items: center; }
+    .cart-header h3 { font-size: 1.1rem; font-weight: normal; }
+    .cart-close { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+    .cart-items { flex: 1; overflow-y: auto; padding: 20px 24px; }
+    .cart-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--warm); }
+    .cart-item-img { width: 60px; height: 60px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0; }
+    .cart-item-info { flex: 1; }
+    .cart-item-name { font-size: 0.88rem; color: var(--brown); margin-bottom: 4px; }
+    .cart-item-price { font-size: 0.95rem; color: var(--rose); font-weight: bold; }
+    .cart-item-qty { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+    .qty-btn { background: var(--warm); border: none; width: 24px; height: 24px; border-radius: 50%; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .qty-btn:hover { background: var(--rose); color: white; }
+    .qty-val { font-size: 0.85rem; min-width: 20px; text-align: center; }
+    .cart-remove { background: none; border: none; color: #ccc; font-size: 1.1rem; transition: color 0.2s; }
+    .cart-remove:hover { color: var(--rose); }
+    .cart-footer { padding: 20px 24px; border-top: 2px solid var(--warm); }
+    .cart-total { display: flex; justify-content: space-between; font-size: 1.1rem; color: var(--brown); font-weight: bold; margin-bottom: 16px; }
+    .empty-cart { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .empty-cart .empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--brown); color: white; padding: 12px 24px; border-radius: 30px;
+      font-size: 0.88rem; z-index: 300; transition: transform 0.35s; white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── Footer ── */
+    footer { background: var(--brown); color: var(--warm); padding: 60px 0 24px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.2fr; gap: 40px; margin-bottom: 48px; }
+    .footer-brand .logo-main { color: var(--warm); }
+    .footer-brand .logo-main span { color: var(--rose); }
+    .footer-brand p { font-size: 0.85rem; color: rgba(253,246,238,0.7); margin-top: 12px; line-height: 1.7; }
+    .footer-socials { display: flex; gap: 10px; margin-top: 16px; }
+    .social-btn {
+      width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center; font-size: 1rem;
+      transition: background 0.2s;
+    }
+    .social-btn:hover { background: var(--rose); }
+    .footer-col h4 { font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px; color: var(--gold); }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { font-size: 0.85rem; color: rgba(253,246,238,0.7); transition: color 0.2s; }
+    .footer-col a:hover { color: var(--rose); }
+    .newsletter-form { display: flex; gap: 8px; margin-top: 8px; }
+    .newsletter-input {
+      flex: 1; padding: 9px 14px; border-radius: 20px; border: none;
+      background: rgba(255,255,255,0.12); color: var(--warm); font-size: 0.83rem; outline: none;
+    }
+    .newsletter-input::placeholder { color: rgba(253,246,238,0.5); }
+    .newsletter-btn { background: var(--rose); color: white; border: none; padding: 9px 16px; border-radius: 20px; font-size: 0.83rem; transition: background 0.2s; }
+    .newsletter-btn:hover { background: var(--rose-dk); }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: center; font-size: 0.78rem; color: rgba(253,246,238,0.5); }
+
+    /* ── Responsive ── */
+    @media (max-width: 960px) {
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 720px) {
+      .nav-links { display: none; }
+      .hamburger { display: block; }
+      .hero h1 { font-size: 2.1rem; }
+      .cat-grid { grid-template-columns: 1fr; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .testi-grid { grid-template-columns: 1fr; }
+      .about-inner, .contact-inner { grid-template-columns: 1fr; }
+      .about-visual { height: 220px; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .cart-sidebar { width: 100%; right: -100%; }
+    }
+    @media (max-width: 480px) {
+      .products-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 1.7rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Announcement -->
+<div class="announcement">🎁 Free gift wrapping on all orders above ₹999 &nbsp;|&nbsp; 🚚 Pan-India delivery available</div>
+
+<!-- Header -->
+<header>
+  <nav>
+    <a href="#" class="logo">
+      <svg class="logo-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <!-- Black circle background -->
+        <circle cx="60" cy="60" r="58" fill="#1a1a1a"/>
+        <!-- Leaf wreath left -->
+        <g fill="none" stroke="#6b8c5a" stroke-width="1.2" stroke-linecap="round">
+          <path d="M28,55 Q22,48 26,40 Q32,47 28,55"/>
+          <path d="M24,65 Q16,60 18,51 Q26,55 24,65"/>
+          <path d="M25,75 Q17,73 18,63 Q26,68 25,75"/>
+          <path d="M30,83 Q23,84 22,74 Q30,76 30,83"/>
+          <path d="M32,50 Q28,42 33,35 Q38,42 32,50"/>
+          <line x1="28" y1="55" x2="38" y2="72"/>
+          <line x1="24" y1="65" x2="38" y2="72"/>
+          <line x1="25" y1="75" x2="38" y2="78"/>
+          <line x1="30" y1="83" x2="42" y2="82"/>
+          <line x1="32" y1="50" x2="40" y2="65"/>
+        </g>
+        <!-- Leaf wreath right -->
+        <g fill="none" stroke="#6b8c5a" stroke-width="1.2" stroke-linecap="round">
+          <path d="M92,55 Q98,48 94,40 Q88,47 92,55"/>
+          <path d="M96,65 Q104,60 102,51 Q94,55 96,65"/>
+          <path d="M95,75 Q103,73 102,63 Q94,68 95,75"/>
+          <path d="M90,83 Q97,84 98,74 Q90,76 90,83"/>
+          <path d="M88,50 Q92,42 87,35 Q82,42 88,50"/>
+          <line x1="92" y1="55" x2="82" y2="72"/>
+          <line x1="96" y1="65" x2="82" y2="72"/>
+          <line x1="95" y1="75" x2="82" y2="78"/>
+          <line x1="90" y1="83" x2="78" y2="82"/>
+          <line x1="88" y1="50" x2="80" y2="65"/>
+        </g>
+        <!-- Gift box body -->
+        <rect x="42" y="52" width="36" height="28" rx="2" fill="#e8826a"/>
+        <!-- Gift box lid -->
+        <rect x="39" y="44" width="42" height="10" rx="2" fill="#d4634a"/>
+        <!-- Ribbon vertical -->
+        <rect x="57" y="44" width="6" height="36" rx="1" fill="#f5c3a8" opacity="0.9"/>
+        <!-- Ribbon horizontal on lid -->
+        <rect x="39" y="48" width="42" height="4" rx="1" fill="#f5c3a8" opacity="0.9"/>
+        <!-- Bow left loop -->
+        <ellipse cx="52" cy="42" rx="8" ry="5" fill="#f5c3a8" transform="rotate(-20,52,42)"/>
+        <!-- Bow right loop -->
+        <ellipse cx="68" cy="42" rx="8" ry="5" fill="#f5c3a8" transform="rotate(20,68,42)"/>
+        <!-- Bow center -->
+        <circle cx="60" cy="43" r="4" fill="#e8826a"/>
+        <!-- H&A Hampers text -->
+        <text x="60" y="94" text-anchor="middle" font-family="Georgia, serif" font-size="10" font-weight="bold" fill="#e8826a" letter-spacing="0.5">H&amp;A Hampers</text>
+        <!-- Tagline curved at bottom -->
+        <path id="curve" d="M 20,108 A 42,42 0 0,0 100,108" fill="none"/>
+        <text font-family="Arial, sans-serif" font-size="6" fill="#ccbbaa" letter-spacing="1">
+          <textPath href="#curve" startOffset="10%">GIFTED WITH LOVE &amp; CARE</textPath>
+        </text>
+      </svg>
+      <div class="logo-text">
+        <div class="logo-main">H <span>&amp;</span> A Hampers</div>
+        <div class="logo-tagline">Gifted with Love</div>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#categories">Shop</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#about">Our Story</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="cart-btn" onclick="toggleCart()">
+        🛒 Cart
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <button class="hamburger" onclick="toggleMenu()">☰</button>
+    </div>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">✨ Handcrafted with Love</div>
+    <h1>Beautiful Gifts<br>for Every <strong>Occasion</strong></h1>
+    <p>Discover our curated collection of handmade hampers, personalized gifts, and seasonal surprises — crafted with care to make every moment unforgettable.</p>
+    <div class="hero-actions">
+      <a href="#products" class="btn btn-primary">Shop Now</a>
+      <a href="#about" class="btn btn-outline">Our Story</a>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<div class="features">
+  <div class="features-grid">
+    <div class="feature-item"><span class="feature-icon">🎀</span> Handcrafted Gifts</div>
+    <div class="feature-item"><span class="feature-icon">✍️</span> Personalization Available</div>
+    <div class="feature-item"><span class="feature-icon">📦</span> Beautiful Packaging</div>
+    <div class="feature-item"><span class="feature-icon">🚚</span> Pan-India Delivery</div>
+    <div class="feature-item"><span class="feature-icon">💝</span> Made with Love</div>
+  </div>
+</div>
+
+<!-- Categories -->
+<section class="categories" id="categories">
+  <div class="container">
+    <h2 class="section-title">Shop by Category</h2>
+    <p class="section-sub">Find the perfect gift for every person and every occasion</p>
+    <div class="cat-grid">
+      <div class="cat-card" onclick="filterProducts('handmade')">
+        <div class="cat-bg cat-bg-1"></div>
+        <div class="cat-emoji">🧶</div>
+        <div class="cat-info">
+          <h3>Handmade Crafts</h3>
+          <p>Lovingly made, one piece at a time</p>
+        </div>
+      </div>
+      <div class="cat-card" onclick="filterProducts('personalized')">
+        <div class="cat-bg cat-bg-2"></div>
+        <div class="cat-emoji">✍️</div>
+        <div class="cat-info">
+          <h3>Personalized Gifts</h3>
+          <p>Customized with their name &amp; story</p>
+        </div>
+      </div>
+      <div class="cat-card" onclick="filterProducts('seasonal')">
+        <div class="cat-bg cat-bg-3"></div>
+        <div class="cat-emoji">🎄</div>
+        <div class="cat-info">
+          <h3>Seasonal Hampers</h3>
+          <p>Festive &amp; occasion-ready gift sets</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Products -->
+<section class="products" id="products">
+  <div class="container">
+    <h2 class="section-title">Our Collection</h2>
+    <p class="section-sub">Every item is carefully crafted and packaged with love</p>
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="filterProducts('all', this)">All</button>
+      <button class="filter-tab" onclick="filterProducts('handmade', this)">Handmade</button>
+      <button class="filter-tab" onclick="filterProducts('personalized', this)">Personalized</button>
+      <button class="filter-tab" onclick="filterProducts('seasonal', this)">Seasonal</button>
+    </div>
+    <div class="products-grid" id="productsGrid"></div>
+  </div>
+</section>
+
+<!-- Personalization Banner -->
+<section class="personalize">
+  <h2>Make It Truly Theirs 💌</h2>
+  <p>Add a personal touch — names, dates, heartfelt messages. We customize every gift to make it uniquely special for the people you love.</p>
+  <a href="#contact" class="btn btn-gold">Request Personalization</a>
+</section>
+
+<!-- Testimonials -->
+<section class="testimonials">
+  <div class="container">
+    <h2 class="section-title">Happy Customers</h2>
+    <p class="section-sub">What our customers say about H &amp; A Hampers</p>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Absolutely loved the birthday hamper I ordered! The packaging was beautiful and the quality was outstanding. Will definitely order again!"</p>
+        <div class="testi-author">
+          <div class="testi-avatar">👩</div>
+          <div>
+            <div class="testi-name">Priya Sharma</div>
+            <div class="testi-loc">Bengaluru</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"The personalized gift box I ordered for my wife's anniversary was perfect. She cried happy tears! Thank you H &amp; A Hampers!"</p>
+        <div class="testi-author">
+          <div class="testi-avatar">👨</div>
+          <div>
+            <div class="testi-name">Rahul Menon</div>
+            <div class="testi-loc">Hyderabad</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Ordered the Diwali hamper for my family — it was a huge hit! The attention to detail and craftsmanship is unmatched. Highly recommend!"</p>
+        <div class="testi-author">
+          <div class="testi-avatar">👩‍💼</div>
+          <div>
+            <div class="testi-name">Anita Reddy</div>
+            <div class="testi-loc">Chennai</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="about-inner">
+      <div class="about-visual">🎁</div>
+      <div class="about-text">
+        <h2>The Heart Behind<br>H &amp; A Hampers</h2>
+        <p>H &amp; A Hampers was born out of a love for beautiful things and the joy of giving. Every hamper, every craft, every personalized gift is made by hand — with intention, care, and a whole lot of love.</p>
+        <p>We believe gifts should feel personal. That's why we pour ourselves into every order — selecting the finest materials, crafting each piece with attention to detail, and wrapping it all in packaging as beautiful as what's inside.</p>
+        <p>Whether it's a birthday, anniversary, festival, or just a "thinking of you" moment — we've got the perfect gift for every occasion.</p>
+        <div class="about-stats">
+          <div class="stat">
+            <div class="stat-num">500+</div>
+            <div class="stat-lbl">Happy Customers</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">50+</div>
+            <div class="stat-lbl">Unique Products</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">100%</div>
+            <div class="stat-lbl">Handcrafted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="contact-inner">
+      <div class="contact-info">
+        <h2>Get in Touch</h2>
+        <p>Have a custom order in mind? Want to know more about our products? We'd love to hear from you!</p>
+        <div class="contact-items">
+          <div class="contact-item"><div class="contact-icon">📍</div> Bengaluru, Karnataka, India</div>
+          <div class="contact-item"><div class="contact-icon">📱</div> +91 98765 43210</div>
+          <div class="contact-item"><div class="contact-icon">✉️</div> hello@handahampers.com</div>
+          <div class="contact-item"><div class="contact-icon">🕐</div> Mon – Sat, 9 AM – 7 PM</div>
+          <div class="contact-item"><div class="contact-icon">📸</div> <a href="https://www.instagram.com/h_and_a_hampers/" target="_blank" style="color:var(--rose);">@h_and_a_hampers</a> on Instagram</div>
+        </div>
+      </div>
+      <div class="contact-form">
+        <h3 style="color:var(--brown);margin-bottom:20px;font-weight:normal;font-size:1.2rem;">Send us a Message</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" placeholder="e.g. Priya Kumar" />
+          </div>
+          <div class="form-group">
+            <label>Phone / WhatsApp</label>
+            <input type="tel" placeholder="+91 XXXXX XXXXX" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="your@email.com" />
+        </div>
+        <div class="form-group">
+          <label>What are you looking for?</label>
+          <select>
+            <option value="">Select a category...</option>
+            <option>Handmade Crafts</option>
+            <option>Personalized Gift</option>
+            <option>Seasonal Hamper</option>
+            <option>Bulk / Corporate Order</option>
+            <option>Custom Order</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Your Message</label>
+          <textarea placeholder="Tell us about the occasion, budget, any preferences..."></textarea>
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="submitForm(this)">Send Message 💌</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+          <svg style="width:48px;height:48px;flex-shrink:0;" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="60" cy="60" r="58" fill="#1a1a1a"/>
+            <g fill="none" stroke="#6b8c5a" stroke-width="1.2" stroke-linecap="round">
+              <path d="M28,55 Q22,48 26,40 Q32,47 28,55"/><path d="M24,65 Q16,60 18,51 Q26,55 24,65"/>
+              <path d="M25,75 Q17,73 18,63 Q26,68 25,75"/><path d="M30,83 Q23,84 22,74 Q30,76 30,83"/>
+              <line x1="28" y1="55" x2="38" y2="72"/><line x1="24" y1="65" x2="38" y2="72"/>
+              <line x1="25" y1="75" x2="38" y2="78"/><line x1="30" y1="83" x2="42" y2="82"/>
+            </g>
+            <g fill="none" stroke="#6b8c5a" stroke-width="1.2" stroke-linecap="round">
+              <path d="M92,55 Q98,48 94,40 Q88,47 92,55"/><path d="M96,65 Q104,60 102,51 Q94,55 96,65"/>
+              <path d="M95,75 Q103,73 102,63 Q94,68 95,75"/><path d="M90,83 Q97,84 98,74 Q90,76 90,83"/>
+              <line x1="92" y1="55" x2="82" y2="72"/><line x1="96" y1="65" x2="82" y2="72"/>
+              <line x1="95" y1="75" x2="82" y2="78"/><line x1="90" y1="83" x2="78" y2="82"/>
+            </g>
+            <rect x="42" y="52" width="36" height="28" rx="2" fill="#e8826a"/>
+            <rect x="39" y="44" width="42" height="10" rx="2" fill="#d4634a"/>
+            <rect x="57" y="44" width="6" height="36" rx="1" fill="#f5c3a8" opacity="0.9"/>
+            <rect x="39" y="48" width="42" height="4" rx="1" fill="#f5c3a8" opacity="0.9"/>
+            <ellipse cx="52" cy="42" rx="8" ry="5" fill="#f5c3a8" transform="rotate(-20,52,42)"/>
+            <ellipse cx="68" cy="42" rx="8" ry="5" fill="#f5c3a8" transform="rotate(20,68,42)"/>
+            <circle cx="60" cy="43" r="4" fill="#e8826a"/>
+            <text x="60" y="94" text-anchor="middle" font-family="Georgia, serif" font-size="10" font-weight="bold" fill="#e8826a" letter-spacing="0.5">H&amp;A Hampers</text>
+            <path id="curve2" d="M 20,108 A 42,42 0 0,0 100,108" fill="none"/>
+            <text font-family="Arial, sans-serif" font-size="6" fill="#ccbbaa" letter-spacing="1"><textPath href="#curve2" startOffset="10%">GIFTED WITH LOVE &amp; CARE</textPath></text>
+          </svg>
+          <div class="logo-main">H <span>&amp;</span> A Hampers</div>
+        </div>
+        <p>Handcrafted gifts made with love, wrapped with care, delivered to your door. Every gift tells a story — let us help you tell yours.</p>
+        <div class="footer-socials">
+          <a class="social-btn" href="https://www.instagram.com/h_and_a_hampers/" target="_blank" title="Instagram">📸</a>
+          <a class="social-btn" href="#" title="Facebook">👍</a>
+          <a class="social-btn" href="#" title="WhatsApp">💬</a>
+          <a class="social-btn" href="#" title="Pinterest">📌</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#categories">Shop All</a></li>
+          <li><a href="#products">New Arrivals</a></li>
+          <li><a href="#about">Our Story</a></li>
+          <li><a href="#contact">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Categories</h4>
+        <ul>
+          <li><a href="#">Handmade Crafts</a></li>
+          <li><a href="#">Personalized Gifts</a></li>
+          <li><a href="#">Seasonal Hampers</a></li>
+          <li><a href="#">Corporate Gifts</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Stay Updated</h4>
+        <p style="font-size:0.82rem;color:rgba(253,246,238,0.65);margin-bottom:12px;">Get notified about new collections and offers.</p>
+        <div class="newsletter-form">
+          <input class="newsletter-input" type="email" placeholder="Your email..." />
+          <button class="newsletter-btn">Join</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2026 H &amp; A Hampers · Made with 💝 · All rights reserved
+    </div>
+  </div>
+</footer>
+
+<!-- Cart Overlay & Sidebar -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h3>🛒 Your Hamper Bag</h3>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter" style="display:none;">
+    <div class="cart-total">
+      <span>Total</span>
+      <span id="cartTotal">₹0</span>
+    </div>
+    <button class="btn btn-primary" style="width:100%;" onclick="checkout()">Proceed to Checkout</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── Product Data ──
+  const products = [
+    { id:1, name:'Rustic Gift Hamper', desc:'Curated handmade items in a beautiful wicker basket', price:1299, orig:1599, emoji:'🧺', bg:'p-bg-1', cat:'handmade', badge:'Bestseller' },
+    { id:2, name:'Personalized Name Jar', desc:'Custom engraved glass jar with your loved one\'s name', price:599, orig:799, emoji:'🫙', bg:'p-bg-2', cat:'personalized', badge:'Custom' },
+    { id:3, name:'Diwali Celebration Box', desc:'Festive goodies — sweets, candles & handcrafted decor', price:1899, orig:2299, emoji:'🪔', bg:'p-bg-3', cat:'seasonal', badge:'Festive' },
+    { id:4, name:'Macramé Wall Hanging', desc:'Handwoven bohemian wall art, made to order', price:849, orig:null, emoji:'🪢', bg:'p-bg-4', cat:'handmade', badge:null },
+    { id:5, name:'Anniversary Love Box', desc:'Rose petals, chocolates & a personalised note card', price:1499, orig:1799, emoji:'💝', bg:'p-bg-5', cat:'personalized', badge:'Popular' },
+    { id:6, name:'Scented Candle Set', desc:'Set of 3 hand-poured soy candles in seasonal scents', price:749, orig:999, emoji:'🕯️', bg:'p-bg-6', cat:'handmade', badge:null },
+    { id:7, name:'Birthday Surprise Hamper', desc:'Balloons, treats, handmade goodies & personalised card', price:1199, orig:1499, emoji:'🎂', bg:'p-bg-7', cat:'seasonal', badge:'New' },
+    { id:8, name:'Custom Photo Memory Box', desc:'Wooden keepsake box engraved with a photo & message', price:1699, orig:null, emoji:'📦', bg:'p-bg-8', cat:'personalized', badge:'Premium' },
+  ];
+
+  let cart = [];
+  let activeFilter = 'all';
+
+  // ── Render Products ──
+  function renderProducts(filter) {
+    const grid = document.getElementById('productsGrid');
+    const filtered = filter === 'all' ? products : products.filter(p => p.cat === filter);
+    grid.innerHTML = filtered.map(p => `
+      <div class="product-card" data-cat="${p.cat}">
+        <div class="product-img ${p.bg}">
+          <span>${p.emoji}</span>
+          ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+          <button class="product-wishlist" title="Add to wishlist" onclick="showToast('Added to wishlist! 💕')">♡</button>
+        </div>
+        <div class="product-body">
+          <h4>${p.name}</h4>
+          <p>${p.desc}</p>
+          <div class="product-footer">
+            <div>
+              <span class="price">₹${p.price.toLocaleString()}</span>
+              ${p.orig ? `<span class="price-orig">₹${p.orig.toLocaleString()}</span>` : ''}
+            </div>
+            <button class="add-btn" onclick="addToCart(${p.id})">Add to Bag</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function filterProducts(cat, btn) {
+    activeFilter = cat;
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderProducts(cat);
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // ── Cart ──
+  function addToCart(id) {
+    const product = products.find(p => p.id === id);
+    const existing = cart.find(i => i.id === id);
+    if (existing) existing.qty++;
+    else cart.push({ ...product, qty: 1 });
+    updateCartUI();
+    showToast(`${product.emoji} Added to your bag!`);
+  }
+
+  function removeFromCart(id) {
+    cart = cart.filter(i => i.id !== id);
+    updateCartUI();
+  }
+
+  function changeQty(id, delta) {
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) removeFromCart(id);
+    else updateCartUI();
+  }
+
+  function updateCartUI() {
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    document.getElementById('cartCount').textContent = count;
+    const itemsEl = document.getElementById('cartItems');
+    const footerEl = document.getElementById('cartFooter');
+    document.getElementById('cartTotal').textContent = `₹${total.toLocaleString()}`;
+    if (cart.length === 0) {
+      itemsEl.innerHTML = `<div class="empty-cart"><div class="empty-icon">🛒</div><p>Your bag is empty</p><p style="font-size:0.8rem;margin-top:8px;">Add some beautiful gifts!</p></div>`;
+      footerEl.style.display = 'none';
+    } else {
+      itemsEl.innerHTML = cart.map(i => `
+        <div class="cart-item">
+          <div class="cart-item-img ${i.bg}">${i.emoji}</div>
+          <div class="cart-item-info">
+            <div class="cart-item-name">${i.name}</div>
+            <div class="cart-item-price">₹${(i.price * i.qty).toLocaleString()}</div>
+            <div class="cart-item-qty">
+              <button class="qty-btn" onclick="changeQty(${i.id},-1)">−</button>
+              <span class="qty-val">${i.qty}</span>
+              <button class="qty-btn" onclick="changeQty(${i.id},1)">+</button>
+            </div>
+          </div>
+          <button class="cart-remove" onclick="removeFromCart(${i.id})">🗑</button>
+        </div>
+      `).join('');
+      footerEl.style.display = 'block';
+    }
+  }
+
+  function toggleCart() {
+    document.getElementById('cartSidebar').classList.toggle('open');
+    document.getElementById('cartOverlay').classList.toggle('open');
+  }
+
+  function checkout() {
+    showToast('🎉 Order placed! We\'ll contact you shortly.');
+    cart = [];
+    updateCartUI();
+    toggleCart();
+  }
+
+  // ── Toast ──
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // ── Mobile Nav ──
+  function toggleMenu() {
+    const links = document.querySelector('.nav-links');
+    if (links.style.display === 'flex') {
+      links.style.display = 'none';
+    } else {
+      links.style.cssText = 'display:flex;flex-direction:column;position:absolute;top:72px;left:0;right:0;background:white;padding:20px 24px;gap:16px;box-shadow:0 4px 12px rgba(0,0,0,0.1);z-index:99;';
+    }
+  }
+
+  // ── Contact Form ──
+  function submitForm(btn) {
+    btn.textContent = '✓ Message Sent!';
+    btn.style.background = 'var(--gold)';
+    showToast('💌 We\'ll get back to you within 24 hours!');
+    setTimeout(() => { btn.textContent = 'Send Message 💌'; btn.style.background = ''; }, 3000);
+  }
+
+  // ── Init ──
+  renderProducts('all');
+  updateCartUI();
+</script>
+</body>
+</html>
