@@ -584,43 +584,66 @@
         <div class="contact-items">
           <div class="contact-item"><div class="contact-icon">📍</div> Bengaluru, Karnataka, India</div>
           <div class="contact-item"><div class="contact-icon">📱</div> +91 98765 43210</div>
-          <div class="contact-item"><div class="contact-icon">✉️</div> hello@handahampers.com</div>
+          <div class="contact-item"><div class="contact-icon">✉️</div> h.and.a.gifts.hampers@gmail.com</div>
           <div class="contact-item"><div class="contact-icon">🕐</div> Mon – Sat, 9 AM – 7 PM</div>
           <div class="contact-item"><div class="contact-icon">📸</div> <a href="https://www.instagram.com/h_and_a_hampers/" target="_blank" style="color:var(--rose);">@h_and_a_hampers</a> on Instagram</div>
+        </div>
+
+        <!-- UPI Payment Box -->
+        <div style="margin-top:28px;background:var(--cream);border-radius:14px;padding:20px;border:1.5px solid var(--warm);">
+          <h4 style="color:var(--brown);font-size:0.95rem;margin-bottom:14px;letter-spacing:0.04em;">💳 Pay via UPI</h4>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <span style="font-size:1.5rem;">📱</span>
+            <div>
+              <div style="font-size:0.78rem;color:var(--muted);margin-bottom:3px;">UPI ID</div>
+              <div style="font-size:1rem;font-weight:bold;color:var(--brown);letter-spacing:0.02em;font-family:monospace;">h-and-a-hampers@axl</div>
+            </div>
+            <button onclick="copyUPI()" style="margin-left:auto;background:var(--rose);color:white;border:none;padding:7px 14px;border-radius:20px;font-size:0.8rem;cursor:pointer;" id="copyUPIBtn">Copy</button>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+            <span style="font-size:0.78rem;color:var(--muted);background:var(--warm);padding:4px 10px;border-radius:20px;">GPay</span>
+            <span style="font-size:0.78rem;color:var(--muted);background:var(--warm);padding:4px 10px;border-radius:20px;">PhonePe</span>
+            <span style="font-size:0.78rem;color:var(--muted);background:var(--warm);padding:4px 10px;border-radius:20px;">Paytm</span>
+            <span style="font-size:0.78rem;color:var(--muted);background:var(--warm);padding:4px 10px;border-radius:20px;">Any UPI App</span>
+          </div>
         </div>
       </div>
       <div class="contact-form">
         <h3 style="color:var(--brown);margin-bottom:20px;font-weight:normal;font-size:1.2rem;">Send us a Message</h3>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Your Name</label>
-            <input type="text" placeholder="e.g. Priya Kumar" />
+        <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="submitForm(event)">
+          <input type="hidden" name="form-name" value="contact" />
+          <p style="display:none;"><input name="bot-field" /></p>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Your Name</label>
+              <input type="text" name="name" placeholder="e.g. Priya Kumar" required />
+            </div>
+            <div class="form-group">
+              <label>Phone / WhatsApp</label>
+              <input type="tel" name="phone" placeholder="+91 XXXXX XXXXX" />
+            </div>
           </div>
           <div class="form-group">
-            <label>Phone / WhatsApp</label>
-            <input type="tel" placeholder="+91 XXXXX XXXXX" />
+            <label>Email Address</label>
+            <input type="email" name="email" placeholder="your@email.com" required />
           </div>
-        </div>
-        <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" placeholder="your@email.com" />
-        </div>
-        <div class="form-group">
-          <label>What are you looking for?</label>
-          <select>
-            <option value="">Select a category...</option>
-            <option>Handmade Crafts</option>
-            <option>Personalized Gift</option>
-            <option>Seasonal Hamper</option>
-            <option>Bulk / Corporate Order</option>
-            <option>Custom Order</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Your Message</label>
-          <textarea placeholder="Tell us about the occasion, budget, any preferences..."></textarea>
-        </div>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="submitForm(this)">Send Message 💌</button>
+          <div class="form-group">
+            <label>What are you looking for?</label>
+            <select name="category">
+              <option value="">Select a category...</option>
+              <option>Handmade Crafts</option>
+              <option>Personalized Gift</option>
+              <option>Seasonal Hamper</option>
+              <option>Bulk / Corporate Order</option>
+              <option>Custom Order</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Your Message</label>
+            <textarea name="message" placeholder="Tell us about the occasion, budget, any preferences..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Send Message 💌</button>
+        </form>
       </div>
     </div>
   </div>
@@ -713,7 +736,28 @@
       <span>Total</span>
       <span id="cartTotal">₹0</span>
     </div>
-    <button class="btn btn-primary" style="width:100%;" onclick="checkout()">Proceed to Checkout</button>
+    <button class="btn btn-primary" style="width:100%;" onclick="checkout()">Place Order & Pay via UPI</button>
+  </div>
+</div>
+
+<!-- UPI Modal -->
+<div id="upiModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center;">
+  <div style="background:white;border-radius:20px;padding:32px;max-width:360px;width:90%;text-align:center;position:relative;">
+    <button onclick="document.getElementById('upiModal').style.display='none'" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#999;">✕</button>
+    <div style="font-size:2.5rem;margin-bottom:8px;">🎁</div>
+    <h3 style="color:#5c3d2e;font-weight:normal;margin-bottom:6px;">Complete Your Payment</h3>
+    <p style="color:#7a6050;font-size:0.85rem;margin-bottom:20px;">Send payment to our UPI ID and we'll confirm your order within 30 minutes!</p>
+    <div style="background:#fdf6ee;border-radius:12px;padding:16px;margin-bottom:16px;border:1.5px solid #f5e6d3;">
+      <div style="font-size:0.75rem;color:#7a6050;margin-bottom:4px;">UPI ID</div>
+      <div style="font-size:1.1rem;font-weight:bold;color:#5c3d2e;font-family:monospace;letter-spacing:0.02em;">h-and-a-hampers@axl</div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px;flex-wrap:wrap;">
+      <span style="font-size:0.78rem;color:#7a6050;background:#f5e6d3;padding:4px 12px;border-radius:20px;">GPay</span>
+      <span style="font-size:0.78rem;color:#7a6050;background:#f5e6d3;padding:4px 12px;border-radius:20px;">PhonePe</span>
+      <span style="font-size:0.78rem;color:#7a6050;background:#f5e6d3;padding:4px 12px;border-radius:20px;">Paytm</span>
+    </div>
+    <button onclick="copyUPI()" style="width:100%;background:#c9856b;color:white;border:none;padding:11px;border-radius:30px;font-size:0.9rem;cursor:pointer;margin-bottom:10px;" id="copyUPIBtn2">📋 Copy UPI ID</button>
+    <p style="font-size:0.75rem;color:#7a6050;">After payment, send screenshot to <strong>@h_and_a_hampers</strong> on Instagram or WhatsApp</p>
   </div>
 </div>
 
@@ -829,10 +873,20 @@
   }
 
   function checkout() {
-    showToast('🎉 Order placed! We\'ll contact you shortly.');
-    cart = [];
-    updateCartUI();
     toggleCart();
+    document.getElementById('upiModal').style.display = 'flex';
+  }
+
+  function copyUPI() {
+    navigator.clipboard.writeText('h-and-a-hampers@axl').then(() => {
+      showToast('✅ UPI ID copied!');
+      document.getElementById('copyUPIBtn') && (document.getElementById('copyUPIBtn').textContent = '✓ Copied!');
+      document.getElementById('copyUPIBtn2') && (document.getElementById('copyUPIBtn2').textContent = '✓ Copied!');
+      setTimeout(() => {
+        document.getElementById('copyUPIBtn') && (document.getElementById('copyUPIBtn').textContent = 'Copy');
+        document.getElementById('copyUPIBtn2') && (document.getElementById('copyUPIBtn2').textContent = '📋 Copy UPI ID');
+      }, 2000);
+    });
   }
 
   // ── Toast ──
@@ -854,11 +908,27 @@
   }
 
   // ── Contact Form ──
-  function submitForm(btn) {
-    btn.textContent = '✓ Message Sent!';
-    btn.style.background = 'var(--gold)';
-    showToast('💌 We\'ll get back to you within 24 hours!');
-    setTimeout(() => { btn.textContent = 'Send Message 💌'; btn.style.background = ''; }, 3000);
+  function submitForm(e) {
+    e.preventDefault();
+    const form = e.target;
+    const btn = form.querySelector('button[type="submit"]');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(new FormData(form)).toString()
+    }).then(() => {
+      btn.textContent = '✓ Message Sent!';
+      btn.style.background = 'var(--gold)';
+      showToast('💌 We\'ll get back to you within 24 hours!');
+      form.reset();
+      setTimeout(() => { btn.textContent = 'Send Message 💌'; btn.style.background = ''; btn.disabled = false; }, 3000);
+    }).catch(() => {
+      btn.textContent = 'Send Message 💌';
+      btn.disabled = false;
+      showToast('Something went wrong. Please try again.');
+    });
   }
 
   // ── Init ──
