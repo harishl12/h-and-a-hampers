@@ -3,351 +3,488 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#1e3d34" />
   <title>H &amp; A Hampers – Gifted with Love</title>
+  <meta name="description" content="Handcrafted hampers, personalized gifts and seasonal surprises — made with love, wrapped with care, delivered across India." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <style>
     /* ── Reset & Base ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --cream:    #fdf6ee;
-      --warm:     #f5e6d3;
-      --rose:     #c9856b;
-      --rose-dk:  #a8624a;
-      --gold:     #c9a96e;
-      --gold-dk:  #a8853d;
-      --brown:    #5c3d2e;
-      --text:     #3a2a1e;
-      --muted:    #7a6050;
+      /* ── "Forest & Clay" palette ── */
+      --cream:    #f4f1e8;   /* page background (porcelain ivory) */
+      --warm:     #ece3d2;   /* warm sand surface */
+      --rose:     #d56f4c;   /* primary accent — clay / terracotta */
+      --rose-dk:  #bb5836;
+      --gold:     #c6a24c;   /* champagne brass */
+      --gold-dk:  #a8853a;
+      --brown:    #1e3d34;   /* deep pine green (dark anchor) */
+      --green:    #2c5446;   /* mid forest green */
+      --sage:     #e6ece4;   /* pale sage tint */
+      --blush:    #ecccb9;   /* soft blush */
+      --text:     #262019;
+      --muted:    #6c655b;
       --white:    #ffffff;
-      --shadow:   rgba(92,61,46,0.12);
+      --surface:  #fffdf8;
+      --shadow:   rgba(30,61,52,0.13);
+      --serif:    'Cormorant Garamond', 'Georgia', serif;
+      --sans:     'Jost', 'Helvetica Neue', Arial, sans-serif;
     }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Georgia', serif; background: var(--cream); color: var(--text); }
+    body { font-family: var(--sans); background: var(--cream); color: var(--text); overflow-x: hidden; font-weight: 300; }
     a { text-decoration: none; color: inherit; }
     img { display: block; max-width: 100%; }
     button { cursor: pointer; font-family: inherit; }
 
+    /* ── Icon system (crisp inline SVG, scales to any size) ── */
+    .icon {
+      display: inline-block; vertical-align: middle; width: 1.1em; height: 1.1em;
+      fill: none; stroke: currentColor; stroke-width: 1.7;
+      stroke-linecap: round; stroke-linejoin: round; flex: none;
+    }
+    .icon.icon--fill { fill: currentColor; stroke: none; }
+    .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
     /* ── Utility ── */
     .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
     .btn {
-      display: inline-block; padding: 12px 28px; border-radius: 30px;
-      font-size: 0.95rem; letter-spacing: 0.04em; transition: all 0.25s;
-      border: none;
+      display: inline-flex; align-items: center; gap: 8px; padding: 13px 30px; border-radius: 30px;
+      font-size: 0.9rem; letter-spacing: 0.06em; transition: all 0.3s cubic-bezier(.2,.8,.2,1);
+      border: none; font-family: var(--sans); font-weight: 400;
+      position: relative; overflow: hidden;
     }
-    .btn-primary { background: var(--rose); color: var(--white); }
-    .btn-primary:hover { background: var(--rose-dk); transform: translateY(-1px); box-shadow: 0 4px 14px var(--shadow); }
-    .btn-outline { background: transparent; border: 2px solid var(--rose); color: var(--rose); }
-    .btn-outline:hover { background: var(--rose); color: var(--white); }
+    .btn-primary { background: var(--rose); color: var(--white); box-shadow: 0 6px 18px rgba(213,111,76,0.32); }
+    .btn-primary:hover { background: var(--rose-dk); transform: translateY(-2px); box-shadow: 0 10px 26px rgba(187,88,54,0.4); }
+    .btn-outline { background: transparent; border: 1.5px solid var(--green); color: var(--green); }
+    .btn-outline:hover { background: var(--green); color: var(--white); transform: translateY(-2px); }
     .section-title {
-      font-size: 2rem; color: var(--brown); text-align: center;
-      margin-bottom: 8px; font-weight: normal;
+      font-family: var(--serif); font-size: 2.7rem; color: var(--brown); text-align: center;
+      margin-bottom: 6px; font-weight: 500; letter-spacing: 0.01em;
     }
-    .section-sub { text-align: center; color: var(--muted); margin-bottom: 48px; font-size: 1rem; }
+    .section-sub { text-align: center; color: var(--muted); margin-bottom: 48px; font-size: 1rem; font-weight: 300; }
+
+    /* ── Scroll-reveal base ── */
+    .reveal { opacity: 0; transform: translateY(34px); }
+    .reveal.is-in { opacity: 1; transform: none; }
+    .no-anim .reveal { opacity: 1 !important; transform: none !important; }
 
     /* ── Announcement Bar ── */
     .announcement {
-      background: var(--brown); color: var(--warm);
-      text-align: center; padding: 9px 16px; font-size: 0.85rem; letter-spacing: 0.06em;
+      background: var(--brown); color: var(--cream);
+      text-align: center; padding: 9px 16px; font-size: 0.8rem; letter-spacing: 0.08em;
+      position: relative; z-index: 120; overflow: hidden;
     }
+    .announcement .icon { width: 15px; height: 15px; color: var(--gold); vertical-align: -3px; }
+    .announcement-track { display: inline-block; }
 
     /* ── Header / Nav ── */
     header {
-      background: var(--white); position: sticky; top: 0; z-index: 100;
-      box-shadow: 0 2px 12px var(--shadow);
+      background: rgba(244,241,232,0.72); position: sticky; top: 0; z-index: 100;
+      backdrop-filter: saturate(1.4) blur(14px); -webkit-backdrop-filter: saturate(1.4) blur(14px);
+      box-shadow: 0 1px 0 rgba(30,61,52,0.06); transition: box-shadow .3s, background .3s;
     }
+    header.scrolled { box-shadow: 0 6px 24px var(--shadow); background: rgba(244,241,232,0.94); }
     nav { display: flex; align-items: center; justify-content: space-between; padding: 10px 24px; max-width: 1160px; margin: 0 auto; }
     .logo { display: flex; align-items: center; gap: 12px; }
-    .logo-svg { width: 60px; height: 60px; flex-shrink: 0; }
+    .logo-svg { width: 58px; height: 58px; flex-shrink: 0; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+    .logo:hover .logo-svg { transform: rotate(-8deg) scale(1.05); }
     .logo-text { display: flex; flex-direction: column; }
-    .logo-main { font-size: 1.7rem; color: var(--brown); font-weight: bold; letter-spacing: 0.02em; }
+    .logo-main { font-family: var(--serif); font-size: 1.85rem; color: var(--brown); font-weight: 600; letter-spacing: 0.02em; line-height: 1; }
     .logo-main span { color: var(--rose); }
-    .logo-tagline { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-top: -2px; }
-    .nav-links { display: flex; gap: 28px; list-style: none; }
-    .nav-links a { font-size: 0.9rem; color: var(--muted); letter-spacing: 0.05em; transition: color 0.2s; text-transform: uppercase; }
+    .logo-tagline { font-size: 0.66rem; color: var(--muted); letter-spacing: 0.18em; text-transform: uppercase; margin-top: 3px; }
+    .nav-links { display: flex; gap: 30px; list-style: none; }
+    .nav-links a { font-size: 0.82rem; color: var(--muted); letter-spacing: 0.1em; transition: color 0.2s; text-transform: uppercase; position: relative; }
+    .nav-links a::after { content:''; position:absolute; left:0; bottom:-6px; width:0; height:1.5px; background:var(--rose); transition:width .3s ease; }
     .nav-links a:hover { color: var(--rose); }
+    .nav-links a:hover::after { width:100%; }
     .nav-actions { display: flex; align-items: center; gap: 16px; }
     .cart-btn {
       position: relative; background: var(--warm); border: none;
       padding: 10px 18px; border-radius: 30px; display: flex; align-items: center; gap: 8px;
-      color: var(--brown); font-size: 0.9rem; transition: all 0.2s;
+      color: var(--brown); font-size: 0.82rem; letter-spacing: 0.06em; transition: all 0.25s;
     }
-    .cart-btn:hover { background: var(--rose); color: var(--white); }
+    .cart-btn .icon { width: 18px; height: 18px; }
+    .cart-btn:hover { background: var(--rose); color: var(--white); transform: translateY(-1px); }
     .cart-count {
       background: var(--rose); color: white; border-radius: 50%;
       width: 20px; height: 20px; font-size: 0.72rem; display: flex; align-items: center; justify-content: center;
-      font-weight: bold;
+      font-weight: 600;
     }
-    .hamburger { display: none; background: none; border: none; font-size: 1.5rem; color: var(--brown); }
+    .cart-btn:hover .cart-count { background: var(--white); color: var(--rose); }
+    .cart-count.bump { animation: cartBump .4s cubic-bezier(.3,1.5,.5,1); }
+    @keyframes cartBump { 0%{transform:scale(1);} 40%{transform:scale(1.5);} 100%{transform:scale(1);} }
+    .hamburger { display: none; background: none; border: none; font-size: 1.5rem; color: var(--brown); line-height: 1; }
+    .hamburger .icon { width: 26px; height: 26px; stroke-width: 1.8; }
 
     /* ── Hero ── */
     .hero {
-      background: linear-gradient(135deg, var(--warm) 0%, #ffe8d6 50%, var(--cream) 100%);
-      padding: 90px 24px 80px;
       position: relative; overflow: hidden;
+      padding: 120px 24px 110px;
+      background: linear-gradient(135deg, var(--sage) 0%, #f3eee4 46%, var(--blush) 100%);
     }
-    .hero::before {
-      content: '🎁'; position: absolute; font-size: 180px; opacity: 0.06;
-      right: 5%; top: 50%; transform: translateY(-50%); pointer-events: none;
+    #hero-canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
     }
-    .hero-inner { max-width: 620px; }
+    .hero .container { position: relative; z-index: 2; }
+    .hero-inner { max-width: 640px; }
     .hero-badge {
-      display: inline-block; background: var(--gold); color: var(--white);
-      padding: 5px 14px; border-radius: 20px; font-size: 0.78rem; letter-spacing: 0.1em;
-      text-transform: uppercase; margin-bottom: 20px;
+      display: inline-flex; align-items:center; gap:8px; background: var(--green); color: var(--white);
+      padding: 7px 16px; border-radius: 20px; font-size: 0.72rem; letter-spacing: 0.16em;
+      text-transform: uppercase; margin-bottom: 22px; box-shadow: 0 6px 18px rgba(44,84,70,0.28);
     }
-    .hero h1 { font-size: 3rem; color: var(--brown); line-height: 1.2; margin-bottom: 18px; font-weight: normal; }
-    .hero h1 strong { color: var(--rose); font-weight: bold; }
-    .hero p { font-size: 1.1rem; color: var(--muted); line-height: 1.7; margin-bottom: 32px; }
+    .hero-badge .icon { width: 15px; height: 15px; color: var(--gold); }
+    .hero h1 { font-family: var(--serif); font-size: 4.2rem; color: var(--brown); line-height: 1.08; margin-bottom: 22px; font-weight: 500; }
+    .hero h1 strong { color: var(--rose); font-weight: 600; font-style: italic; }
+    .hero h1 .line { display:block; overflow:hidden; }
+    .hero h1 .line > span { display:inline-block; }
+    .hero p { font-size: 1.12rem; color: var(--muted); line-height: 1.8; margin-bottom: 34px; max-width: 540px; font-weight: 300; }
     .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+    .scroll-cue { position:absolute; left:50%; bottom:24px; transform:translateX(-50%); z-index:2; color:var(--muted); font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; display:flex; flex-direction:column; align-items:center; gap:8px; opacity:.8; }
+    .scroll-cue .dot { width:22px; height:36px; border:1.5px solid var(--muted); border-radius:12px; position:relative; }
+    .scroll-cue .dot::after { content:''; position:absolute; left:50%; top:7px; width:4px; height:4px; border-radius:50%; background:var(--rose); transform:translateX(-50%); animation: scrollDot 1.6s ease-in-out infinite; }
+    @keyframes scrollDot { 0%{opacity:0; transform:translate(-50%,0);} 30%{opacity:1;} 100%{opacity:0; transform:translate(-50%,14px);} }
 
     /* ── Features Strip ── */
-    .features { background: var(--brown); padding: 24px; }
-    .features-grid { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; }
-    .feature-item { display: flex; align-items: center; gap: 10px; color: var(--warm); font-size: 0.88rem; }
-    .feature-icon { font-size: 1.3rem; }
+    .features { background: var(--brown); padding: 22px 0; overflow: hidden; }
+    .features-track { display: flex; align-items:center; gap: 44px; width: max-content; will-change: transform; }
+    .feature-item { display: flex; align-items: center; gap: 10px; color: var(--cream); font-size: 0.85rem; letter-spacing: 0.05em; white-space: nowrap; }
+    .feature-item .icon { width: 22px; height: 22px; color: var(--gold); }
+    .feature-sep { width:4px; height:4px; border-radius:50%; background:var(--gold); opacity:.55; flex:none; }
 
     /* ── Categories ── */
-    .categories { padding: 80px 0; }
+    .categories { padding: 96px 0; }
     .cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
     .cat-card {
-      border-radius: 16px; overflow: hidden; position: relative; cursor: pointer;
-      height: 220px; display: flex; align-items: flex-end;
-      box-shadow: 0 4px 16px var(--shadow); transition: transform 0.3s;
+      border-radius: 18px; overflow: hidden; position: relative; cursor: pointer;
+      height: 250px; display: flex; align-items: flex-end;
+      box-shadow: 0 8px 26px var(--shadow); transition: transform 0.4s cubic-bezier(.2,.8,.2,1), box-shadow .4s;
     }
-    .cat-card:hover { transform: translateY(-4px); }
+    .cat-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px var(--shadow); }
     .cat-bg {
       position: absolute; inset: 0; background-size: cover; background-position: center;
-      transition: transform 0.4s;
+      transition: transform 0.6s cubic-bezier(.2,.8,.2,1);
     }
-    .cat-card:hover .cat-bg { transform: scale(1.05); }
-    .cat-bg-1 { background: linear-gradient(160deg, #f7c59f, #e07b54); }
-    .cat-bg-2 { background: linear-gradient(160deg, #f9e4b7, #c9a96e); }
-    .cat-bg-3 { background: linear-gradient(160deg, #dce8f0, #8ab4c9); }
-    .cat-emoji { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-60%); font-size: 60px; opacity: 0.35; }
+    .cat-card:hover .cat-bg { transform: scale(1.08); }
+    .cat-bg-1 { background: linear-gradient(160deg, #e6a283, #cf6a45); }
+    .cat-bg-2 { background: linear-gradient(160deg, #e3cd93, #c19a45); }
+    .cat-bg-3 { background: linear-gradient(160deg, #6f9a86, #2c5446); }
+    .cat-emoji { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-58%); color:#fff; opacity:.5; }
+    .cat-emoji .icon { width: 64px; height: 64px; stroke-width: 1.3; transition: transform .5s; }
+    .cat-card:hover .cat-emoji .icon { transform: scale(1.12) rotate(6deg); }
     .cat-info {
-      position: relative; z-index: 2; padding: 20px;
+      position: relative; z-index: 2; padding: 22px;
       background: linear-gradient(to top, rgba(0,0,0,0.55), transparent);
       width: 100%;
     }
-    .cat-info h3 { color: white; font-size: 1.15rem; margin-bottom: 4px; }
-    .cat-info p { color: rgba(255,255,255,0.85); font-size: 0.82rem; font-style: italic; }
+    .cat-info h3 { font-family: var(--serif); color: white; font-size: 1.5rem; margin-bottom: 4px; font-weight: 600; }
+    .cat-info p { color: rgba(255,255,255,0.9); font-size: 0.82rem; font-style: italic; font-family: var(--serif); }
 
     /* ── Products ── */
-    .products { padding: 80px 0; background: var(--white); }
-    .filter-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; flex-wrap: wrap; }
+    .products { padding: 96px 0; background: var(--surface); }
+    .filter-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 44px; flex-wrap: wrap; }
     .filter-tab {
-      padding: 8px 20px; border-radius: 30px; font-size: 0.85rem; border: 2px solid var(--warm);
-      background: transparent; color: var(--muted); transition: all 0.2s;
+      padding: 9px 22px; border-radius: 30px; font-size: 0.8rem; letter-spacing: 0.06em; border: 1.5px solid var(--warm);
+      background: transparent; color: var(--muted); transition: all 0.25s;
     }
     .filter-tab.active, .filter-tab:hover { background: var(--rose); border-color: var(--rose); color: white; }
     .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
     .product-card {
-      border-radius: 14px; overflow: hidden; background: var(--cream);
-      box-shadow: 0 2px 12px var(--shadow); transition: transform 0.3s, box-shadow 0.3s;
+      border-radius: 16px; overflow: hidden; background: var(--cream);
+      box-shadow: 0 4px 16px var(--shadow); transition: transform 0.35s cubic-bezier(.2,.8,.2,1), box-shadow 0.35s;
       position: relative;
     }
-    .product-card:hover { transform: translateY(-5px); box-shadow: 0 8px 24px var(--shadow); }
+    .product-card:hover { transform: translateY(-6px); box-shadow: 0 16px 34px var(--shadow); }
     .product-img {
-      height: 200px; display: flex; align-items: center; justify-content: center;
-      font-size: 64px; position: relative; overflow: hidden;
+      height: 210px; display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
     }
+    .product-icon { width: 86px; height: 86px; stroke-width: 1.35; color: var(--brown); transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+    .product-card:hover .product-icon { transform: scale(1.12) rotate(-4deg); }
     .product-badge {
-      position: absolute; top: 10px; left: 10px;
-      background: var(--gold); color: white; padding: 3px 10px;
-      border-radius: 20px; font-size: 0.72rem; letter-spacing: 0.06em;
+      position: absolute; top: 12px; left: 12px;
+      background: var(--gold); color: white; padding: 4px 11px;
+      border-radius: 20px; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
     }
     .product-wishlist {
-      position: absolute; top: 10px; right: 10px;
-      background: white; border: none; width: 32px; height: 32px;
-      border-radius: 50%; font-size: 1rem; display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 2px 6px var(--shadow); transition: all 0.2s;
+      position: absolute; top: 12px; right: 12px;
+      background: white; border: none; width: 34px; height: 34px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px var(--shadow); transition: all 0.25s; color: var(--rose);
     }
-    .product-wishlist:hover { background: var(--rose); }
-    .product-body { padding: 16px; }
-    .product-body h4 { font-size: 0.95rem; color: var(--brown); margin-bottom: 4px; font-weight: normal; }
-    .product-body p { font-size: 0.8rem; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
+    .product-wishlist .icon { width: 18px; height: 18px; }
+    .product-wishlist:hover { background: var(--rose); color: white; transform: scale(1.1); }
+    .product-wishlist.liked .icon { fill: var(--rose); stroke: var(--rose); }
+    .product-wishlist.liked:hover .icon { fill: #fff; stroke: #fff; }
+    .product-body { padding: 18px; }
+    .product-body h4 { font-family: var(--serif); font-size: 1.25rem; color: var(--brown); margin-bottom: 4px; font-weight: 600; }
+    .product-body p { font-size: 0.8rem; color: var(--muted); margin-bottom: 14px; line-height: 1.55; font-weight: 300; }
     .product-footer { display: flex; align-items: center; justify-content: space-between; }
-    .price { font-size: 1.1rem; color: var(--rose); font-weight: bold; }
+    .price { font-size: 1.15rem; color: var(--rose); font-weight: 600; }
     .price-orig { font-size: 0.8rem; color: var(--muted); text-decoration: line-through; margin-left: 4px; }
     .add-btn {
-      background: var(--rose); color: white; border: none;
-      padding: 7px 14px; border-radius: 20px; font-size: 0.8rem; transition: all 0.2s;
+      background: var(--green); color: white; border: none;
+      padding: 8px 16px; border-radius: 20px; font-size: 0.76rem; letter-spacing: 0.04em; transition: all 0.25s;
     }
-    .add-btn:hover { background: var(--rose-dk); transform: scale(1.05); }
+    .add-btn:hover { background: var(--brown); transform: scale(1.06); }
 
-    /* Product image backgrounds */
-    .p-bg-1 { background: linear-gradient(135deg, #fde8d8, #f5c3a8); }
-    .p-bg-2 { background: linear-gradient(135deg, #fef3d4, #f5dfa0); }
-    .p-bg-3 { background: linear-gradient(135deg, #e8f4f8, #b8d8e8); }
-    .p-bg-4 { background: linear-gradient(135deg, #f0e8f4, #d4b8e0); }
-    .p-bg-5 { background: linear-gradient(135deg, #fde8d8, #e8c4a8); }
-    .p-bg-6 { background: linear-gradient(135deg, #e8f4e8, #b8d8b8); }
-    .p-bg-7 { background: linear-gradient(135deg, #fff3d4, #f5e0a0); }
-    .p-bg-8 { background: linear-gradient(135deg, #fce8f0, #e8b8cc); }
+    /* Product image backgrounds (refined palette tints) */
+    .p-bg-1 { background: linear-gradient(135deg, #f3e2d4, #e7c2a9); }
+    .p-bg-2 { background: linear-gradient(135deg, #f4ead2, #e3cd95); }
+    .p-bg-3 { background: linear-gradient(135deg, #e3ebe3, #bcd1c4); }
+    .p-bg-4 { background: linear-gradient(135deg, #f2e5dd, #e4c0b0); }
+    .p-bg-5 { background: linear-gradient(135deg, #f1e0d3, #e0b69d); }
+    .p-bg-6 { background: linear-gradient(135deg, #e5ece7, #bdd3c6); }
+    .p-bg-7 { background: linear-gradient(135deg, #f5ecd3, #e6d39a); }
+    .p-bg-8 { background: linear-gradient(135deg, #f1e3df, #ddbcb5); }
 
     /* ── Personalization Banner ── */
     .personalize {
-      padding: 70px 24px; text-align: center;
-      background: linear-gradient(135deg, var(--brown) 0%, #7a5040 100%);
+      padding: 86px 24px; text-align: center; position: relative; overflow: hidden;
+      background: linear-gradient(135deg, var(--brown) 0%, var(--green) 100%);
       color: var(--white);
     }
-    .personalize h2 { font-size: 2rem; margin-bottom: 12px; font-weight: normal; }
-    .personalize p { color: var(--warm); margin-bottom: 28px; font-size: 1rem; max-width: 520px; margin-left: auto; margin-right: auto; line-height: 1.7; }
-    .btn-gold { background: var(--gold); color: var(--white); }
-    .btn-gold:hover { background: var(--gold-dk); transform: translateY(-1px); }
+    .personalize-deco { position:absolute; top:50%; transform:translateY(-50%); width:150px; height:150px; color:#fff; opacity:.07; stroke-width:1; pointer-events:none; }
+    .personalize-deco.left { left:4%; }
+    .personalize-deco.right { right:4%; transform:translateY(-50%) scaleX(-1); }
+    .personalize h2 { font-family: var(--serif); font-size: 2.7rem; margin-bottom: 12px; font-weight: 500; position:relative; display:inline-flex; align-items:center; gap:12px; }
+    .personalize h2 .icon { width: 30px; height: 30px; color: var(--gold); }
+    .personalize p { color: var(--blush); margin-bottom: 30px; font-size: 1.02rem; max-width: 540px; margin-left: auto; margin-right: auto; line-height: 1.8; position:relative; font-weight: 300; }
+    .btn-gold { background: var(--gold); color: var(--brown); box-shadow: 0 6px 18px rgba(198,162,76,0.4); position:relative; font-weight:500; }
+    .btn-gold:hover { background: #d8b75e; transform: translateY(-2px); }
 
     /* ── Testimonials ── */
-    .testimonials { padding: 80px 0; }
+    .testimonials { padding: 96px 0; }
     .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
     .testi-card {
-      background: var(--white); border-radius: 14px; padding: 28px;
-      box-shadow: 0 2px 12px var(--shadow);
+      background: var(--surface); border-radius: 16px; padding: 30px;
+      box-shadow: 0 4px 16px var(--shadow); transition: transform .35s, box-shadow .35s; border:1px solid rgba(30,61,52,0.05);
     }
-    .stars { color: var(--gold); font-size: 1rem; margin-bottom: 12px; }
-    .testi-text { color: var(--muted); font-style: italic; line-height: 1.7; margin-bottom: 16px; font-size: 0.9rem; }
-    .testi-author { display: flex; align-items: center; gap: 10px; }
+    .testi-card:hover { transform: translateY(-5px); box-shadow: 0 16px 34px var(--shadow); }
+    .stars { display:flex; gap:3px; margin-bottom: 14px; }
+    .stars .icon { width: 16px; height: 16px; color: var(--gold); }
+    .testi-text { color: var(--muted); font-style: italic; line-height: 1.8; margin-bottom: 18px; font-size: 1.02rem; font-family: var(--serif); }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
     .testi-avatar {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: var(--warm); display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--blush); color: var(--brown); display: flex; align-items: center; justify-content: center;
+      font-family: var(--serif); font-weight: 600; font-size: 1rem; letter-spacing: 0.03em;
     }
-    .testi-name { font-size: 0.85rem; color: var(--brown); font-weight: bold; }
-    .testi-loc { font-size: 0.75rem; color: var(--muted); }
+    .testi-name { font-size: 0.85rem; color: var(--brown); font-weight: 500; }
+    .testi-loc { font-size: 0.74rem; color: var(--muted); }
 
     /* ── About ── */
-    .about { padding: 80px 0; background: var(--warm); }
-    .about-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .about { padding: 96px 0; background: var(--warm); }
+    .about-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
     .about-visual {
-      height: 360px; border-radius: 20px;
-      background: linear-gradient(160deg, var(--rose) 0%, var(--gold) 100%);
+      height: 380px; border-radius: 24px; position: relative; overflow: hidden;
+      background: linear-gradient(160deg, var(--green) 0%, var(--rose) 100%);
       display: flex; align-items: center; justify-content: center;
-      font-size: 100px; box-shadow: 0 8px 32px var(--shadow);
+      box-shadow: 0 16px 44px var(--shadow);
     }
-    .about-text h2 { font-size: 2rem; color: var(--brown); margin-bottom: 16px; font-weight: normal; }
-    .about-text p { color: var(--muted); line-height: 1.8; margin-bottom: 14px; }
-    .about-stats { display: flex; gap: 32px; margin-top: 28px; }
+    .about-visual .big-gift { width: 128px; height: 128px; color: #fff; stroke-width: 1.25; }
+    .about-visual .float-ic { position:absolute; color:rgba(255,255,255,0.92); }
+    .about-text h2 { font-family: var(--serif); font-size: 2.6rem; color: var(--brown); margin-bottom: 18px; font-weight: 500; line-height: 1.15; }
+    .about-text p { color: var(--muted); line-height: 1.9; margin-bottom: 14px; font-weight: 300; }
+    .about-stats { display: flex; gap: 36px; margin-top: 30px; }
     .stat { text-align: center; }
-    .stat-num { font-size: 2rem; color: var(--rose); font-weight: bold; }
-    .stat-lbl { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .stat-num { font-family: var(--serif); font-size: 2.6rem; color: var(--rose); font-weight: 600; line-height: 1; }
+    .stat-lbl { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 6px; }
 
     /* ── Contact ── */
-    .contact { padding: 80px 0; }
+    .contact { padding: 96px 0; }
     .contact-inner { display: grid; grid-template-columns: 1fr 1.4fr; gap: 60px; align-items: start; }
-    .contact-info h2 { font-size: 2rem; color: var(--brown); margin-bottom: 14px; font-weight: normal; }
-    .contact-info p { color: var(--muted); line-height: 1.7; margin-bottom: 28px; }
+    .contact-info h2 { font-family: var(--serif); font-size: 2.6rem; color: var(--brown); margin-bottom: 14px; font-weight: 500; }
+    .contact-info p { color: var(--muted); line-height: 1.8; margin-bottom: 28px; font-weight: 300; }
     .contact-items { display: flex; flex-direction: column; gap: 16px; }
     .contact-item { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 0.9rem; }
-    .contact-icon { font-size: 1.3rem; width: 40px; height: 40px; background: var(--warm); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-    .contact-form { background: var(--white); border-radius: 16px; padding: 36px; box-shadow: 0 4px 20px var(--shadow); }
+    .contact-icon { width: 42px; height: 42px; background: var(--sage); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink:0; color: var(--green); }
+    .contact-icon .icon { width: 20px; height: 20px; }
+    .contact-form { background: var(--surface); border-radius: 18px; padding: 38px; box-shadow: 0 8px 30px var(--shadow); }
+    .contact-form h3 { font-family: var(--serif); font-size: 1.6rem !important; font-weight: 600 !important; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
     .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 0.83rem; color: var(--brown); margin-bottom: 6px; }
+    .form-group label { display: block; font-size: 0.8rem; color: var(--brown); margin-bottom: 6px; letter-spacing: 0.03em; }
     .form-group input, .form-group select, .form-group textarea {
-      width: 100%; padding: 11px 14px; border-radius: 8px; font-family: inherit;
+      width: 100%; padding: 12px 14px; border-radius: 10px; font-family: var(--sans);
       border: 1.5px solid var(--warm); background: var(--cream); color: var(--text);
-      font-size: 0.9rem; transition: border-color 0.2s; outline: none;
+      font-size: 0.9rem; transition: border-color 0.2s, box-shadow .2s; outline: none; font-weight: 300;
     }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--rose); }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--rose); box-shadow: 0 0 0 3px rgba(213,111,76,0.12); }
     .form-group textarea { resize: vertical; min-height: 110px; }
+    /* UPI box */
+    .upi-box { margin-top:28px; background:var(--cream); border-radius:14px; padding:20px; border:1.5px solid var(--warm); }
+    .upi-box h4 { color:var(--brown); font-size:0.95rem; margin-bottom:14px; letter-spacing:0.04em; display:flex; align-items:center; gap:8px; }
+    .upi-box h4 .icon { width:18px; height:18px; color:var(--rose); }
+    .upi-id-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    .upi-id-row .upi-glyph { width:34px; height:34px; color:var(--green); }
+    .upi-id-row .upi-glyph .icon { width:100%; height:100%; }
+    .upi-id { font-size:1rem; font-weight:bold; color:var(--brown); letter-spacing:0.02em; font-family:monospace; }
+    .upi-id-lbl { font-size:0.78rem; color:var(--muted); margin-bottom:3px; }
+    .upi-copy { margin-left:auto; background:var(--rose); color:white; border:none; padding:7px 14px; border-radius:20px; font-size:0.8rem; cursor:pointer; }
+    .upi-apps { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+    .upi-apps span { font-size:0.78rem; color:var(--muted); background:var(--warm); padding:4px 10px; border-radius:20px; }
 
     /* ── Cart Sidebar ── */
     .cart-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200;
+      position: fixed; inset: 0; background: rgba(20,40,33,0.45); z-index: 200;
       opacity: 0; pointer-events: none; transition: opacity 0.3s;
     }
     .cart-overlay.open { opacity: 1; pointer-events: all; }
     .cart-sidebar {
       position: fixed; top: 0; right: -420px; width: 400px; height: 100vh;
-      background: var(--white); z-index: 201; transition: right 0.35s ease;
-      display: flex; flex-direction: column; box-shadow: -4px 0 24px var(--shadow);
+      background: var(--surface); z-index: 201; transition: right 0.4s cubic-bezier(.2,.8,.2,1);
+      display: flex; flex-direction: column; box-shadow: -8px 0 40px var(--shadow);
     }
     .cart-sidebar.open { right: 0; }
-    .cart-header { padding: 20px 24px; background: var(--brown); color: white; display: flex; justify-content: space-between; align-items: center; }
-    .cart-header h3 { font-size: 1.1rem; font-weight: normal; }
-    .cart-close { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+    .cart-header { padding: 22px 24px; background: var(--brown); color: white; display: flex; justify-content: space-between; align-items: center; }
+    .cart-header h3 { font-family: var(--serif); font-size: 1.3rem; font-weight: 500; display:flex; align-items:center; gap:10px; }
+    .cart-header h3 .icon { width: 22px; height: 22px; }
+    .cart-close { background: none; border: none; color: white; cursor: pointer; display:flex; }
+    .cart-close .icon { width: 22px; height: 22px; }
     .cart-items { flex: 1; overflow-y: auto; padding: 20px 24px; }
-    .cart-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--warm); }
-    .cart-item-img { width: 60px; height: 60px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0; }
+    .cart-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--warm); align-items:center; }
+    .cart-item-img { width: 58px; height: 58px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .cart-item-img .icon { width: 32px; height: 32px; color: var(--brown); stroke-width:1.5; }
     .cart-item-info { flex: 1; }
-    .cart-item-name { font-size: 0.88rem; color: var(--brown); margin-bottom: 4px; }
-    .cart-item-price { font-size: 0.95rem; color: var(--rose); font-weight: bold; }
+    .cart-item-name { font-size: 0.9rem; color: var(--brown); margin-bottom: 4px; }
+    .cart-item-price { font-size: 0.95rem; color: var(--rose); font-weight: 600; }
     .cart-item-qty { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
-    .qty-btn { background: var(--warm); border: none; width: 24px; height: 24px; border-radius: 50%; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .qty-btn { background: var(--warm); border: none; width: 24px; height: 24px; border-radius: 50%; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: background 0.2s; color: var(--brown); }
     .qty-btn:hover { background: var(--rose); color: white; }
     .qty-val { font-size: 0.85rem; min-width: 20px; text-align: center; }
-    .cart-remove { background: none; border: none; color: #ccc; font-size: 1.1rem; transition: color 0.2s; }
+    .cart-remove { background: none; border: none; color: #c5bdb2; transition: color 0.2s; display:flex; }
+    .cart-remove .icon { width: 20px; height: 20px; }
     .cart-remove:hover { color: var(--rose); }
     .cart-footer { padding: 20px 24px; border-top: 2px solid var(--warm); }
-    .cart-total { display: flex; justify-content: space-between; font-size: 1.1rem; color: var(--brown); font-weight: bold; margin-bottom: 16px; }
+    .cart-total { display: flex; justify-content: space-between; font-size: 1.1rem; color: var(--brown); font-weight: 600; margin-bottom: 16px; }
     .empty-cart { text-align: center; padding: 60px 20px; color: var(--muted); }
-    .empty-cart .empty-icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-cart .empty-icon { color: var(--warm); margin-bottom: 12px; }
+    .empty-cart .empty-icon .icon { width: 52px; height: 52px; color: var(--blush); }
 
     /* ── Toast ── */
     .toast {
       position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
-      background: var(--brown); color: white; padding: 12px 24px; border-radius: 30px;
-      font-size: 0.88rem; z-index: 300; transition: transform 0.35s; white-space: nowrap;
+      background: var(--brown); color: white; padding: 13px 26px; border-radius: 30px;
+      font-size: 0.88rem; z-index: 300; transition: transform 0.4s cubic-bezier(.2,1.2,.3,1); white-space: nowrap;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.25); display:flex; align-items:center; gap:8px;
     }
+    .toast .icon { width: 17px; height: 17px; color: var(--gold); }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
     /* ── Footer ── */
-    footer { background: var(--brown); color: var(--warm); padding: 60px 0 24px; }
+    footer { background: var(--brown); color: var(--cream); padding: 64px 0 24px; }
     .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.2fr; gap: 40px; margin-bottom: 48px; }
-    .footer-brand .logo-main { color: var(--warm); }
+    .footer-brand .logo-main { color: var(--cream); }
     .footer-brand .logo-main span { color: var(--rose); }
-    .footer-brand p { font-size: 0.85rem; color: rgba(253,246,238,0.7); margin-top: 12px; line-height: 1.7; }
+    .footer-brand p { font-size: 0.85rem; color: rgba(244,241,232,0.7); margin-top: 12px; line-height: 1.8; font-weight: 300; }
     .footer-socials { display: flex; gap: 10px; margin-top: 16px; }
     .social-btn {
-      width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.12);
-      display: flex; align-items: center; justify-content: center; font-size: 1rem;
-      transition: background 0.2s;
+      width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center; color: var(--cream);
+      transition: background 0.25s, transform .25s, color .25s;
     }
-    .social-btn:hover { background: var(--rose); }
-    .footer-col h4 { font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px; color: var(--gold); }
+    .social-btn .icon { width: 18px; height: 18px; }
+    .social-btn:hover { background: var(--rose); color:#fff; transform: translateY(-3px); }
+    .footer-col h4 { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 16px; color: var(--gold); font-weight: 500; }
     .footer-col ul { list-style: none; }
-    .footer-col li { margin-bottom: 8px; }
-    .footer-col a { font-size: 0.85rem; color: rgba(253,246,238,0.7); transition: color 0.2s; }
+    .footer-col li { margin-bottom: 9px; }
+    .footer-col a { font-size: 0.85rem; color: rgba(244,241,232,0.7); transition: color 0.2s; font-weight: 300; }
     .footer-col a:hover { color: var(--rose); }
     .newsletter-form { display: flex; gap: 8px; margin-top: 8px; }
     .newsletter-input {
-      flex: 1; padding: 9px 14px; border-radius: 20px; border: none;
-      background: rgba(255,255,255,0.12); color: var(--warm); font-size: 0.83rem; outline: none;
+      flex: 1; padding: 10px 14px; border-radius: 20px; border: none;
+      background: rgba(255,255,255,0.1); color: var(--cream); font-size: 0.83rem; outline: none; font-family: var(--sans);
     }
-    .newsletter-input::placeholder { color: rgba(253,246,238,0.5); }
-    .newsletter-btn { background: var(--rose); color: white; border: none; padding: 9px 16px; border-radius: 20px; font-size: 0.83rem; transition: background 0.2s; }
+    .newsletter-input::placeholder { color: rgba(244,241,232,0.5); }
+    .newsletter-btn { background: var(--rose); color: white; border: none; padding: 10px 18px; border-radius: 20px; font-size: 0.83rem; transition: background 0.2s; }
     .newsletter-btn:hover { background: var(--rose-dk); }
-    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: center; font-size: 0.78rem; color: rgba(253,246,238,0.5); }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: center; font-size: 0.78rem; color: rgba(244,241,232,0.5); }
+    .footer-bottom .icon { width: 14px; height: 14px; color: var(--rose); vertical-align: -2px; }
 
     /* ── Responsive ── */
     @media (max-width: 960px) {
+      .hero h1 { font-size: 3.2rem; }
       .products-grid { grid-template-columns: repeat(2, 1fr); }
       .footer-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 720px) {
       .nav-links { display: none; }
-      .hamburger { display: block; }
-      .hero h1 { font-size: 2.1rem; }
+      .hamburger { display: flex; }
+      .hero { padding: 80px 24px 90px; }
+      .hero h1 { font-size: 2.6rem; }
+      .section-title, .personalize h2, .about-text h2, .contact-info h2 { font-size: 2.1rem; }
       .cat-grid { grid-template-columns: 1fr; }
       .products-grid { grid-template-columns: repeat(2, 1fr); }
       .testi-grid { grid-template-columns: 1fr; }
       .about-inner, .contact-inner { grid-template-columns: 1fr; }
-      .about-visual { height: 220px; }
+      .about-visual { height: 240px; }
       .footer-grid { grid-template-columns: 1fr; }
       .form-row { grid-template-columns: 1fr; }
       .cart-sidebar { width: 100%; right: -100%; }
     }
     @media (max-width: 480px) {
       .products-grid { grid-template-columns: 1fr; }
-      .hero h1 { font-size: 1.7rem; }
+      .hero h1 { font-size: 2.2rem; }
+      .section-title { font-size: 1.9rem; }
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+      .reveal { opacity: 1 !important; transform: none !important; }
     }
   </style>
 </head>
 <body>
 
+<!-- ════════ SVG ICON SPRITE (defines all icons once) ════════ -->
+<svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+  <symbol id="i-gift" viewBox="0 0 24 24"><rect x="3.5" y="8" width="17" height="4.5" rx="1"/><path d="M5.5 12.5V19a1.5 1.5 0 0 0 1.5 1.5h10a1.5 1.5 0 0 0 1.5-1.5v-6.5"/><path d="M12 8v12.5"/><path d="M12 8C12 8 10.8 4 8.6 4.6 7 5 7.2 8 9.5 8z"/><path d="M12 8c0 0 1.2-4 3.4-3.4C17 5 16.8 8 14.5 8z"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.7 5L19 9.7l-5.3 1.7L12 17l-1.7-5.6L5 9.7l5.3-1.7z"/><path d="M18.5 14l.7 2.1 2.3.7-2.3.7-.7 2.2-.7-2.2-2.3-.7 2.3-.7z"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></symbol>
+  <symbol id="i-package" viewBox="0 0 24 24"><path d="M21 8.2l-9-5-9 5v7.6l9 5 9-5z"/><path d="M3.2 8.2L12 13l8.8-4.8"/><path d="M12 13v8"/></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24"><path d="M3 6.5h11v9.5H3z"/><path d="M14 9.5h3.5L21 13v3h-7z"/><circle cx="7" cy="18" r="1.7"/><circle cx="17.5" cy="18" r="1.7"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-9.7a3.8 3.8 0 0 1 7-2.1 3.8 3.8 0 0 1 7 2.1C19 15.6 12 20 12 20z"/></symbol>
+  <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 2.3 2.3 0 0 0 2.3-2.3 2.2 2.2 0 0 0-.6-1.5 2.2 2.2 0 0 1 1.6-3.7H17a4 4 0 0 0 4-4c0-3.3-4-6.5-9-6.5z"/><circle cx="7.7" cy="11.2" r="1"/><circle cx="10" cy="7.6" r="1"/><circle cx="14" cy="7.6" r="1"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3.5 12.5l8-8H20v8.5l-8 8z"/><circle cx="16" cy="8" r="1.3"/></symbol>
+  <symbol id="i-snow" viewBox="0 0 24 24"><path d="M12 2.5v19"/><path d="M3.7 7.25l16.6 9.5"/><path d="M20.3 7.25L3.7 16.75"/><path d="M12 6l-2.2-1.3M12 6l2.2-1.3M12 18l-2.2 1.3M12 18l2.2 1.3"/><path d="M6.8 9l-2.4-.1M6.8 9l-.1-2.4M17.2 15l2.4.1M17.2 15l.1 2.4"/><path d="M6.8 15l-2.4.1M6.8 15l-.1 2.4M17.2 9l2.4-.1M17.2 9l.1-2.4"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s6-5.4 6-10.2A6 6 0 0 0 6 10.8C6 15.6 12 21 12 21z"/><circle cx="12" cy="10.8" r="2.2"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.5 4h-2A1.5 1.5 0 0 0 3 5.5 16 16 0 0 0 18.5 21a1.5 1.5 0 0 0 1.5-1.5v-2.2a1 1 0 0 0-.8-1l-3-.6a1 1 0 0 0-1 .4l-.8 1.1a12 12 0 0 1-5.3-5.3l1.1-.8a1 1 0 0 0 .4-1l-.6-3a1 1 0 0 0-1-.8z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 5.5L20.5 7"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="16.7" cy="7.3" r="1"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 9.5h19"/><path d="M6 14.5h4"/></symbol>
+  <symbol id="i-facebook" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><path d="M14.6 8h-1.3A1.6 1.6 0 0 0 11.7 9.6V11H10v2.4h1.7V20"/><path d="M11.7 13.4h2.6"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20.5 11.5a8 8 0 0 1-11.7 7.1L4 20.5l1.9-4.7A8 8 0 1 1 20.5 11.5z"/></symbol>
+  <symbol id="i-pinterest" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M10.3 16.5V8h3a2.6 2.6 0 0 1 0 5.2h-3"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5.5 7.5h13l-1 12.5h-11z"/><path d="M9 7.5a3 3 0 0 1 6 0"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V5.2A1.2 1.2 0 0 1 10.2 4h3.6A1.2 1.2 0 0 1 15 5.2V7"/><path d="M6 7l1 12.5a1.5 1.5 0 0 0 1.5 1.4h7a1.5 1.5 0 0 0 1.5-1.4L18 7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.4 5.5 5.9.5-4.5 3.9 1.4 5.8L12 16.6 6.8 19.7l1.4-5.8L3.7 9.5l5.9-.5z"/></symbol>
+  <!-- product icons -->
+  <symbol id="i-basket" viewBox="0 0 24 24"><path d="M5 9.5h14l-1.1 9a2 2 0 0 1-2 1.8H8.1a2 2 0 0 1-2-1.8z"/><path d="M3.5 9.5h17"/><path d="M8.5 9.5L11 5M15.5 9.5L13 5"/><path d="M9.5 13v3.5M12 13v3.5M14.5 13v3.5"/></symbol>
+  <symbol id="i-jar" viewBox="0 0 24 24"><path d="M8 4h8"/><path d="M9.2 4v2.2C9.2 7.6 7.8 8 7.8 9.8v8.4A1.8 1.8 0 0 0 9.6 20h4.8a1.8 1.8 0 0 0 1.8-1.8V9.8c0-1.8-1.4-2.2-1.4-3.6V4"/><path d="M7.9 12.5h8.2"/></symbol>
+  <symbol id="i-diya" viewBox="0 0 24 24"><path d="M4 14.5c0 2.2 3.6 3.5 8 3.5s8-1.3 8-3.5"/><path d="M4.5 14.5h15"/><path d="M12 9.8v4.7"/><path d="M12 4.5s-1.7 2.2-1.7 3.6A1.7 1.7 0 0 0 12 9.8a1.7 1.7 0 0 0 1.7-1.7C13.7 6.7 12 4.5 12 4.5z"/></symbol>
+  <symbol id="i-macrame" viewBox="0 0 24 24"><path d="M5 5.5h14"/><path d="M7.5 5.5v5M12 5.5v5M16.5 5.5v5"/><path d="M7.5 10.5l-1.3 5.5M7.5 10.5l1.3 5.5"/><path d="M12 10.5l-1.3 6.5M12 10.5l1.3 6.5"/><path d="M16.5 10.5l-1.3 5.5M16.5 10.5l1.3 5.5"/></symbol>
+  <symbol id="i-lovebox" viewBox="0 0 24 24"><rect x="4.5" y="6.5" width="15" height="13.5" rx="2"/><path d="M4.5 11h15"/><path d="M12 17.8s-3.2-2-3.2-4.2a1.8 1.8 0 0 1 3.2-1.1 1.8 1.8 0 0 1 3.2 1.1c0 2.2-3.2 4.2-3.2 4.2z"/></symbol>
+  <symbol id="i-candle" viewBox="0 0 24 24"><rect x="8.5" y="9.5" width="7" height="10.5" rx="1.5"/><path d="M8.5 13h7"/><path d="M12 9.5V7"/><path d="M12 7s-1.6-1.1-1.6-2.5A1.6 1.6 0 0 1 12 3a1.6 1.6 0 0 1 1.6 1.5C13.6 5.9 12 7 12 7z"/></symbol>
+  <symbol id="i-cake" viewBox="0 0 24 24"><path d="M4 20.5h16"/><path d="M5.5 20.5v-7A2 2 0 0 1 7.5 11.5h9a2 2 0 0 1 2 2v7"/><path d="M5.5 15.5c1.4 1.2 2.6 1.2 4 0s2.6-1.2 4 0 2.6 1.2 4 0"/><path d="M12 11.5V8"/><circle cx="12" cy="6.4" r=".9"/></symbol>
+  <symbol id="i-photo" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.7"/><path d="M4.5 16.5l4.2-3.8 3 2.6 3.8-3.4 4 3.6"/></symbol>
+</defs></svg>
+
 <!-- Announcement -->
-<div class="announcement">🎁 Free gift wrapping on all orders above ₹999 &nbsp;|&nbsp; 🚚 Pan-India delivery available</div>
+<div class="announcement"><span class="announcement-track"><svg class="icon"><use href="#i-gift"/></svg> Free gift wrapping on all orders above ₹999 &nbsp;|&nbsp; <svg class="icon"><use href="#i-truck"/></svg> Pan-India delivery available</span></div>
 
 <!-- Header -->
-<header>
+<header id="siteHeader">
   <nav>
     <a href="#" class="logo">
       <svg class="logo-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
@@ -414,63 +551,75 @@
     </ul>
     <div class="nav-actions">
       <button class="cart-btn" onclick="toggleCart()">
-        🛒 Cart
+        <svg class="icon"><use href="#i-bag"/></svg> Cart
         <span class="cart-count" id="cartCount">0</span>
       </button>
-      <button class="hamburger" onclick="toggleMenu()">☰</button>
+      <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><svg class="icon"><use href="#i-menu"/></svg></button>
     </div>
   </nav>
 </header>
 
 <!-- Hero -->
 <section class="hero">
-  <div class="hero-inner">
-    <div class="hero-badge">✨ Handcrafted with Love</div>
-    <h1>Beautiful Gifts<br>for Every <strong>Occasion</strong></h1>
-    <p>Discover our curated collection of handmade hampers, personalized gifts, and seasonal surprises — crafted with care to make every moment unforgettable.</p>
-    <div class="hero-actions">
-      <a href="#products" class="btn btn-primary">Shop Now</a>
-      <a href="#about" class="btn btn-outline">Our Story</a>
+  <canvas id="hero-canvas"></canvas>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-badge"><svg class="icon"><use href="#i-sparkle"/></svg> Handcrafted with Love</div>
+      <h1>
+        <span class="line"><span>Beautiful Gifts</span></span>
+        <span class="line"><span>for Every <strong>Occasion</strong></span></span>
+      </h1>
+      <p>Discover our curated collection of handmade hampers, personalized gifts, and seasonal surprises — crafted with care to make every moment unforgettable.</p>
+      <div class="hero-actions">
+        <a href="#products" class="btn btn-primary">Shop Now</a>
+        <a href="#about" class="btn btn-outline">Our Story</a>
+      </div>
     </div>
   </div>
+  <div class="scroll-cue"><div class="dot"></div>Scroll</div>
 </section>
 
 <!-- Features -->
 <div class="features">
-  <div class="features-grid">
-    <div class="feature-item"><span class="feature-icon">🎀</span> Handcrafted Gifts</div>
-    <div class="feature-item"><span class="feature-icon">✍️</span> Personalization Available</div>
-    <div class="feature-item"><span class="feature-icon">📦</span> Beautiful Packaging</div>
-    <div class="feature-item"><span class="feature-icon">🚚</span> Pan-India Delivery</div>
-    <div class="feature-item"><span class="feature-icon">💝</span> Made with Love</div>
+  <div class="features-track" id="featuresTrack">
+    <div class="feature-item"><svg class="icon"><use href="#i-gift"/></svg> Handcrafted Gifts</div>
+    <span class="feature-sep"></span>
+    <div class="feature-item"><svg class="icon"><use href="#i-pen"/></svg> Personalization Available</div>
+    <span class="feature-sep"></span>
+    <div class="feature-item"><svg class="icon"><use href="#i-package"/></svg> Beautiful Packaging</div>
+    <span class="feature-sep"></span>
+    <div class="feature-item"><svg class="icon"><use href="#i-truck"/></svg> Pan-India Delivery</div>
+    <span class="feature-sep"></span>
+    <div class="feature-item"><svg class="icon"><use href="#i-heart"/></svg> Made with Love</div>
+    <span class="feature-sep"></span>
   </div>
 </div>
 
 <!-- Categories -->
 <section class="categories" id="categories">
   <div class="container">
-    <h2 class="section-title">Shop by Category</h2>
-    <p class="section-sub">Find the perfect gift for every person and every occasion</p>
+    <h2 class="section-title reveal">Shop by Category</h2>
+    <p class="section-sub reveal">Find the perfect gift for every person and every occasion</p>
     <div class="cat-grid">
-      <div class="cat-card" onclick="filterProducts('handmade')">
+      <div class="cat-card reveal" onclick="filterProducts('handmade')">
         <div class="cat-bg cat-bg-1"></div>
-        <div class="cat-emoji">🧶</div>
+        <div class="cat-emoji"><svg class="icon"><use href="#i-palette"/></svg></div>
         <div class="cat-info">
           <h3>Handmade Crafts</h3>
           <p>Lovingly made, one piece at a time</p>
         </div>
       </div>
-      <div class="cat-card" onclick="filterProducts('personalized')">
+      <div class="cat-card reveal" onclick="filterProducts('personalized')">
         <div class="cat-bg cat-bg-2"></div>
-        <div class="cat-emoji">✍️</div>
+        <div class="cat-emoji"><svg class="icon"><use href="#i-tag"/></svg></div>
         <div class="cat-info">
           <h3>Personalized Gifts</h3>
           <p>Customized with their name &amp; story</p>
         </div>
       </div>
-      <div class="cat-card" onclick="filterProducts('seasonal')">
+      <div class="cat-card reveal" onclick="filterProducts('seasonal')">
         <div class="cat-bg cat-bg-3"></div>
-        <div class="cat-emoji">🎄</div>
+        <div class="cat-emoji"><svg class="icon"><use href="#i-snow"/></svg></div>
         <div class="cat-info">
           <h3>Seasonal Hampers</h3>
           <p>Festive &amp; occasion-ready gift sets</p>
@@ -483,9 +632,9 @@
 <!-- Products -->
 <section class="products" id="products">
   <div class="container">
-    <h2 class="section-title">Our Collection</h2>
-    <p class="section-sub">Every item is carefully crafted and packaged with love</p>
-    <div class="filter-tabs">
+    <h2 class="section-title reveal">Our Collection</h2>
+    <p class="section-sub reveal">Every item is carefully crafted and packaged with love</p>
+    <div class="filter-tabs reveal">
       <button class="filter-tab active" onclick="filterProducts('all', this)">All</button>
       <button class="filter-tab" onclick="filterProducts('handmade', this)">Handmade</button>
       <button class="filter-tab" onclick="filterProducts('personalized', this)">Personalized</button>
@@ -497,44 +646,46 @@
 
 <!-- Personalization Banner -->
 <section class="personalize">
-  <h2>Make It Truly Theirs 💌</h2>
-  <p>Add a personal touch — names, dates, heartfelt messages. We customize every gift to make it uniquely special for the people you love.</p>
-  <a href="#contact" class="btn btn-gold">Request Personalization</a>
+  <svg class="personalize-deco left"><use href="#i-mail"/></svg>
+  <svg class="personalize-deco right"><use href="#i-mail"/></svg>
+  <h2 class="reveal">Make It Truly Theirs <svg class="icon"><use href="#i-heart"/></svg></h2>
+  <p class="reveal">Add a personal touch — names, dates, heartfelt messages. We customize every gift to make it uniquely special for the people you love.</p>
+  <a href="#contact" class="btn btn-gold reveal">Request Personalization</a>
 </section>
 
 <!-- Testimonials -->
 <section class="testimonials">
   <div class="container">
-    <h2 class="section-title">Happy Customers</h2>
-    <p class="section-sub">What our customers say about H &amp; A Hampers</p>
+    <h2 class="section-title reveal">Happy Customers</h2>
+    <p class="section-sub reveal">What our customers say about H &amp; A Hampers</p>
     <div class="testi-grid">
-      <div class="testi-card">
-        <div class="stars">★★★★★</div>
+      <div class="testi-card reveal">
+        <div class="stars"><svg class="icon icon--fill"><use href="#i-star"/></svg><svg class="icon icon--fill"><use href="#i-star"/></svg><svg class="icon icon--fill"><use href="#i-star"/></svg><svg class="icon icon--fill"><use href="#i-star"/></svg><svg class="icon icon--fill"><use href="#i-star"/></svg></div>
         <p class="testi-text">"Absolutely loved the birthday hamper I ordered! The packaging was beautiful and the quality was outstanding. Will definitely order again!"</p>
         <div class="testi-author">
-          <div class="testi-avatar">👩</div>
+          <div class="testi-avatar">PS</div>
           <div>
             <div class="testi-name">Priya Sharma</div>
             <div class="testi-loc">Bengaluru</div>
           </div>
         </div>
       </div>
-      <div class="testi-card">
-        <div class="stars">★★★★★</div>
+      <div class="testi-card reveal">
+        <div class="stars"><svg class="icon icon--fill"><use href="#i-star"/></svg><svg class="icon icon--fill"><use href="#i-star"/></svg><svg class="icon icon--fill"><use href="#i-star"/></svg><svg class="icon icon--fill"><use href="#i-star"/></svg><svg class="icon icon--fill"><use href="#i-star"/></svg></div>
         <p class="testi-text">"The personalized gift box I ordered for my wife's anniversary was perfect. She cried happy tears! Thank you H &amp; A Hampers!"</p>
         <div class="testi-author">
-          <div class="testi-avatar">👨</div>
+          <div class="testi-avatar">RM</div>
           <div>
             <div class="testi-name">Rahul Menon</div>
             <div class="testi-loc">Hyderabad</div>
           </div>
         </div>
       </div>
-      <div class="testi-card">
-        <div class="stars">★★★★★</div>
+      <div class="testi-card reveal">
+        <div class="stars"><svg class="icon icon--fill"><use href="#i-star"/></svg><svg class="icon icon--fill"><use href="#i-star"/></svg><svg class="icon icon--fill"><use href="#i-star"/></svg><svg class="icon icon--fill"><use href="#i-star"/></svg><svg class="icon icon--fill"><use href="#i-star"/></svg></div>
         <p class="testi-text">"Ordered the Diwali hamper for my family — it was a huge hit! The attention to detail and craftsmanship is unmatched. Highly recommend!"</p>
         <div class="testi-author">
-          <div class="testi-avatar">👩‍💼</div>
+          <div class="testi-avatar">AR</div>
           <div>
             <div class="testi-name">Anita Reddy</div>
             <div class="testi-loc">Chennai</div>
@@ -549,23 +700,28 @@
 <section class="about" id="about">
   <div class="container">
     <div class="about-inner">
-      <div class="about-visual">🎁</div>
+      <div class="about-visual reveal">
+        <svg class="icon float-ic" style="width:42px;height:42px; top:18%; left:14%;"><use href="#i-sparkle"/></svg>
+        <svg class="icon float-ic" style="width:36px;height:36px; bottom:18%; right:16%;"><use href="#i-heart"/></svg>
+        <svg class="icon float-ic" style="width:32px;height:32px; bottom:22%; left:20%;"><use href="#i-gift"/></svg>
+        <svg class="icon big-gift"><use href="#i-gift"/></svg>
+      </div>
       <div class="about-text">
-        <h2>The Heart Behind<br>H &amp; A Hampers</h2>
-        <p>H &amp; A Hampers was born out of a love for beautiful things and the joy of giving. Every hamper, every craft, every personalized gift is made by hand — with intention, care, and a whole lot of love.</p>
-        <p>We believe gifts should feel personal. That's why we pour ourselves into every order — selecting the finest materials, crafting each piece with attention to detail, and wrapping it all in packaging as beautiful as what's inside.</p>
-        <p>Whether it's a birthday, anniversary, festival, or just a "thinking of you" moment — we've got the perfect gift for every occasion.</p>
-        <div class="about-stats">
+        <h2 class="reveal">The Heart Behind<br>H &amp; A Hampers</h2>
+        <p class="reveal">H &amp; A Hampers was born out of a love for beautiful things and the joy of giving. Every hamper, every craft, every personalized gift is made by hand — with intention, care, and a whole lot of love.</p>
+        <p class="reveal">We believe gifts should feel personal. That's why we pour ourselves into every order — selecting the finest materials, crafting each piece with attention to detail, and wrapping it all in packaging as beautiful as what's inside.</p>
+        <p class="reveal">Whether it's a birthday, anniversary, festival, or just a "thinking of you" moment — we've got the perfect gift for every occasion.</p>
+        <div class="about-stats reveal">
           <div class="stat">
-            <div class="stat-num">500+</div>
+            <div class="stat-num" data-count="500" data-suffix="+">0</div>
             <div class="stat-lbl">Happy Customers</div>
           </div>
           <div class="stat">
-            <div class="stat-num">50+</div>
+            <div class="stat-num" data-count="50" data-suffix="+">0</div>
             <div class="stat-lbl">Unique Products</div>
           </div>
           <div class="stat">
-            <div class="stat-num">100%</div>
+            <div class="stat-num" data-count="100" data-suffix="%">0</div>
             <div class="stat-lbl">Handcrafted</div>
           </div>
         </div>
@@ -579,36 +735,36 @@
   <div class="container">
     <div class="contact-inner">
       <div class="contact-info">
-        <h2>Get in Touch</h2>
-        <p>Have a custom order in mind? Want to know more about our products? We'd love to hear from you!</p>
+        <h2 class="reveal">Get in Touch</h2>
+        <p class="reveal">Have a custom order in mind? Want to know more about our products? We'd love to hear from you!</p>
         <div class="contact-items">
-          <div class="contact-item"><div class="contact-icon">📍</div> Bengaluru, Karnataka, India</div>
-          <div class="contact-item"><div class="contact-icon">📱</div> +91 98765 43210</div>
-          <div class="contact-item"><div class="contact-icon">✉️</div> h.and.a.gifts.hampers@gmail.com</div>
-          <div class="contact-item"><div class="contact-icon">🕐</div> Mon – Sat, 9 AM – 7 PM</div>
-          <div class="contact-item"><div class="contact-icon">📸</div> <a href="https://www.instagram.com/h_and_a_hampers/" target="_blank" style="color:var(--rose);">@h_and_a_hampers</a> on Instagram</div>
+          <div class="contact-item reveal"><div class="contact-icon"><svg class="icon"><use href="#i-pin"/></svg></div> Bengaluru, Karnataka, India</div>
+          <div class="contact-item reveal"><div class="contact-icon"><svg class="icon"><use href="#i-phone"/></svg></div> +91 98765 43210</div>
+          <div class="contact-item reveal"><div class="contact-icon"><svg class="icon"><use href="#i-mail"/></svg></div> h.and.a.gifts.hampers@gmail.com</div>
+          <div class="contact-item reveal"><div class="contact-icon"><svg class="icon"><use href="#i-clock"/></svg></div> Mon – Sat, 9 AM – 7 PM</div>
+          <div class="contact-item reveal"><div class="contact-icon"><svg class="icon"><use href="#i-instagram"/></svg></div> <a href="https://www.instagram.com/h_and_a_hampers/" target="_blank" style="color:var(--rose);">@h_and_a_hampers</a> on Instagram</div>
         </div>
 
         <!-- UPI Payment Box -->
-        <div style="margin-top:28px;background:var(--cream);border-radius:14px;padding:20px;border:1.5px solid var(--warm);">
-          <h4 style="color:var(--brown);font-size:0.95rem;margin-bottom:14px;letter-spacing:0.04em;">💳 Pay via UPI</h4>
-          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-            <span style="font-size:1.5rem;">📱</span>
+        <div class="upi-box reveal">
+          <h4><svg class="icon"><use href="#i-card"/></svg> Pay via UPI</h4>
+          <div class="upi-id-row">
+            <span class="upi-glyph"><svg class="icon"><use href="#i-phone"/></svg></span>
             <div>
-              <div style="font-size:0.78rem;color:var(--muted);margin-bottom:3px;">UPI ID</div>
-              <div style="font-size:1rem;font-weight:bold;color:var(--brown);letter-spacing:0.02em;font-family:monospace;">h-and-a-hampers@axl</div>
+              <div class="upi-id-lbl">UPI ID</div>
+              <div class="upi-id">h-and-a-hampers@axl</div>
             </div>
-            <button onclick="copyUPI()" style="margin-left:auto;background:var(--rose);color:white;border:none;padding:7px 14px;border-radius:20px;font-size:0.8rem;cursor:pointer;" id="copyUPIBtn">Copy</button>
+            <button onclick="copyUPI()" class="upi-copy" id="copyUPIBtn">Copy</button>
           </div>
-          <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
-            <span style="font-size:0.78rem;color:var(--muted);background:var(--warm);padding:4px 10px;border-radius:20px;">GPay</span>
-            <span style="font-size:0.78rem;color:var(--muted);background:var(--warm);padding:4px 10px;border-radius:20px;">PhonePe</span>
-            <span style="font-size:0.78rem;color:var(--muted);background:var(--warm);padding:4px 10px;border-radius:20px;">Paytm</span>
-            <span style="font-size:0.78rem;color:var(--muted);background:var(--warm);padding:4px 10px;border-radius:20px;">Any UPI App</span>
+          <div class="upi-apps">
+            <span>GPay</span>
+            <span>PhonePe</span>
+            <span>Paytm</span>
+            <span>Any UPI App</span>
           </div>
         </div>
       </div>
-      <div class="contact-form">
+      <div class="contact-form reveal">
         <h3 style="color:var(--brown);margin-bottom:20px;font-weight:normal;font-size:1.2rem;">Send us a Message</h3>
         <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="submitForm(event)">
           <input type="hidden" name="form-name" value="contact" />
@@ -642,7 +798,7 @@
             <label>Your Message</label>
             <textarea name="message" placeholder="Tell us about the occasion, budget, any preferences..."></textarea>
           </div>
-          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Send Message 💌</button>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Send Message <svg class="icon"><use href="#i-mail"/></svg></button>
         </form>
       </div>
     </div>
@@ -684,10 +840,10 @@
         </div>
         <p>Handcrafted gifts made with love, wrapped with care, delivered to your door. Every gift tells a story — let us help you tell yours.</p>
         <div class="footer-socials">
-          <a class="social-btn" href="https://www.instagram.com/h_and_a_hampers/" target="_blank" title="Instagram">📸</a>
-          <a class="social-btn" href="#" title="Facebook">👍</a>
-          <a class="social-btn" href="#" title="WhatsApp">💬</a>
-          <a class="social-btn" href="#" title="Pinterest">📌</a>
+          <a class="social-btn" href="https://www.instagram.com/h_and_a_hampers/" target="_blank" title="Instagram"><svg class="icon"><use href="#i-instagram"/></svg></a>
+          <a class="social-btn" href="#" title="Facebook"><svg class="icon"><use href="#i-facebook"/></svg></a>
+          <a class="social-btn" href="#" title="WhatsApp"><svg class="icon"><use href="#i-chat"/></svg></a>
+          <a class="social-btn" href="#" title="Pinterest"><svg class="icon"><use href="#i-pinterest"/></svg></a>
         </div>
       </div>
       <div class="footer-col">
@@ -710,7 +866,7 @@
       </div>
       <div class="footer-col">
         <h4>Stay Updated</h4>
-        <p style="font-size:0.82rem;color:rgba(253,246,238,0.65);margin-bottom:12px;">Get notified about new collections and offers.</p>
+        <p style="font-size:0.82rem;color:rgba(244,241,232,0.65);margin-bottom:12px;">Get notified about new collections and offers.</p>
         <div class="newsletter-form">
           <input class="newsletter-input" type="email" placeholder="Your email..." />
           <button class="newsletter-btn">Join</button>
@@ -718,7 +874,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      © 2026 H &amp; A Hampers · Made with 💝 · All rights reserved
+      © 2026 H &amp; A Hampers · Made with <svg class="icon icon--fill"><use href="#i-heart"/></svg> · All rights reserved
     </div>
   </div>
 </footer>
@@ -727,8 +883,8 @@
 <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
 <div class="cart-sidebar" id="cartSidebar">
   <div class="cart-header">
-    <h3>🛒 Your Hamper Bag</h3>
-    <button class="cart-close" onclick="toggleCart()">✕</button>
+    <h3><svg class="icon"><use href="#i-bag"/></svg> Your Hamper Bag</h3>
+    <button class="cart-close" onclick="toggleCart()"><svg class="icon"><use href="#i-close"/></svg></button>
   </div>
   <div class="cart-items" id="cartItems"></div>
   <div class="cart-footer" id="cartFooter" style="display:none;">
@@ -736,49 +892,56 @@
       <span>Total</span>
       <span id="cartTotal">₹0</span>
     </div>
-    <button class="btn btn-primary" style="width:100%;" onclick="checkout()">Place Order & Pay via UPI</button>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="checkout()">Place Order &amp; Pay via UPI</button>
   </div>
 </div>
 
 <!-- UPI Modal -->
-<div id="upiModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center;">
-  <div style="background:white;border-radius:20px;padding:32px;max-width:360px;width:90%;text-align:center;position:relative;">
-    <button onclick="document.getElementById('upiModal').style.display='none'" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#999;">✕</button>
-    <div style="font-size:2.5rem;margin-bottom:8px;">🎁</div>
-    <h3 style="color:#5c3d2e;font-weight:normal;margin-bottom:6px;">Complete Your Payment</h3>
-    <p style="color:#7a6050;font-size:0.85rem;margin-bottom:20px;">Send payment to our UPI ID and we'll confirm your order within 30 minutes!</p>
-    <div style="background:#fdf6ee;border-radius:12px;padding:16px;margin-bottom:16px;border:1.5px solid #f5e6d3;">
-      <div style="font-size:0.75rem;color:#7a6050;margin-bottom:4px;">UPI ID</div>
-      <div style="font-size:1.1rem;font-weight:bold;color:#5c3d2e;font-family:monospace;letter-spacing:0.02em;">h-and-a-hampers@axl</div>
+<div id="upiModal" style="display:none;position:fixed;inset:0;background:rgba(20,40,33,0.55);z-index:300;align-items:center;justify-content:center;">
+  <div style="background:var(--surface);border-radius:20px;padding:32px;max-width:360px;width:90%;text-align:center;position:relative;">
+    <button onclick="document.getElementById('upiModal').style.display='none'" style="position:absolute;top:12px;right:16px;background:none;border:none;cursor:pointer;color:#999;display:flex;"><svg class="icon" style="width:20px;height:20px;"><use href="#i-close"/></svg></button>
+    <div style="color:var(--rose);display:flex;justify-content:center;margin-bottom:8px;"><svg class="icon" style="width:44px;height:44px;"><use href="#i-gift"/></svg></div>
+    <h3 style="font-family:var(--serif);color:var(--brown);font-weight:600;margin-bottom:6px;font-size:1.4rem;">Complete Your Payment</h3>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:20px;">Send payment to our UPI ID and we'll confirm your order within 30 minutes!</p>
+    <div style="background:var(--cream);border-radius:12px;padding:16px;margin-bottom:16px;border:1.5px solid var(--warm);">
+      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:4px;">UPI ID</div>
+      <div style="font-size:1.1rem;font-weight:bold;color:var(--brown);font-family:monospace;letter-spacing:0.02em;">h-and-a-hampers@axl</div>
     </div>
     <div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px;flex-wrap:wrap;">
-      <span style="font-size:0.78rem;color:#7a6050;background:#f5e6d3;padding:4px 12px;border-radius:20px;">GPay</span>
-      <span style="font-size:0.78rem;color:#7a6050;background:#f5e6d3;padding:4px 12px;border-radius:20px;">PhonePe</span>
-      <span style="font-size:0.78rem;color:#7a6050;background:#f5e6d3;padding:4px 12px;border-radius:20px;">Paytm</span>
+      <span style="font-size:0.78rem;color:var(--muted);background:var(--warm);padding:4px 12px;border-radius:20px;">GPay</span>
+      <span style="font-size:0.78rem;color:var(--muted);background:var(--warm);padding:4px 12px;border-radius:20px;">PhonePe</span>
+      <span style="font-size:0.78rem;color:var(--muted);background:var(--warm);padding:4px 12px;border-radius:20px;">Paytm</span>
     </div>
-    <button onclick="copyUPI()" style="width:100%;background:#c9856b;color:white;border:none;padding:11px;border-radius:30px;font-size:0.9rem;cursor:pointer;margin-bottom:10px;" id="copyUPIBtn2">📋 Copy UPI ID</button>
-    <p style="font-size:0.75rem;color:#7a6050;">After payment, send screenshot to <strong>@h_and_a_hampers</strong> on Instagram or WhatsApp</p>
+    <button onclick="copyUPI()" style="width:100%;background:var(--rose);color:white;border:none;padding:11px;border-radius:30px;font-size:0.9rem;cursor:pointer;margin-bottom:10px;display:inline-flex;align-items:center;justify-content:center;gap:8px;" id="copyUPIBtn2"><svg class="icon" style="width:16px;height:16px;"><use href="#i-card"/></svg> Copy UPI ID</button>
+    <p style="font-size:0.75rem;color:var(--muted);">After payment, send screenshot to <strong>@h_and_a_hampers</strong> on Instagram or WhatsApp</p>
   </div>
 </div>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
+<!-- Libraries (deferred so they never block content/paint) -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
 <script>
   // ── Product Data ──
   const products = [
-    { id:1, name:'Rustic Gift Hamper', desc:'Curated handmade items in a beautiful wicker basket', price:1299, orig:1599, emoji:'🧺', bg:'p-bg-1', cat:'handmade', badge:'Bestseller' },
-    { id:2, name:'Personalized Name Jar', desc:'Custom engraved glass jar with your loved one\'s name', price:599, orig:799, emoji:'🫙', bg:'p-bg-2', cat:'personalized', badge:'Custom' },
-    { id:3, name:'Diwali Celebration Box', desc:'Festive goodies — sweets, candles & handcrafted decor', price:1899, orig:2299, emoji:'🪔', bg:'p-bg-3', cat:'seasonal', badge:'Festive' },
-    { id:4, name:'Macramé Wall Hanging', desc:'Handwoven bohemian wall art, made to order', price:849, orig:null, emoji:'🪢', bg:'p-bg-4', cat:'handmade', badge:null },
-    { id:5, name:'Anniversary Love Box', desc:'Rose petals, chocolates & a personalised note card', price:1499, orig:1799, emoji:'💝', bg:'p-bg-5', cat:'personalized', badge:'Popular' },
-    { id:6, name:'Scented Candle Set', desc:'Set of 3 hand-poured soy candles in seasonal scents', price:749, orig:999, emoji:'🕯️', bg:'p-bg-6', cat:'handmade', badge:null },
-    { id:7, name:'Birthday Surprise Hamper', desc:'Balloons, treats, handmade goodies & personalised card', price:1199, orig:1499, emoji:'🎂', bg:'p-bg-7', cat:'seasonal', badge:'New' },
-    { id:8, name:'Custom Photo Memory Box', desc:'Wooden keepsake box engraved with a photo & message', price:1699, orig:null, emoji:'📦', bg:'p-bg-8', cat:'personalized', badge:'Premium' },
+    { id:1, name:'Rustic Gift Hamper', desc:'Curated handmade items in a beautiful wicker basket', price:1299, orig:1599, icon:'i-basket', bg:'p-bg-1', cat:'handmade', badge:'Bestseller' },
+    { id:2, name:'Personalized Name Jar', desc:'Custom engraved glass jar with your loved one\'s name', price:599, orig:799, icon:'i-jar', bg:'p-bg-2', cat:'personalized', badge:'Custom' },
+    { id:3, name:'Diwali Celebration Box', desc:'Festive goodies — sweets, candles & handcrafted decor', price:1899, orig:2299, icon:'i-diya', bg:'p-bg-3', cat:'seasonal', badge:'Festive' },
+    { id:4, name:'Macramé Wall Hanging', desc:'Handwoven bohemian wall art, made to order', price:849, orig:null, icon:'i-macrame', bg:'p-bg-4', cat:'handmade', badge:null },
+    { id:5, name:'Anniversary Love Box', desc:'Rose petals, chocolates & a personalised note card', price:1499, orig:1799, icon:'i-lovebox', bg:'p-bg-5', cat:'personalized', badge:'Popular' },
+    { id:6, name:'Scented Candle Set', desc:'Set of 3 hand-poured soy candles in seasonal scents', price:749, orig:999, icon:'i-candle', bg:'p-bg-6', cat:'handmade', badge:null },
+    { id:7, name:'Birthday Surprise Hamper', desc:'Balloons, treats, handmade goodies & personalised card', price:1199, orig:1499, icon:'i-cake', bg:'p-bg-7', cat:'seasonal', badge:'New' },
+    { id:8, name:'Custom Photo Memory Box', desc:'Wooden keepsake box engraved with a photo & message', price:1699, orig:null, icon:'i-photo', bg:'p-bg-8', cat:'personalized', badge:'Premium' },
   ];
 
   let cart = [];
   let activeFilter = 'all';
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ── Render Products ──
   function renderProducts(filter) {
@@ -787,9 +950,9 @@
     grid.innerHTML = filtered.map(p => `
       <div class="product-card" data-cat="${p.cat}">
         <div class="product-img ${p.bg}">
-          <span>${p.emoji}</span>
+          <svg class="icon product-icon"><use href="#${p.icon}"/></svg>
           ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
-          <button class="product-wishlist" title="Add to wishlist" onclick="showToast('Added to wishlist! 💕')">♡</button>
+          <button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button>
         </div>
         <div class="product-body">
           <h4>${p.name}</h4>
@@ -804,12 +967,32 @@
         </div>
       </div>
     `).join('');
+    animateProductCards();
+  }
+
+  function animateProductCards() {
+    if (typeof gsap === 'undefined' || prefersReduced) return;
+    gsap.fromTo('#productsGrid .product-card',
+      { opacity: 0, y: 30, scale: 0.97 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.06, ease: 'power3.out', clearProps: 'transform' }
+    );
+  }
+
+  function toggleWish(btn) {
+    btn.classList.toggle('liked');
+    showToast(btn.classList.contains('liked') ? 'Added to wishlist' : 'Removed from wishlist', 'i-heart');
   }
 
   function filterProducts(cat, btn) {
     activeFilter = cat;
     document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-    if (btn) btn.classList.add('active');
+    if (btn) {
+      btn.classList.add('active');
+    } else {
+      document.querySelectorAll('.filter-tab').forEach(t => {
+        if (t.textContent.trim().toLowerCase() === cat.toLowerCase()) t.classList.add('active');
+      });
+    }
     renderProducts(cat);
     document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
   }
@@ -821,7 +1004,15 @@
     if (existing) existing.qty++;
     else cart.push({ ...product, qty: 1 });
     updateCartUI();
-    showToast(`${product.emoji} Added to your bag!`);
+    bumpCart();
+    showToast('Added to your bag', 'i-check');
+  }
+
+  function bumpCart() {
+    const c = document.getElementById('cartCount');
+    c.classList.remove('bump');
+    void c.offsetWidth;
+    c.classList.add('bump');
   }
 
   function removeFromCart(id) {
@@ -845,12 +1036,12 @@
     const footerEl = document.getElementById('cartFooter');
     document.getElementById('cartTotal').textContent = `₹${total.toLocaleString()}`;
     if (cart.length === 0) {
-      itemsEl.innerHTML = `<div class="empty-cart"><div class="empty-icon">🛒</div><p>Your bag is empty</p><p style="font-size:0.8rem;margin-top:8px;">Add some beautiful gifts!</p></div>`;
+      itemsEl.innerHTML = `<div class="empty-cart"><div class="empty-icon"><svg class="icon"><use href="#i-bag"/></svg></div><p>Your bag is empty</p><p style="font-size:0.8rem;margin-top:8px;">Add some beautiful gifts!</p></div>`;
       footerEl.style.display = 'none';
     } else {
       itemsEl.innerHTML = cart.map(i => `
         <div class="cart-item">
-          <div class="cart-item-img ${i.bg}">${i.emoji}</div>
+          <div class="cart-item-img ${i.bg}"><svg class="icon"><use href="#${i.icon}"/></svg></div>
           <div class="cart-item-info">
             <div class="cart-item-name">${i.name}</div>
             <div class="cart-item-price">₹${(i.price * i.qty).toLocaleString()}</div>
@@ -860,7 +1051,7 @@
               <button class="qty-btn" onclick="changeQty(${i.id},1)">+</button>
             </div>
           </div>
-          <button class="cart-remove" onclick="removeFromCart(${i.id})">🗑</button>
+          <button class="cart-remove" onclick="removeFromCart(${i.id})"><svg class="icon"><use href="#i-trash"/></svg></button>
         </div>
       `).join('');
       footerEl.style.display = 'block';
@@ -879,22 +1070,24 @@
 
   function copyUPI() {
     navigator.clipboard.writeText('h-and-a-hampers@axl').then(() => {
-      showToast('✅ UPI ID copied!');
-      document.getElementById('copyUPIBtn') && (document.getElementById('copyUPIBtn').textContent = '✓ Copied!');
-      document.getElementById('copyUPIBtn2') && (document.getElementById('copyUPIBtn2').textContent = '✓ Copied!');
+      showToast('UPI ID copied', 'i-check');
+      document.getElementById('copyUPIBtn') && (document.getElementById('copyUPIBtn').textContent = 'Copied!');
+      document.getElementById('copyUPIBtn2') && (document.getElementById('copyUPIBtn2').innerHTML = '<svg class="icon" style="width:16px;height:16px;"><use href="#i-check"/></svg> Copied!');
       setTimeout(() => {
         document.getElementById('copyUPIBtn') && (document.getElementById('copyUPIBtn').textContent = 'Copy');
-        document.getElementById('copyUPIBtn2') && (document.getElementById('copyUPIBtn2').textContent = '📋 Copy UPI ID');
+        document.getElementById('copyUPIBtn2') && (document.getElementById('copyUPIBtn2').innerHTML = '<svg class="icon" style="width:16px;height:16px;"><use href="#i-card"/></svg> Copy UPI ID');
       }, 2000);
     });
   }
 
   // ── Toast ──
-  function showToast(msg) {
+  let toastTimer;
+  function showToast(msg, icon) {
     const t = document.getElementById('toast');
-    t.textContent = msg;
+    t.innerHTML = (icon ? `<svg class="icon"><use href="#${icon}"/></svg>` : '') + `<span>${msg}</span>`;
     t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
   }
 
   // ── Mobile Nav ──
@@ -903,15 +1096,20 @@
     if (links.style.display === 'flex') {
       links.style.display = 'none';
     } else {
-      links.style.cssText = 'display:flex;flex-direction:column;position:absolute;top:72px;left:0;right:0;background:white;padding:20px 24px;gap:16px;box-shadow:0 4px 12px rgba(0,0,0,0.1);z-index:99;';
+      links.style.cssText = 'display:flex;flex-direction:column;position:absolute;top:78px;left:0;right:0;background:var(--surface);padding:20px 24px;gap:16px;box-shadow:0 10px 24px rgba(0,0,0,0.12);z-index:99;';
     }
   }
+  document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+    const links = document.querySelector('.nav-links');
+    if (window.innerWidth <= 720) links.style.display = 'none';
+  }));
 
   // ── Contact Form ──
   function submitForm(e) {
     e.preventDefault();
     const form = e.target;
     const btn = form.querySelector('button[type="submit"]');
+    const original = btn.innerHTML;
     btn.textContent = 'Sending...';
     btn.disabled = true;
     fetch('/', {
@@ -919,21 +1117,247 @@
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams(new FormData(form)).toString()
     }).then(() => {
-      btn.textContent = '✓ Message Sent!';
-      btn.style.background = 'var(--gold)';
-      showToast('💌 We\'ll get back to you within 24 hours!');
+      btn.innerHTML = '<svg class="icon"><use href="#i-check"/></svg> Message Sent!';
+      btn.style.background = 'var(--green)';
+      showToast('We\'ll get back to you within 24 hours!', 'i-mail');
       form.reset();
-      setTimeout(() => { btn.textContent = 'Send Message 💌'; btn.style.background = ''; btn.disabled = false; }, 3000);
+      setTimeout(() => { btn.innerHTML = original; btn.style.background = ''; btn.disabled = false; }, 3000);
     }).catch(() => {
-      btn.textContent = 'Send Message 💌';
+      btn.innerHTML = original;
       btn.disabled = false;
       showToast('Something went wrong. Please try again.');
     });
   }
 
-  // ── Init ──
+  // ── Init data ──
   renderProducts('all');
   updateCartUI();
+
+  /* ============================================================
+     VISUAL EXPERIENCE LAYER  —  GSAP + Three.js
+  ============================================================ */
+  window.addEventListener('load', () => {
+    initScrollFx();
+    initThreeHero();
+  });
+
+  function initScrollFx() {
+    const header = document.getElementById('siteHeader');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+
+    const track = document.getElementById('featuresTrack');
+    if (track) track.innerHTML += track.innerHTML;
+
+    if (typeof gsap === 'undefined' || prefersReduced) {
+      document.body.classList.add('no-anim');
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    heroTl
+      .from('.hero-badge', { y: 20, opacity: 0, duration: 0.6 })
+      .from('.hero h1 .line > span', { yPercent: 110, opacity: 0, duration: 0.9, stagger: 0.12 }, '-=0.3')
+      .from('.hero p', { y: 24, opacity: 0, duration: 0.7 }, '-=0.5')
+      .from('.hero-actions .btn', { y: 18, opacity: 0, duration: 0.6, stagger: 0.12 }, '-=0.4')
+      .from('.scroll-cue', { opacity: 0, duration: 0.6 }, '-=0.2');
+
+    gsap.utils.toArray('.reveal').forEach((el) => {
+      gsap.to(el, {
+        opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+      });
+    });
+
+    if (track) {
+      gsap.to(track, { xPercent: -50, duration: 22, ease: 'none', repeat: -1 });
+    }
+
+    gsap.utils.toArray('.stat-num').forEach((el) => {
+      const target = +el.dataset.count;
+      const suffix = el.dataset.suffix || '';
+      const obj = { v: 0 };
+      ScrollTrigger.create({
+        trigger: el, start: 'top 90%', once: true,
+        onEnter: () => gsap.to(obj, {
+          v: target, duration: 1.6, ease: 'power2.out',
+          onUpdate: () => { el.textContent = Math.round(obj.v) + suffix; }
+        })
+      });
+    });
+
+    gsap.to('.about-visual .float-ic', {
+      y: () => gsap.utils.random(-16, 16), duration: 3, ease: 'sine.inOut',
+      yoyo: true, repeat: -1, stagger: 0.4
+    });
+    gsap.to('.about-visual', {
+      yPercent: -8,
+      scrollTrigger: { trigger: '.about', start: 'top bottom', end: 'bottom top', scrub: 1 }
+    });
+
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      document.querySelectorAll('.btn').forEach((btn) => {
+        btn.addEventListener('mousemove', (e) => {
+          const r = btn.getBoundingClientRect();
+          const mx = e.clientX - r.left - r.width / 2;
+          const my = e.clientY - r.top - r.height / 2;
+          gsap.to(btn, { x: mx * 0.25, y: my * 0.35, duration: 0.4, ease: 'power2.out' });
+        });
+        btn.addEventListener('mouseleave', () => {
+          gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1,0.4)' });
+        });
+      });
+    }
+  }
+
+  /* ---- Three.js hero: drifting golden bokeh + floating gift boxes ---- */
+  function initThreeHero() {
+    const canvas = document.getElementById('hero-canvas');
+    if (!canvas) return;
+    if (typeof THREE === 'undefined' || prefersReduced || window.innerWidth < 760) return;
+
+    let renderer, scene, camera, frameId, running = true;
+    const group = new THREE.Group();
+    const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    } catch (e) { return; }
+    renderer.setClearColor(0x000000, 0);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+
+    const hero = canvas.parentElement;
+    function size() {
+      const w = hero.clientWidth, h = hero.clientHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(60, hero.clientWidth / hero.clientHeight, 0.1, 100);
+    camera.position.z = 18;
+    scene.add(group);
+
+    scene.add(new THREE.AmbientLight(0xfff1e0, 0.95));
+    const key = new THREE.DirectionalLight(0xffe2b8, 1.1); key.position.set(5, 8, 10); scene.add(key);
+    const rim = new THREE.DirectionalLight(0x2c5446, 0.6); rim.position.set(-8, -4, 6); scene.add(rim);
+
+    const sprite = (() => {
+      const c = document.createElement('canvas'); c.width = c.height = 64;
+      const g = c.getContext('2d');
+      const grd = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+      grd.addColorStop(0, 'rgba(255,255,255,1)');
+      grd.addColorStop(0.3, 'rgba(245,222,170,0.9)');
+      grd.addColorStop(1, 'rgba(245,222,170,0)');
+      g.fillStyle = grd; g.fillRect(0, 0, 64, 64);
+      return new THREE.CanvasTexture(c);
+    })();
+
+    const COUNT = 90;
+    const pGeo = new THREE.BufferGeometry();
+    const pos = new Float32Array(COUNT * 3);
+    const spd = new Float32Array(COUNT);
+    for (let i = 0; i < COUNT; i++) {
+      pos[i*3]   = (Math.random() - 0.5) * 46;
+      pos[i*3+1] = (Math.random() - 0.5) * 26;
+      pos[i*3+2] = (Math.random() - 0.5) * 20 - 4;
+      spd[i] = 0.004 + Math.random() * 0.012;
+    }
+    pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const pMat = new THREE.PointsMaterial({
+      size: 1.5, map: sprite, transparent: true, depthWrite: false,
+      blending: THREE.AdditiveBlending, color: 0xddb778, opacity: 0.85
+    });
+    group.add(new THREE.Points(pGeo, pMat));
+
+    const boxes = [];
+    const palette = [0xd56f4c, 0xc6a24c, 0x2c5446, 0xe0a07e];
+    function makeGift(scale, color) {
+      const g = new THREE.Group();
+      const matBox = new THREE.MeshStandardMaterial({ color, roughness: 0.55, metalness: 0.05 });
+      const matRibbon = new THREE.MeshStandardMaterial({ color: 0xf2dcbf, roughness: 0.4 });
+      const body = new THREE.Mesh(new THREE.BoxGeometry(1, 0.85, 1), matBox);
+      const lid  = new THREE.Mesh(new THREE.BoxGeometry(1.12, 0.22, 1.12), matBox);
+      lid.position.y = 0.52;
+      const rv = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.86, 1.02), matRibbon);
+      const rh = new THREE.Mesh(new THREE.BoxGeometry(1.02, 0.86, 0.16), matRibbon);
+      const rlid = new THREE.Mesh(new THREE.BoxGeometry(1.14, 0.24, 0.18), matRibbon); rlid.position.y = 0.52;
+      g.add(body, lid, rv, rh, rlid);
+      g.scale.setScalar(scale);
+      return g;
+    }
+    const placements = [
+      { x: 9,  y: 3.5,  z: -2, s: 1.6 },
+      { x: -10, y: -2,  z: -3, s: 2.1 },
+      { x: 7,  y: -4,   z: 1,  s: 1.2 },
+      { x: 12, y: -1,   z: -5, s: 1.0 },
+      { x: -7, y: 4.5,  z: -4, s: 1.3 },
+    ];
+    placements.forEach((p, i) => {
+      const gift = makeGift(p.s, palette[i % palette.length]);
+      gift.position.set(p.x, p.y, p.z);
+      gift.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, 0);
+      gift.userData = {
+        rx: 0.002 + Math.random()*0.004,
+        ry: 0.003 + Math.random()*0.004,
+        bob: 0.4 + Math.random()*0.5,
+        phase: Math.random()*Math.PI*2,
+        baseY: p.y
+      };
+      group.add(gift);
+      boxes.push(gift);
+    });
+
+    function onMove(e) {
+      const r = hero.getBoundingClientRect();
+      pointer.tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+      pointer.ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
+    }
+    hero.addEventListener('mousemove', onMove);
+
+    const clock = new THREE.Clock();
+    function animate() {
+      frameId = requestAnimationFrame(animate);
+      const t = clock.getElapsedTime();
+
+      pointer.x += (pointer.tx - pointer.x) * 0.05;
+      pointer.y += (pointer.ty - pointer.y) * 0.05;
+      group.rotation.y = pointer.x * 0.18;
+      group.rotation.x = pointer.y * 0.12;
+
+      const arr = pGeo.attributes.position.array;
+      for (let i = 0; i < COUNT; i++) {
+        arr[i*3+1] += spd[i];
+        if (arr[i*3+1] > 14) arr[i*3+1] = -14;
+      }
+      pGeo.attributes.position.needsUpdate = true;
+
+      boxes.forEach((b) => {
+        b.rotation.x += b.userData.rx;
+        b.rotation.y += b.userData.ry;
+        b.position.y = b.userData.baseY + Math.sin(t * b.userData.bob + b.userData.phase) * 0.5;
+      });
+
+      renderer.render(scene, camera);
+    }
+
+    size();
+    animate();
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting && !running) { running = true; animate(); }
+        else if (!en.isIntersecting && running) { running = false; cancelAnimationFrame(frameId); }
+      });
+    }, { threshold: 0.01 });
+    io.observe(hero);
+
+    window.addEventListener('resize', size);
+  }
 </script>
 </body>
 </html>
