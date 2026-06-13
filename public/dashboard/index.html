@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#1e3d34" />
+  <title>Owner Dashboard · H &amp; A Hampers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --cream:#f4f1e8; --warm:#ece3d2; --rose:#d56f4c; --rose-dk:#bb5836;
+      --gold:#c6a24c; --brown:#1e3d34; --green:#2c5446; --sage:#e6ece4; --blush:#ecccb9;
+      --text:#262019; --muted:#6c655b; --surface:#fffdf8; --line:rgba(30,61,52,.1);
+      --shadow:rgba(30,61,52,.13);
+      --serif:'Cormorant Garamond',Georgia,serif; --sans:'Jost','Helvetica Neue',Arial,sans-serif;
+    }
+    body{font-family:var(--sans);background:var(--cream);color:var(--text);font-weight:300;min-height:100vh}
+    .icon{display:inline-block;vertical-align:middle;width:1.1em;height:1.1em;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+    .icon.fill{fill:currentColor;stroke:none}
+    .sprite{position:absolute;width:0;height:0}
+    button{cursor:pointer;font-family:inherit}
+    a{color:inherit}
+
+    /* ── Login ── */
+    .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+      background:linear-gradient(135deg,var(--sage),#f3eee4 50%,var(--blush))}
+    .login-card{background:var(--surface);border-radius:22px;padding:42px 38px;width:100%;max-width:400px;
+      box-shadow:0 24px 60px var(--shadow);text-align:center}
+    .login-logo{width:64px;height:64px;margin:0 auto 14px;display:block}
+    .login-card h1{font-family:var(--serif);font-weight:600;color:var(--brown);font-size:1.9rem;line-height:1.1}
+    .login-card .sub{color:var(--muted);font-size:.86rem;margin:6px 0 26px;letter-spacing:.04em}
+    .field{position:relative;margin-bottom:14px;text-align:left}
+    .field .icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);width:18px;height:18px}
+    .field input{width:100%;padding:13px 14px 13px 42px;border:1.5px solid var(--warm);border-radius:12px;
+      background:var(--cream);font-family:var(--sans);font-size:.95rem;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s}
+    .field input:focus{border-color:var(--rose);box-shadow:0 0 0 3px rgba(213,111,76,.12)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:30px;
+      font-family:var(--sans);font-size:.9rem;letter-spacing:.04em;padding:13px 24px;transition:all .25s}
+    .btn-primary{background:var(--rose);color:#fff;box-shadow:0 6px 18px rgba(213,111,76,.3)}
+    .btn-primary:hover{background:var(--rose-dk);transform:translateY(-1px)}
+    .btn-primary:disabled{opacity:.6;cursor:wait;transform:none}
+    .btn-full{width:100%}
+    .login-err{color:var(--rose-dk);font-size:.82rem;min-height:18px;margin-top:10px}
+    .login-hint{color:var(--muted);font-size:.74rem;margin-top:18px;line-height:1.5}
+
+    /* ── App shell ── */
+    .app{display:none}
+    .topbar{position:sticky;top:0;z-index:20;background:var(--brown);color:var(--cream);
+      display:flex;align-items:center;justify-content:space-between;padding:14px 22px}
+    .topbar .brand{display:flex;align-items:center;gap:12px}
+    .topbar .brand svg.lg{width:38px;height:38px}
+    .topbar .brand b{font-family:var(--serif);font-weight:600;font-size:1.25rem}
+    .topbar .brand span{display:block;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(244,241,232,.6)}
+    .topbar-actions{display:flex;align-items:center;gap:10px}
+    .updated{font-size:.72rem;color:rgba(244,241,232,.6);margin-right:4px}
+    .tbtn{background:rgba(255,255,255,.1);color:var(--cream);border:none;border-radius:20px;padding:8px 14px;
+      font-size:.78rem;display:inline-flex;align-items:center;gap:7px;transition:background .2s}
+    .tbtn:hover{background:rgba(255,255,255,.2)}
+    .tbtn .icon{width:15px;height:15px}
+
+    .wrap{max-width:1140px;margin:0 auto;padding:26px 22px 60px}
+    .banner{background:#fff5ef;border:1.5px solid var(--blush);color:var(--rose-dk);border-radius:12px;
+      padding:12px 16px;font-size:.84rem;margin-bottom:22px;display:none;align-items:center;gap:10px}
+    .banner .icon{width:18px;height:18px;flex:none}
+
+    /* ── Stat cards ── */
+    .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:24px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px 22px;
+      box-shadow:0 4px 16px var(--shadow);position:relative;overflow:hidden}
+    .card .ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+    .card .ic .icon{width:21px;height:21px}
+    .card .num{font-family:var(--serif);font-size:2.3rem;font-weight:600;color:var(--brown);line-height:1}
+    .card .lbl{font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:6px}
+    .ic.views{background:var(--sage);color:var(--green)}
+    .ic.msgs{background:#fbe6dc;color:var(--rose)}
+    .ic.subs{background:#f4ecd2;color:var(--gold-dk,#a8853a)}
+    .ic.bag{background:#e7e9e0;color:var(--brown)}
+
+    /* ── Panels ── */
+    .panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;
+      box-shadow:0 4px 16px var(--shadow);margin-bottom:22px}
+    .panel h2{font-family:var(--serif);font-weight:600;color:var(--brown);font-size:1.4rem;margin-bottom:2px;
+      display:flex;align-items:center;gap:10px}
+    .panel h2 .icon{width:20px;height:20px;color:var(--rose)}
+    .panel .desc{color:var(--muted);font-size:.8rem;margin-bottom:18px}
+    .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px}
+    .panel-head h2{margin-bottom:2px}
+    .mini{background:transparent;border:1.5px solid var(--warm);border-radius:20px;padding:6px 13px;font-size:.74rem;
+      color:var(--muted);display:inline-flex;align-items:center;gap:6px;transition:all .2s}
+    .mini:hover{border-color:var(--rose);color:var(--rose)}
+    .mini .icon{width:14px;height:14px}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+
+    /* ── Chart ── */
+    .chart{display:flex;align-items:flex-end;gap:6px;height:180px;padding-top:10px}
+    .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}
+    .bar{width:100%;max-width:34px;background:linear-gradient(180deg,var(--rose),var(--gold));border-radius:6px 6px 3px 3px;
+      min-height:3px;transition:height .6s cubic-bezier(.2,.8,.2,1);position:relative}
+    .bar:hover::after{content:attr(data-v);position:absolute;top:-22px;left:50%;transform:translateX(-50%);
+      background:var(--brown);color:#fff;font-size:.66rem;padding:2px 7px;border-radius:10px;white-space:nowrap}
+    .bar-lbl{font-size:.6rem;color:var(--muted);white-space:nowrap}
+
+    /* ── Lists ── */
+    .plist{list-style:none}
+    .prow{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+    .prow:last-child{border-bottom:none}
+    .prow .pic{width:38px;height:38px;border-radius:10px;background:var(--cream);display:flex;align-items:center;justify-content:center;color:var(--brown);flex:none}
+    .prow .pic .icon{width:22px;height:22px;stroke-width:1.5}
+    .prow .pname{flex:1;min-width:0;font-size:.88rem;color:var(--brown);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .prow .ptrack{flex:1.4;height:8px;background:var(--cream);border-radius:6px;overflow:hidden}
+    .prow .ptrack i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--rose));border-radius:6px}
+    .prow .pcount{font-size:.82rem;color:var(--rose);font-weight:600;min-width:34px;text-align:right}
+
+    .msg{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px;transition:box-shadow .2s}
+    .msg:hover{box-shadow:0 4px 14px var(--shadow)}
+    .msg.unread{border-left:3px solid var(--rose);background:#fffaf6}
+    .msg-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .msg-name{font-weight:500;color:var(--brown);font-size:.92rem;display:flex;align-items:center;gap:8px}
+    .dot{width:7px;height:7px;border-radius:50%;background:var(--rose);flex:none}
+    .msg-date{font-size:.72rem;color:var(--muted);white-space:nowrap}
+    .msg-meta{font-size:.76rem;color:var(--muted);margin:4px 0 8px;display:flex;flex-wrap:wrap;gap:5px 14px}
+    .msg-meta a{color:var(--rose)}
+    .chip{background:var(--sage);color:var(--green);border-radius:12px;padding:2px 9px;font-size:.68rem}
+    .msg-body{font-size:.86rem;color:var(--text);line-height:1.6;font-family:var(--serif);font-style:italic}
+    .empty{text-align:center;color:var(--muted);padding:34px 10px;font-size:.86rem}
+    .empty .icon{width:34px;height:34px;color:var(--blush);margin-bottom:8px}
+    .scroll{max-height:440px;overflow:auto}
+
+    .sub-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.85rem}
+    .sub-row:last-child{border-bottom:none}
+    .sub-row .em{color:var(--brown)}
+    .sub-row .dt{color:var(--muted);font-size:.74rem}
+
+    @media(max-width:820px){
+      .cards{grid-template-columns:1fr 1fr}
+      .grid-2{grid-template-columns:1fr}
+      .updated{display:none}
+    }
+    @media(max-width:480px){
+      .cards{grid-template-columns:1fr 1fr;gap:12px}
+      .card{padding:16px}
+      .card .num{font-size:1.9rem}
+      .wrap{padding:18px 14px 50px}
+    }
+  </style>
+</head>
+<body>
+
+<svg class="sprite" aria-hidden="true"><defs>
+  <symbol id="d-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><circle cx="12" cy="15.5" r="1.3"/></symbol>
+  <symbol id="d-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="d-chat" viewBox="0 0 24 24"><path d="M20.5 11.5a8 8 0 0 1-11.7 7.1L4 20.5l1.9-4.7A8 8 0 1 1 20.5 11.5z"/></symbol>
+  <symbol id="d-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 5.2a3.2 3.2 0 0 1 0 5.6"/><path d="M17.5 13.5A5.5 5.5 0 0 1 20.5 18.5"/></symbol>
+  <symbol id="d-bag" viewBox="0 0 24 24"><path d="M5.5 7.5h13l-1 12.5h-11z"/><path d="M9 7.5a3 3 0 0 1 6 0"/></symbol>
+  <symbol id="d-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-.5 4"/><path d="M20 5v6h-6"/></symbol>
+  <symbol id="d-out" viewBox="0 0 24 24"><path d="M14 7V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-2"/><path d="M10 12h10M17 9l3 3-3 3"/></symbol>
+  <symbol id="d-download" viewBox="0 0 24 24"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M5 20h14"/></symbol>
+  <symbol id="d-chart" viewBox="0 0 24 24"><path d="M4 20V4"/><path d="M4 20h16"/><rect x="7" y="12" width="3" height="5"/><rect x="12" y="8" width="3" height="9"/><rect x="17" y="14" width="3" height="3"/></symbol>
+  <symbol id="d-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 5.5L20.5 7"/></symbol>
+  <symbol id="d-gift" viewBox="0 0 24 24"><rect x="3.5" y="8" width="17" height="4.5" rx="1"/><path d="M5.5 12.5V19a1.5 1.5 0 0 0 1.5 1.5h10a1.5 1.5 0 0 0 1.5-1.5v-6.5"/><path d="M12 8v12.5"/><path d="M12 8C12 8 10.8 4 8.6 4.6 7 5 7.2 8 9.5 8z"/><path d="M12 8c0 0 1.2-4 3.4-3.4C17 5 16.8 8 14.5 8z"/></symbol>
+  <symbol id="i-gift" viewBox="0 0 24 24"><rect x="3.5" y="8" width="17" height="4.5" rx="1"/><path d="M5.5 12.5V19a1.5 1.5 0 0 0 1.5 1.5h10a1.5 1.5 0 0 0 1.5-1.5v-6.5"/><path d="M12 8v12.5"/><path d="M12 8C12 8 10.8 4 8.6 4.6 7 5 7.2 8 9.5 8z"/><path d="M12 8c0 0 1.2-4 3.4-3.4C17 5 16.8 8 14.5 8z"/></symbol>
+  <symbol id="i-basket" viewBox="0 0 24 24"><path d="M5 9.5h14l-1.1 9a2 2 0 0 1-2 1.8H8.1a2 2 0 0 1-2-1.8z"/><path d="M3.5 9.5h17"/><path d="M8.5 9.5L11 5M15.5 9.5L13 5"/><path d="M9.5 13v3.5M12 13v3.5M14.5 13v3.5"/></symbol>
+  <symbol id="i-jar" viewBox="0 0 24 24"><path d="M8 4h8"/><path d="M9.2 4v2.2C9.2 7.6 7.8 8 7.8 9.8v8.4A1.8 1.8 0 0 0 9.6 20h4.8a1.8 1.8 0 0 0 1.8-1.8V9.8c0-1.8-1.4-2.2-1.4-3.6V4"/><path d="M7.9 12.5h8.2"/></symbol>
+  <symbol id="i-diya" viewBox="0 0 24 24"><path d="M4 14.5c0 2.2 3.6 3.5 8 3.5s8-1.3 8-3.5"/><path d="M4.5 14.5h15"/><path d="M12 9.8v4.7"/><path d="M12 4.5s-1.7 2.2-1.7 3.6A1.7 1.7 0 0 0 12 9.8a1.7 1.7 0 0 0 1.7-1.7C13.7 6.7 12 4.5 12 4.5z"/></symbol>
+  <symbol id="i-macrame" viewBox="0 0 24 24"><path d="M5 5.5h14"/><path d="M7.5 5.5v5M12 5.5v5M16.5 5.5v5"/><path d="M7.5 10.5l-1.3 5.5M7.5 10.5l1.3 5.5"/><path d="M12 10.5l-1.3 6.5M12 10.5l1.3 6.5"/><path d="M16.5 10.5l-1.3 5.5M16.5 10.5l1.3 5.5"/></symbol>
+  <symbol id="i-lovebox" viewBox="0 0 24 24"><rect x="4.5" y="6.5" width="15" height="13.5" rx="2"/><path d="M4.5 11h15"/><path d="M12 17.8s-3.2-2-3.2-4.2a1.8 1.8 0 0 1 3.2-1.1 1.8 1.8 0 0 1 3.2 1.1c0 2.2-3.2 4.2-3.2 4.2z"/></symbol>
+  <symbol id="i-candle" viewBox="0 0 24 24"><rect x="8.5" y="9.5" width="7" height="10.5" rx="1.5"/><path d="M8.5 13h7"/><path d="M12 9.5V7"/><path d="M12 7s-1.6-1.1-1.6-2.5A1.6 1.6 0 0 1 12 3a1.6 1.6 0 0 1 1.6 1.5C13.6 5.9 12 7 12 7z"/></symbol>
+  <symbol id="i-cake" viewBox="0 0 24 24"><path d="M4 20.5h16"/><path d="M5.5 20.5v-7A2 2 0 0 1 7.5 11.5h9a2 2 0 0 1 2 2v7"/><path d="M5.5 15.5c1.4 1.2 2.6 1.2 4 0s2.6-1.2 4 0 2.6 1.2 4 0"/><path d="M12 11.5V8"/><circle cx="12" cy="6.4" r=".9"/></symbol>
+  <symbol id="i-photo" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.7"/><path d="M4.5 16.5l4.2-3.8 3 2.6 3.8-3.4 4 3.6"/></symbol>
+</defs></svg>
+
+<!-- ════════ LOGIN ════════ -->
+<div class="login-wrap" id="loginView">
+  <form class="login-card" id="loginForm" onsubmit="return false;">
+    <svg class="login-logo" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="58" fill="#1a1a1a"/>
+      <rect x="42" y="52" width="36" height="28" rx="2" fill="#e8826a"/>
+      <rect x="39" y="44" width="42" height="10" rx="2" fill="#d4634a"/>
+      <rect x="57" y="44" width="6" height="36" rx="1" fill="#f5c3a8" opacity=".9"/>
+      <rect x="39" y="48" width="42" height="4" rx="1" fill="#f5c3a8" opacity=".9"/>
+      <ellipse cx="52" cy="42" rx="8" ry="5" fill="#f5c3a8" transform="rotate(-20,52,42)"/>
+      <ellipse cx="68" cy="42" rx="8" ry="5" fill="#f5c3a8" transform="rotate(20,68,42)"/>
+      <circle cx="60" cy="43" r="4" fill="#e8826a"/>
+    </svg>
+    <h1>Owner Dashboard</h1>
+    <div class="sub">H &amp; A Hampers · Private</div>
+    <div class="field">
+      <svg class="icon"><use href="#d-lock"/></svg>
+      <input id="pw" type="password" placeholder="Dashboard password" autocomplete="current-password" autofocus />
+    </div>
+    <button class="btn btn-primary btn-full" id="loginBtn" type="submit">Sign In</button>
+    <div class="login-err" id="loginErr"></div>
+    <div class="login-hint">Authorized access only. Sessions expire after 12 hours.</div>
+  </form>
+</div>
+
+<!-- ════════ APP ════════ -->
+<div class="app" id="appView">
+  <div class="topbar">
+    <div class="brand">
+      <svg class="lg" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="58" fill="#1a1a1a"/>
+        <rect x="42" y="52" width="36" height="28" rx="2" fill="#e8826a"/>
+        <rect x="39" y="44" width="42" height="10" rx="2" fill="#d4634a"/>
+        <rect x="57" y="44" width="6" height="36" rx="1" fill="#f5c3a8" opacity=".9"/>
+        <ellipse cx="52" cy="42" rx="8" ry="5" fill="#f5c3a8" transform="rotate(-20,52,42)"/>
+        <ellipse cx="68" cy="42" rx="8" ry="5" fill="#f5c3a8" transform="rotate(20,68,42)"/>
+        <circle cx="60" cy="43" r="4" fill="#e8826a"/>
+      </svg>
+      <div><b>H &amp; A Hampers</b><span>Owner Dashboard</span></div>
+    </div>
+    <div class="topbar-actions">
+      <span class="updated" id="updated"></span>
+      <button class="tbtn" id="refreshBtn" onclick="App.load()"><svg class="icon"><use href="#d-refresh"/></svg> Refresh</button>
+      <button class="tbtn" onclick="App.logout()"><svg class="icon"><use href="#d-out"/></svg> Sign out</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="banner" id="banner"><svg class="icon"><use href="#d-mail"/></svg><span id="bannerText"></span></div>
+
+    <!-- Stat cards -->
+    <div class="cards">
+      <div class="card"><div class="ic views"><svg class="icon"><use href="#d-eye"/></svg></div><div class="num" id="cViews">0</div><div class="lbl">Total Views</div></div>
+      <div class="card"><div class="ic bag"><svg class="icon"><use href="#d-eye"/></svg></div><div class="num" id="cToday">0</div><div class="lbl">Views Today</div></div>
+      <div class="card"><div class="ic msgs"><svg class="icon"><use href="#d-chat"/></svg></div><div class="num" id="cMsgs">0</div><div class="lbl">Messages</div></div>
+      <div class="card"><div class="ic subs"><svg class="icon"><use href="#d-users"/></svg></div><div class="num" id="cSubs">0</div><div class="lbl">Subscribers</div></div>
+    </div>
+
+    <!-- Views chart -->
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2><svg class="icon"><use href="#d-chart"/></svg> Traffic</h2><div class="desc">Daily page views — last 14 days</div></div>
+      </div>
+      <div class="chart" id="chart"></div>
+    </div>
+
+    <div class="grid-2">
+      <!-- Popular products -->
+      <div class="panel">
+        <h2><svg class="icon"><use href="#d-bag"/></svg> Popular Products</h2>
+        <div class="desc">By “Add to Bag” clicks · <span id="totalAdds">0</span> total</div>
+        <ul class="plist" id="products"></ul>
+      </div>
+      <!-- Newsletter -->
+      <div class="panel">
+        <div class="panel-head">
+          <div><h2><svg class="icon"><use href="#d-users"/></svg> Newsletter</h2><div class="desc"><span id="subCount">0</span> subscribers</div></div>
+          <button class="mini" onclick="App.exportSubs()"><svg class="icon"><use href="#d-download"/></svg> CSV</button>
+        </div>
+        <div class="scroll" id="subs"></div>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2><svg class="icon"><use href="#d-chat"/></svg> Messages</h2><div class="desc">Contact-form enquiries</div></div>
+        <div style="display:flex;gap:8px">
+          <button class="mini" onclick="App.markAllRead()"><svg class="icon"><use href="#d-mail"/></svg> Mark all read</button>
+          <button class="mini" onclick="App.exportMsgs()"><svg class="icon"><use href="#d-download"/></svg> CSV</button>
+        </div>
+      </div>
+      <div class="scroll" id="messages"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const App = (() => {
+  const API = '/.netlify/functions';
+  const TOKEN_KEY = 'ha_dash_token';
+  const SEEN_KEY = 'ha_seen_msgs';
+  let state = { stats: null, contact: [], newsletter: [] };
+
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const token = () => localStorage.getItem(TOKEN_KEY);
+  const seen = () => { try { return new Set(JSON.parse(localStorage.getItem(SEEN_KEY) || '[]')); } catch { return new Set(); } };
+  const saveSeen = (set) => localStorage.setItem(SEEN_KEY, JSON.stringify([...set]));
+
+  function fmtDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (isNaN(d)) return '';
+    const now = new Date();
+    const opts = d.getFullYear() === now.getFullYear()
+      ? { month: 'short', day: 'numeric' } : { month: 'short', day: 'numeric', year: 'numeric' };
+    return d.toLocaleDateString('en-IN', opts) + ', ' + d.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' });
+  }
+
+  /* ── Auth ── */
+  async function login(password) {
+    const r = await fetch(API + '/login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.error || 'Login failed');
+    localStorage.setItem(TOKEN_KEY, data.token);
+  }
+
+  function logout() {
+    localStorage.removeItem(TOKEN_KEY);
+    show('login');
+    $('pw').value = '';
+  }
+
+  async function api(path) {
+    const r = await fetch(API + '/' + path, { headers: { Authorization: 'Bearer ' + token() } });
+    if (r.status === 401) { logout(); throw new Error('Session expired'); }
+    const data = await r.json().catch(() => ({}));
+    return { ok: r.ok, status: r.status, data };
+  }
+
+  /* ── Load + render ── */
+  async function load() {
+    if (location.hash === '#demo') { show('app'); renderAll(DEMO.stats, DEMO.msgs); $('updated').textContent = 'Demo data'; return; }
+    if (!token()) { show('login'); return; }
+    show('app');
+    $('refreshBtn').disabled = true;
+    const [statsRes, msgRes] = await Promise.all([api('stats').catch(e => ({ ok:false, data:{error:e.message} })),
+                                                  api('messages').catch(e => ({ ok:false, data:{error:e.message} }))]);
+    const stats = statsRes.ok ? statsRes.data : { views:0, daily:{}, products:{} };
+    const msgs = msgRes.ok ? msgRes.data : { contact:[], newsletter:[] };
+    if (!msgRes.ok && msgRes.data && msgRes.data.error) showBanner(msgRes.data.error);
+    else hideBanner();
+    renderAll(stats, msgs);
+    $('refreshBtn').disabled = false;
+    $('updated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' });
+  }
+
+  function renderAll(stats, msgs) {
+    state.stats = stats; state.contact = msgs.contact || []; state.newsletter = msgs.newsletter || [];
+    renderCards(); renderChart(); renderProducts(); renderMessages(); renderSubs();
+  }
+
+  function renderCards() {
+    const today = new Date().toISOString().slice(0, 10);
+    $('cViews').textContent = (state.stats.views || 0).toLocaleString('en-IN');
+    $('cToday').textContent = ((state.stats.daily || {})[today] || 0).toLocaleString('en-IN');
+    $('cMsgs').textContent = state.contact.length.toLocaleString('en-IN');
+    $('cSubs').textContent = state.newsletter.length.toLocaleString('en-IN');
+  }
+
+  function renderChart() {
+    const daily = state.stats.daily || {};
+    const days = [];
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date(Date.now() - i * 864e5);
+      const key = d.toISOString().slice(0, 10);
+      days.push({ key, v: daily[key] || 0, lbl: d.toLocaleDateString('en-IN', { day: 'numeric', month: i === 13 || d.getDate() === 1 ? 'short' : undefined }) });
+    }
+    const max = Math.max(1, ...days.map(d => d.v));
+    $('chart').innerHTML = days.map(d => `
+      <div class="bar-col">
+        <div class="bar" data-v="${d.v} views" style="height:${Math.round((d.v / max) * 150) + 3}px"></div>
+        <div class="bar-lbl">${esc(d.lbl)}</div>
+      </div>`).join('');
+  }
+
+  const ICONS = { 1:'i-basket',2:'i-jar',3:'i-diya',4:'i-macrame',5:'i-lovebox',6:'i-candle',7:'i-cake',8:'i-photo' };
+  function renderProducts() {
+    const products = state.stats.products || {};
+    const arr = Object.entries(products).map(([id, p]) => ({ id, name: p.name, count: p.count || 0 }))
+      .sort((a, b) => b.count - a.count);
+    const total = arr.reduce((s, p) => s + p.count, 0);
+    $('totalAdds').textContent = total.toLocaleString('en-IN');
+    if (!arr.length) { $('products').innerHTML = `<li class="empty"><svg class="icon"><use href="#d-bag"/></svg><div>No “Add to Bag” activity yet.</div></li>`; return; }
+    const max = Math.max(1, ...arr.map(p => p.count));
+    $('products').innerHTML = arr.map(p => `
+      <li class="prow">
+        <div class="pic"><svg class="icon" style="stroke:var(--brown)"><use href="#${ICONS[p.id] || 'i-gift'}"/></svg></div>
+        <div class="pname">${esc(p.name)}</div>
+        <div class="ptrack"><i style="width:${Math.round((p.count / max) * 100)}%"></i></div>
+        <div class="pcount">${p.count}</div>
+      </li>`).join('');
+  }
+
+  function renderMessages() {
+    const s = seen();
+    const list = [...state.contact].sort((a, b) => new Date(b.created) - new Date(a.created));
+    if (!list.length) { $('messages').innerHTML = `<div class="empty"><svg class="icon"><use href="#d-chat"/></svg><div>No messages yet.</div></div>`; return; }
+    $('messages').innerHTML = list.map(m => {
+      const unread = !s.has(m.id);
+      return `<div class="msg ${unread ? 'unread' : ''}" onclick="App.markRead('${esc(m.id)}', this)">
+        <div class="msg-top">
+          <div class="msg-name">${unread ? '<span class="dot"></span>' : ''}${esc(m.name) || 'Anonymous'}</div>
+          <div class="msg-date">${esc(fmtDate(m.created))}</div>
+        </div>
+        <div class="msg-meta">
+          ${m.email ? `<a href="mailto:${esc(m.email)}">${esc(m.email)}</a>` : ''}
+          ${m.phone ? `<span>${esc(m.phone)}</span>` : ''}
+          ${m.category ? `<span class="chip">${esc(m.category)}</span>` : ''}
+        </div>
+        ${m.message ? `<div class="msg-body">${esc(m.message)}</div>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  function renderSubs() {
+    const list = [...state.newsletter].sort((a, b) => new Date(b.created) - new Date(a.created));
+    $('subCount').textContent = list.length;
+    if (!list.length) { $('subs').innerHTML = `<div class="empty"><svg class="icon"><use href="#d-users"/></svg><div>No subscribers yet.</div></div>`; return; }
+    $('subs').innerHTML = list.map(s => `
+      <div class="sub-row"><span class="em">${esc(s.email) || '—'}</span><span class="dt">${esc(fmtDate(s.created))}</span></div>`).join('');
+  }
+
+  /* ── Read state ── */
+  function markRead(id, el) { const s = seen(); s.add(id); saveSeen(s); el.classList.remove('unread'); const d = el.querySelector('.dot'); if (d) d.remove(); }
+  function markAllRead() { const s = seen(); state.contact.forEach(m => s.add(m.id)); saveSeen(s); renderMessages(); }
+
+  /* ── CSV export ── */
+  function downloadCSV(name, rows) {
+    const csv = rows.map(r => r.map(c => `"${String(c == null ? '' : c).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+  function exportSubs() {
+    downloadCSV('newsletter-subscribers.csv', [['Email', 'Date'], ...state.newsletter.map(s => [s.email, s.created])]);
+  }
+  function exportMsgs() {
+    downloadCSV('contact-messages.csv', [['Name', 'Email', 'Phone', 'Category', 'Message', 'Date'],
+      ...state.contact.map(m => [m.name, m.email, m.phone, m.category, m.message, m.created])]);
+  }
+
+  /* ── View switch ── */
+  function show(which) {
+    $('loginView').style.display = which === 'login' ? 'flex' : 'none';
+    $('appView').style.display = which === 'app' ? 'block' : 'none';
+  }
+  function showBanner(t) { $('bannerText').textContent = t; $('banner').style.display = 'flex'; }
+  function hideBanner() { $('banner').style.display = 'none'; }
+
+  /* ── Wire up ── */
+  function init() {
+    $('loginForm').addEventListener('submit', async () => {
+      const btn = $('loginBtn'); const err = $('loginErr');
+      err.textContent = ''; btn.disabled = true; btn.textContent = 'Signing in…';
+      try { await login($('pw').value); await load(); }
+      catch (e) { err.textContent = e.message || 'Login failed'; }
+      finally { btn.disabled = false; btn.textContent = 'Sign In'; }
+    });
+    window.addEventListener('hashchange', load);
+    load();
+  }
+
+  return { init, load, logout, markRead, markAllRead, exportSubs, exportMsgs, renderAll };
+})();
+
+/* ── Demo data (open /dashboard/#demo to preview the layout) ── */
+const DEMO = {
+  stats: (() => {
+    const daily = {};
+    for (let i = 13; i >= 0; i--) { const k = new Date(Date.now() - i * 864e5).toISOString().slice(0, 10); daily[k] = Math.floor(20 + Math.random() * 90); }
+    return { views: 4827, daily, products: {
+      1: { name: 'Rustic Gift Hamper', count: 64 }, 3: { name: 'Diwali Celebration Box', count: 51 },
+      5: { name: 'Anniversary Love Box', count: 39 }, 7: { name: 'Birthday Surprise Hamper', count: 28 },
+      2: { name: 'Personalized Name Jar', count: 22 }, 6: { name: 'Scented Candle Set', count: 14 } } };
+  })(),
+  msgs: {
+    contact: [
+      { id: 'd1', name: 'Priya Sharma', email: 'priya@example.com', phone: '+91 98765 43210', category: 'Seasonal Hamper', message: 'Hi! Do you do custom Diwali hampers for a group of 12 colleagues? Budget around ₹1500 each.', created: new Date(Date.now() - 2 * 36e5).toISOString() },
+      { id: 'd2', name: 'Rahul Menon', email: 'rahul@example.com', phone: '', category: 'Personalized Gift', message: 'Looking for an engraved photo box for my parents’ 25th anniversary next month.', created: new Date(Date.now() - 26 * 36e5).toISOString() },
+      { id: 'd3', name: 'Anita Reddy', email: 'anita@example.com', phone: '+91 90000 11111', category: 'Bulk / Corporate Order', message: 'Need 50 corporate gift boxes with our logo. Can you share a quote and timeline?', created: new Date(Date.now() - 72 * 36e5).toISOString() }
+    ],
+    newsletter: [
+      { id: 'n1', email: 'meera@example.com', created: new Date(Date.now() - 5 * 36e5).toISOString() },
+      { id: 'n2', email: 'arjun@example.com', created: new Date(Date.now() - 30 * 36e5).toISOString() },
+      { id: 'n3', email: 'sneha@example.com', created: new Date(Date.now() - 90 * 36e5).toISOString() }
+    ]
+  }
+};
+
+App.init();
+</script>
+</body>
+</html>

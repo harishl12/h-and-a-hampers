@@ -867,10 +867,12 @@
       <div class="footer-col">
         <h4>Stay Updated</h4>
         <p style="font-size:0.82rem;color:rgba(244,241,232,0.65);margin-bottom:12px;">Get notified about new collections and offers.</p>
-        <div class="newsletter-form">
-          <input class="newsletter-input" type="email" placeholder="Your email..." />
-          <button class="newsletter-btn">Join</button>
-        </div>
+        <form class="newsletter-form" name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="submitNewsletter(event)">
+          <input type="hidden" name="form-name" value="newsletter" />
+          <p style="display:none;"><input name="bot-field" /></p>
+          <input class="newsletter-input" name="email" type="email" placeholder="Your email..." required />
+          <button class="newsletter-btn" type="submit">Join</button>
+        </form>
       </div>
     </div>
     <div class="footer-bottom">
@@ -1005,6 +1007,7 @@
     else cart.push({ ...product, qty: 1 });
     updateCartUI();
     bumpCart();
+    track('add', product);
     showToast('Added to your bag', 'i-check');
   }
 
@@ -1129,9 +1132,46 @@
     });
   }
 
+  // ── Newsletter signup (Netlify form) ──
+  function submitNewsletter(e) {
+    e.preventDefault();
+    const form = e.target;
+    const btn = form.querySelector('button');
+    const original = btn.textContent;
+    btn.textContent = '…';
+    btn.disabled = true;
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(new FormData(form)).toString()
+    }).then(() => {
+      showToast('Subscribed! Thank you', 'i-check');
+      form.reset();
+    }).catch(() => {
+      showToast('Something went wrong. Please try again.');
+    }).finally(() => {
+      btn.textContent = original;
+      btn.disabled = false;
+    });
+  }
+
+  // ── Lightweight analytics beacon (feeds the owner dashboard) ──
+  function track(type, p) {
+    try {
+      const payload = type === 'add'
+        ? { type: 'add', id: p.id, name: p.name }
+        : { type: 'view', path: location.pathname };
+      const url = '/.netlify/functions/track';
+      const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+      if (navigator.sendBeacon) navigator.sendBeacon(url, blob);
+      else fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), keepalive: true }).catch(() => {});
+    } catch (e) { /* analytics must never break the page */ }
+  }
+
   // ── Init data ──
   renderProducts('all');
   updateCartUI();
+  track('view');
 
   /* ============================================================
      VISUAL EXPERIENCE LAYER  —  GSAP + Three.js

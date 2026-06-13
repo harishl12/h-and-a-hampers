@@ -1,0 +1,10 @@
+{
+  "name": "h-and-a-hampers",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "H & A Hampers storefront + owner dashboard (Netlify Functions)",
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}

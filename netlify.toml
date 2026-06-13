@@ -1,0 +1,18 @@
+# Netlify configuration for H & A Hampers
+# Static site lives in /public; serverless functions in /netlify/functions.
+# Publishing only /public keeps node_modules, source & config out of the web root.
+
+[build]
+  command = ""          # no build step — static HTML
+  publish = "public"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Cache-bust the dashboard so owners always get the latest build
+[[headers]]
+  for = "/dashboard/*"
+  [headers.values]
+    Cache-Control = "no-cache"
+    X-Robots-Tag = "noindex"   # keep the dashboard out of search engines
