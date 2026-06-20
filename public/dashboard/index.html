@@ -46,6 +46,15 @@
     .btn-full{width:100%}
     .login-err{color:var(--rose-dk);font-size:.82rem;min-height:18px;margin-top:10px}
     .login-hint{color:var(--muted);font-size:.74rem;margin-top:18px;line-height:1.5}
+    .login-tabs{display:flex;gap:4px;background:var(--cream);border:1.5px solid var(--warm);border-radius:12px;padding:4px;margin-bottom:18px}
+    .ltab{flex:1;border:none;background:transparent;padding:9px;border-radius:9px;font-family:var(--sans);font-size:.82rem;color:var(--muted);transition:all .2s}
+    .ltab.active{background:var(--surface);color:var(--brown);font-weight:500;box-shadow:0 2px 8px var(--shadow)}
+    .otp-to{font-size:.82rem;color:var(--muted);margin-bottom:12px;text-align:left}
+    .otp-to b{color:var(--brown)}
+    .otp-links{margin-top:14px;font-size:.78rem;color:var(--muted)}
+    .otp-links a{color:var(--rose);cursor:pointer}
+    .otp-links a:hover{text-decoration:underline}
+    #otpCode{letter-spacing:.3em;font-weight:600;text-align:center}
 
     /* ── App shell ── */
     .app{display:none}
@@ -238,11 +247,41 @@
     </svg>
     <h1>Owner Dashboard</h1>
     <div class="sub">H &amp; A Hampers · Private</div>
-    <div class="field">
-      <svg class="icon"><use href="#d-lock"/></svg>
-      <input id="pw" type="password" placeholder="Dashboard password" autocomplete="current-password" autofocus />
+
+    <div class="login-tabs">
+      <button type="button" class="ltab active" id="tabPw" onclick="App.loginMode('pw')">Password</button>
+      <button type="button" class="ltab" id="tabOtp" onclick="App.loginMode('otp')">Email OTP</button>
     </div>
-    <button class="btn btn-primary btn-full" id="loginBtn" type="submit">Sign In</button>
+
+    <!-- Password -->
+    <div id="panePw">
+      <div class="field">
+        <svg class="icon"><use href="#d-lock"/></svg>
+        <input id="pw" type="password" placeholder="Dashboard password" autocomplete="current-password" autofocus />
+      </div>
+      <button class="btn btn-primary btn-full" id="loginBtn" type="submit">Sign In</button>
+    </div>
+
+    <!-- Email OTP -->
+    <div id="paneOtp" style="display:none">
+      <div id="otpStep1">
+        <div class="field">
+          <svg class="icon"><use href="#d-mail"/></svg>
+          <input id="otpEmail" type="email" placeholder="Owner email" autocomplete="email" />
+        </div>
+        <button class="btn btn-primary btn-full" type="button" id="sendOtpBtn" onclick="App.sendOtp()">Send Code</button>
+      </div>
+      <div id="otpStep2" style="display:none">
+        <div class="otp-to" id="otpTo"></div>
+        <div class="field">
+          <svg class="icon"><use href="#d-lock"/></svg>
+          <input id="otpCode" inputmode="numeric" maxlength="6" placeholder="6-digit code" autocomplete="one-time-code" />
+        </div>
+        <button class="btn btn-primary btn-full" type="button" id="verifyOtpBtn" onclick="App.verifyOtp()">Verify &amp; Sign In</button>
+        <div class="otp-links"><a id="resendLink" onclick="App.sendOtp(true)">Resend code</a> · <a onclick="App.otpBack()">Change email</a></div>
+      </div>
+    </div>
+
     <div class="login-err" id="loginErr"></div>
     <div class="login-hint">Authorized access only. Sessions expire after 12 hours.</div>
   </form>
@@ -420,6 +459,77 @@ const App = (() => {
     const data = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(data.error || 'Login failed');
     localStorage.setItem(TOKEN_KEY, data.token);
+  }
+
+  /* ── Email-OTP login ── */
+  let loginModeState = 'pw';
+  let otpEmailVal = '';
+
+  async function postPublic(path, body) {
+    const r = await fetch(API + '/' + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const data = await r.json().catch(() => ({}));
+    return { ok: r.ok, data };
+  }
+  const maskEmail = (e) => { const [u, d] = String(e).split('@'); return d ? (u[0] || '') + '•••@' + d : e; };
+
+  function loginMode(m) {
+    loginModeState = m;
+    $('tabPw').classList.toggle('active', m === 'pw');
+    $('tabOtp').classList.toggle('active', m === 'otp');
+    $('panePw').style.display = m === 'pw' ? 'block' : 'none';
+    $('paneOtp').style.display = m === 'otp' ? 'block' : 'none';
+    $('loginErr').textContent = '';
+    if (m === 'otp') { $('otpStep1').style.display = 'block'; $('otpStep2').style.display = 'none'; setTimeout(() => $('otpEmail').focus(), 40); }
+    else setTimeout(() => $('pw').focus(), 40);
+  }
+
+  async function sendOtp(isResend) {
+    const email = (isResend ? otpEmailVal : $('otpEmail').value).trim();
+    const err = $('loginErr'); err.textContent = '';
+    if (!email) { err.textContent = 'Enter the owner email.'; return; }
+    const btn = $('sendOtpBtn');
+    btn.disabled = true; const label = btn.textContent; btn.textContent = 'Sending…';
+    try {
+      const res = await postPublic('request-otp', { email });
+      if (!res.ok) throw new Error(res.data.error || 'Could not send code');
+      otpEmailVal = email;
+      $('otpTo').innerHTML = `Code sent to <b>${esc(maskEmail(email))}</b>`;
+      $('otpStep1').style.display = 'none';
+      $('otpStep2').style.display = 'block';
+      $('otpCode').value = '';
+      err.innerHTML = res.data.devMode
+        ? '<span style="color:var(--muted)">Dev mode: set GMAIL_APP_PASSWORD to email codes. For now read it from Netlify → Functions → logs.</span>'
+        : '';
+      setTimeout(() => $('otpCode').focus(), 40);
+    } catch (e) { err.textContent = e.message; }
+    finally { btn.disabled = false; btn.textContent = label; }
+  }
+
+  async function verifyOtp() {
+    const otp = $('otpCode').value.trim(); const err = $('loginErr'); err.textContent = '';
+    if (!/^\d{6}$/.test(otp)) { err.textContent = 'Enter the 6-digit code.'; return; }
+    const btn = $('verifyOtpBtn'); btn.disabled = true; btn.textContent = 'Verifying…';
+    try {
+      const res = await postPublic('verify-otp', { email: otpEmailVal, otp });
+      if (!res.ok) throw new Error(res.data.error || 'Invalid code');
+      localStorage.setItem(TOKEN_KEY, res.data.token);
+      await load();
+    } catch (e) { err.textContent = e.message; btn.disabled = false; btn.textContent = 'Verify & Sign In'; }
+  }
+
+  function otpBack() {
+    $('otpStep2').style.display = 'none';
+    $('otpStep1').style.display = 'block';
+    $('loginErr').textContent = '';
+    setTimeout(() => $('otpEmail').focus(), 40);
+  }
+
+  async function doPasswordLogin() {
+    const btn = $('loginBtn'); const err = $('loginErr');
+    err.textContent = ''; btn.disabled = true; btn.textContent = 'Signing in…';
+    try { await login($('pw').value); await load(); }
+    catch (e) { err.textContent = e.message || 'Login failed'; }
+    finally { btn.disabled = false; btn.textContent = 'Sign In'; }
   }
 
   function logout() {
@@ -703,19 +813,21 @@ const App = (() => {
 
   /* ── Wire up ── */
   function init() {
-    $('loginForm').addEventListener('submit', async () => {
-      const btn = $('loginBtn'); const err = $('loginErr');
-      err.textContent = ''; btn.disabled = true; btn.textContent = 'Signing in…';
-      try { await login($('pw').value); await load(); }
-      catch (e) { err.textContent = e.message || 'Login failed'; }
-      finally { btn.disabled = false; btn.textContent = 'Sign In'; }
+    $('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (loginModeState === 'otp') {
+        if ($('otpStep2').style.display !== 'none') verifyOtp(); else sendOtp();
+      } else {
+        doPasswordLogin();
+      }
     });
     window.addEventListener('hashchange', load);
     load();
   }
 
   return { init, load, logout, markRead, markAllRead, exportSubs, exportMsgs, exportOrders,
-           editProduct, closeProduct, previewIcon, saveProduct, deleteProduct, renderAll };
+           editProduct, closeProduct, previewIcon, saveProduct, deleteProduct, renderAll,
+           loginMode, sendOtp, verifyOtp, otpBack };
 })();
 
 /* ── Demo data (open /dashboard/#demo to preview the layout) ── */
