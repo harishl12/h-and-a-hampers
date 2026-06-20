@@ -367,6 +367,90 @@
     .empty-cart .empty-icon { color: var(--warm); margin-bottom: 12px; }
     .empty-cart .empty-icon .icon { width: 52px; height: 52px; color: var(--blush); }
 
+    /* ── Checkout (full-page, modeled on a shop checkout) ── */
+    .checkout-overlay {
+      position: fixed; inset: 0; z-index: 250; background: var(--cream);
+      overflow-y: auto; opacity: 0; visibility: hidden; transition: opacity .35s ease, visibility .35s;
+    }
+    .checkout-overlay.open { opacity: 1; visibility: visible; }
+    .checkout-bar {
+      position: sticky; top: 0; z-index: 5; background: var(--brown); color: var(--cream);
+      display: flex; align-items: center; justify-content: space-between; padding: 14px 22px;
+    }
+    .checkout-brand { display: flex; align-items: center; gap: 12px; }
+    .checkout-brand svg.lg { width: 36px; height: 36px; }
+    .checkout-brand b { font-family: var(--serif); font-weight: 600; font-size: 1.2rem; }
+    .checkout-brand span.crumb { font-size: .66rem; letter-spacing: .16em; text-transform: uppercase; color: rgba(244,241,232,.6); display:block; }
+    .checkout-close { background: rgba(255,255,255,.1); border: none; color: var(--cream); border-radius: 20px; padding: 8px 14px; font-size: .78rem; display: inline-flex; align-items: center; gap: 7px; transition: background .2s; }
+    .checkout-close .icon { width: 16px; height: 16px; }
+    .checkout-close:hover { background: rgba(255,255,255,.2); }
+    .checkout-body { max-width: 1100px; margin: 0 auto; padding: 30px 22px 70px; }
+    .checkout-title { font-family: var(--serif); font-size: 2.3rem; color: var(--brown); font-weight: 600; margin-bottom: 4px; }
+    .checkout-sub { color: var(--muted); font-size: .9rem; margin-bottom: 28px; }
+    .checkout-grid { display: grid; grid-template-columns: 1fr 0.86fr; gap: 32px; align-items: start; }
+    .co-card { background: var(--surface); border: 1px solid var(--line, rgba(30,61,52,.1)); border-radius: 18px; padding: 26px; box-shadow: 0 4px 16px var(--shadow); margin-bottom: 22px; }
+    .co-h { font-family: var(--serif); font-size: 1.4rem; color: var(--brown); font-weight: 600; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+    .co-h .icon { width: 20px; height: 20px; color: var(--rose); }
+    .co-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .co-field { margin-bottom: 14px; }
+    .co-field label { display: block; font-size: .78rem; color: var(--brown); margin-bottom: 6px; letter-spacing: .03em; }
+    .co-field label .req { color: var(--rose); }
+    .co-field input, .co-field textarea, .co-field select {
+      width: 100%; padding: 12px 14px; border: 1.5px solid var(--warm); border-radius: 10px;
+      background: var(--cream); font-family: var(--sans); font-size: .9rem; color: var(--text);
+      outline: none; transition: border-color .2s, box-shadow .2s; font-weight: 300;
+    }
+    .co-field input:focus, .co-field textarea:focus, .co-field select:focus { border-color: var(--rose); box-shadow: 0 0 0 3px rgba(213,111,76,.12); }
+    .co-field textarea { resize: vertical; min-height: 80px; }
+
+    /* Payment options */
+    .pay-opt { display: flex; align-items: center; gap: 12px; border: 1.5px solid var(--warm); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; cursor: pointer; transition: border-color .2s, background .2s; }
+    .pay-opt:hover { border-color: var(--blush); }
+    .pay-opt.sel { border-color: var(--rose); background: #fff6f1; }
+    .pay-opt input { accent-color: var(--rose); width: 18px; height: 18px; }
+    .pay-opt .pay-ic { width: 36px; height: 36px; border-radius: 10px; background: var(--sage); color: var(--green); display: flex; align-items: center; justify-content: center; }
+    .pay-opt .pay-ic .icon { width: 20px; height: 20px; }
+    .pay-opt .pay-name { font-size: .92rem; color: var(--brown); font-weight: 500; }
+    .pay-opt .pay-desc { font-size: .76rem; color: var(--muted); }
+    .upi-inline { display: none; background: var(--cream); border: 1.5px dashed var(--warm); border-radius: 12px; padding: 16px; margin: -4px 0 14px; }
+    .upi-inline.show { display: block; }
+    .upi-inline .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .upi-inline .uid { font-family: monospace; font-weight: bold; color: var(--brown); font-size: 1rem; }
+    .upi-inline .apps { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .upi-inline .apps span { font-size: .72rem; color: var(--muted); background: var(--warm); padding: 3px 10px; border-radius: 20px; }
+
+    /* Order summary */
+    .checkout-summary { position: sticky; top: 86px; }
+    .co-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line, rgba(30,61,52,.1)); }
+    .co-item .ci-img { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex: none; }
+    .co-item .ci-img .icon { width: 28px; height: 28px; color: var(--brown); stroke-width: 1.5; }
+    .co-item .ci-info { flex: 1; min-width: 0; }
+    .co-item .ci-name { font-size: .85rem; color: var(--brown); }
+    .co-item .ci-qty { font-size: .74rem; color: var(--muted); }
+    .co-item .ci-price { font-size: .9rem; color: var(--rose); font-weight: 600; white-space: nowrap; }
+    .coupon-row { display: flex; gap: 8px; margin: 16px 0; }
+    .coupon-row input { flex: 1; padding: 11px 14px; border: 1.5px solid var(--warm); border-radius: 10px; background: var(--cream); font-family: var(--sans); font-size: .85rem; outline: none; text-transform: uppercase; }
+    .coupon-row input:focus { border-color: var(--rose); }
+    .coupon-btn { background: var(--green); color: #fff; border: none; border-radius: 10px; padding: 0 18px; font-size: .82rem; transition: background .2s; }
+    .coupon-btn:hover { background: var(--brown); }
+    .coupon-msg { font-size: .76rem; margin: -8px 0 12px; min-height: 16px; }
+    .coupon-msg.ok { color: var(--green); }
+    .coupon-msg.bad { color: var(--rose-dk); }
+    .co-line { display: flex; justify-content: space-between; font-size: .9rem; color: var(--muted); padding: 7px 0; }
+    .co-line.disc { color: var(--green); }
+    .co-total { font-family: var(--serif); font-size: 1.35rem; color: var(--brown); font-weight: 600; padding-top: 12px; margin-top: 6px; border-top: 2px solid var(--warm); }
+    .place-btn { width: 100%; justify-content: center; margin-top: 18px; }
+    .co-secure { display: flex; align-items: center; justify-content: center; gap: 7px; font-size: .74rem; color: var(--muted); margin-top: 14px; }
+    .co-secure .icon { width: 14px; height: 14px; color: var(--green); }
+
+    /* Success state */
+    .co-success { display: none; max-width: 520px; margin: 20px auto; text-align: center; }
+    .co-success.show { display: block; }
+    .co-success .tick { width: 76px; height: 76px; border-radius: 50%; background: var(--sage); color: var(--green); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
+    .co-success .tick .icon { width: 40px; height: 40px; stroke-width: 2; }
+    .co-success h2 { font-family: var(--serif); font-size: 2rem; color: var(--brown); font-weight: 600; margin-bottom: 8px; }
+    .co-success p { color: var(--muted); font-size: .95rem; line-height: 1.7; margin-bottom: 8px; }
+
     /* ── Toast ── */
     .toast {
       position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
@@ -427,11 +511,16 @@
       .footer-grid { grid-template-columns: 1fr; }
       .form-row { grid-template-columns: 1fr; }
       .cart-sidebar { width: 100%; right: -100%; }
+      .checkout-grid { grid-template-columns: 1fr; gap: 0; }
+      .checkout-summary { position: static; }
+      .checkout-title { font-size: 1.9rem; }
+      .co-card { padding: 20px; }
     }
     @media (max-width: 480px) {
       .products-grid { grid-template-columns: 1fr; }
       .hero h1 { font-size: 2.2rem; }
       .section-title { font-size: 1.9rem; }
+      .co-row { grid-template-columns: 1fr; }
     }
 
     /* ── Reduced motion ── */
@@ -894,28 +983,120 @@
       <span>Total</span>
       <span id="cartTotal">₹0</span>
     </div>
-    <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="checkout()">Place Order &amp; Pay via UPI</button>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="openCheckout()">Proceed to Checkout</button>
   </div>
 </div>
 
-<!-- UPI Modal -->
-<div id="upiModal" style="display:none;position:fixed;inset:0;background:rgba(20,40,33,0.55);z-index:300;align-items:center;justify-content:center;">
-  <div style="background:var(--surface);border-radius:20px;padding:32px;max-width:360px;width:90%;text-align:center;position:relative;">
-    <button onclick="document.getElementById('upiModal').style.display='none'" style="position:absolute;top:12px;right:16px;background:none;border:none;cursor:pointer;color:#999;display:flex;"><svg class="icon" style="width:20px;height:20px;"><use href="#i-close"/></svg></button>
-    <div style="color:var(--rose);display:flex;justify-content:center;margin-bottom:8px;"><svg class="icon" style="width:44px;height:44px;"><use href="#i-gift"/></svg></div>
-    <h3 style="font-family:var(--serif);color:var(--brown);font-weight:600;margin-bottom:6px;font-size:1.4rem;">Complete Your Payment</h3>
-    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:20px;">Send payment to our UPI ID and we'll confirm your order within 30 minutes!</p>
-    <div style="background:var(--cream);border-radius:12px;padding:16px;margin-bottom:16px;border:1.5px solid var(--warm);">
-      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:4px;">UPI ID</div>
-      <div style="font-size:1.1rem;font-weight:bold;color:var(--brown);font-family:monospace;letter-spacing:0.02em;">h-and-a-hampers@axl</div>
+<!-- Hidden form so Netlify detects & captures orders (owner sees them in Forms) -->
+<form name="order" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input name="bot-field" /><input name="name" /><input name="phone" /><input name="email" />
+  <input name="address" /><input name="city" /><input name="state" /><input name="pin" />
+  <input name="notes" /><input name="payment" /><input name="items" /><input name="total" />
+</form>
+
+<!-- Checkout (full page) -->
+<div class="checkout-overlay" id="checkoutOverlay" aria-hidden="true">
+  <div class="checkout-bar">
+    <div class="checkout-brand">
+      <svg class="lg" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="58" fill="#1a1a1a"/>
+        <rect x="42" y="52" width="36" height="28" rx="2" fill="#e8826a"/>
+        <rect x="39" y="44" width="42" height="10" rx="2" fill="#d4634a"/>
+        <rect x="57" y="44" width="6" height="36" rx="1" fill="#f5c3a8" opacity=".9"/>
+        <ellipse cx="52" cy="42" rx="8" ry="5" fill="#f5c3a8" transform="rotate(-20,52,42)"/>
+        <ellipse cx="68" cy="42" rx="8" ry="5" fill="#f5c3a8" transform="rotate(20,68,42)"/>
+        <circle cx="60" cy="43" r="4" fill="#e8826a"/>
+      </svg>
+      <div><b>H &amp; A Hampers</b><span class="crumb">Cart › Checkout</span></div>
     </div>
-    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px;flex-wrap:wrap;">
-      <span style="font-size:0.78rem;color:var(--muted);background:var(--warm);padding:4px 12px;border-radius:20px;">GPay</span>
-      <span style="font-size:0.78rem;color:var(--muted);background:var(--warm);padding:4px 12px;border-radius:20px;">PhonePe</span>
-      <span style="font-size:0.78rem;color:var(--muted);background:var(--warm);padding:4px 12px;border-radius:20px;">Paytm</span>
+    <button class="checkout-close" onclick="closeCheckout()"><svg class="icon"><use href="#i-close"/></svg> Back to shop</button>
+  </div>
+
+  <div class="checkout-body">
+    <!-- Checkout form + summary -->
+    <div id="checkoutContent">
+      <h1 class="checkout-title">Checkout</h1>
+      <p class="checkout-sub">Almost there — just a few delivery details and your gifts are on the way.</p>
+      <form id="checkoutForm" onsubmit="placeOrder(event)">
+        <div class="checkout-grid">
+          <!-- LEFT: details + payment -->
+          <div class="checkout-left">
+            <div class="co-card">
+              <h3 class="co-h"><svg class="icon"><use href="#i-pin"/></svg> Delivery Details</h3>
+              <div class="co-row">
+                <div class="co-field"><label>First Name <span class="req">*</span></label><input name="firstName" required placeholder="Priya" /></div>
+                <div class="co-field"><label>Last Name <span class="req">*</span></label><input name="lastName" required placeholder="Kumar" /></div>
+              </div>
+              <div class="co-row">
+                <div class="co-field"><label>Phone / WhatsApp <span class="req">*</span></label><input name="phone" type="tel" required placeholder="+91 XXXXX XXXXX" /></div>
+                <div class="co-field"><label>Email <span class="req">*</span></label><input name="email" type="email" required placeholder="you@email.com" /></div>
+              </div>
+              <div class="co-field"><label>Full Address <span class="req">*</span></label><textarea name="address" required placeholder="House no., street, area, landmark"></textarea></div>
+              <div class="co-row">
+                <div class="co-field"><label>Town / City <span class="req">*</span></label><input name="city" required placeholder="Bengaluru" /></div>
+                <div class="co-field"><label>State <span class="req">*</span></label><input name="state" required placeholder="Karnataka" /></div>
+              </div>
+              <div class="co-row">
+                <div class="co-field"><label>PIN Code <span class="req">*</span></label><input name="pin" required inputmode="numeric" pattern="[0-9]{6}" placeholder="560001" /></div>
+                <div class="co-field"><label>Order Notes (optional)</label><input name="notes" placeholder="e.g. gift wrap, message card" /></div>
+              </div>
+            </div>
+
+            <div class="co-card">
+              <h3 class="co-h"><svg class="icon"><use href="#i-card"/></svg> Payment Method</h3>
+              <label class="pay-opt sel" id="payUPIOpt">
+                <input type="radio" name="payment" value="UPI" checked onchange="selectPayment('UPI')" />
+                <span class="pay-ic"><svg class="icon"><use href="#i-phone"/></svg></span>
+                <span><span class="pay-name">UPI</span><br><span class="pay-desc">GPay · PhonePe · Paytm — pay after placing the order</span></span>
+              </label>
+              <div class="upi-inline show" id="upiInline">
+                <div class="row">
+                  <div>
+                    <div style="font-size:.72rem;color:var(--muted);margin-bottom:3px;">Our UPI ID</div>
+                    <div class="uid">h-and-a-hampers@axl</div>
+                  </div>
+                  <button type="button" class="coupon-btn" onclick="copyUPI()" id="copyUPIBtn">Copy</button>
+                </div>
+                <div class="apps"><span>GPay</span><span>PhonePe</span><span>Paytm</span><span>Any UPI App</span></div>
+              </div>
+              <label class="pay-opt" id="payCODOpt">
+                <input type="radio" name="payment" value="Cash on Delivery" onchange="selectPayment('COD')" />
+                <span class="pay-ic"><svg class="icon"><use href="#i-bag"/></svg></span>
+                <span><span class="pay-name">Cash on Delivery</span><br><span class="pay-desc">Pay in cash when your hamper arrives</span></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- RIGHT: order summary -->
+          <aside class="checkout-summary">
+            <div class="co-card">
+              <h3 class="co-h"><svg class="icon"><use href="#i-bag"/></svg> Your Order</h3>
+              <div id="coItems"></div>
+              <div class="coupon-row">
+                <input id="couponInput" placeholder="Coupon code" />
+                <button type="button" class="coupon-btn" onclick="applyCoupon()">Apply</button>
+              </div>
+              <div class="coupon-msg" id="couponMsg"></div>
+              <div class="co-line"><span>Subtotal</span><span id="coSubtotal">₹0</span></div>
+              <div class="co-line disc" id="coDiscLine" style="display:none;"><span id="coDiscLabel">Discount</span><span id="coDiscount">-₹0</span></div>
+              <div class="co-line"><span>Shipping</span><span style="color:var(--green);">Free</span></div>
+              <div class="co-line co-total"><span>Total</span><span id="coTotal">₹0</span></div>
+              <button type="submit" class="btn btn-primary place-btn">Place Order</button>
+              <div class="co-secure"><svg class="icon"><use href="#i-check"/></svg> Secure UPI payment · Pan-India delivery</div>
+            </div>
+          </aside>
+        </div>
+      </form>
     </div>
-    <button onclick="copyUPI()" style="width:100%;background:var(--rose);color:white;border:none;padding:11px;border-radius:30px;font-size:0.9rem;cursor:pointer;margin-bottom:10px;display:inline-flex;align-items:center;justify-content:center;gap:8px;" id="copyUPIBtn2"><svg class="icon" style="width:16px;height:16px;"><use href="#i-card"/></svg> Copy UPI ID</button>
-    <p style="font-size:0.75rem;color:var(--muted);">After payment, send screenshot to <strong>@h_and_a_hampers</strong> on Instagram or WhatsApp</p>
+
+    <!-- Success state -->
+    <div class="co-success" id="checkoutSuccess">
+      <div class="tick"><svg class="icon"><use href="#i-check"/></svg></div>
+      <h2 id="successTitle">Order Placed!</h2>
+      <p id="successMsg"></p>
+      <div id="successPay"></div>
+      <button class="btn btn-primary place-btn" style="max-width:280px;margin:18px auto 0;" onclick="closeCheckout()">Continue Shopping</button>
+    </div>
   </div>
 </div>
 
@@ -1066,9 +1247,143 @@
     document.getElementById('cartOverlay').classList.toggle('open');
   }
 
-  function checkout() {
-    toggleCart();
-    document.getElementById('upiModal').style.display = 'flex';
+  /* ── Checkout ── */
+  // Add coupon codes here to activate them, e.g. { WELCOME10: 10 } gives 10% off.
+  const COUPONS = {};
+  let coupon = null;        // { code, percent }
+  let paymentMethod = 'UPI';
+
+  function cartSubtotal() { return cart.reduce((s, i) => s + i.price * i.qty, 0); }
+
+  function openCheckout() {
+    if (cart.length === 0) { showToast('Your bag is empty'); return; }
+    document.getElementById('cartSidebar').classList.remove('open');
+    document.getElementById('cartOverlay').classList.remove('open');
+    // reset to form view
+    document.getElementById('checkoutContent').style.display = 'block';
+    document.getElementById('checkoutSuccess').classList.remove('show');
+    renderCheckoutSummary();
+    const ov = document.getElementById('checkoutOverlay');
+    ov.classList.add('open');
+    ov.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    ov.scrollTop = 0;
+    if (typeof gsap !== 'undefined' && !prefersReduced) {
+      gsap.from('#checkoutOverlay .co-card', { y: 26, opacity: 0, duration: 0.5, stagger: 0.08, ease: 'power3.out' });
+    }
+  }
+
+  function closeCheckout() {
+    const ov = document.getElementById('checkoutOverlay');
+    ov.classList.remove('open');
+    ov.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  function selectPayment(method) {
+    paymentMethod = method === 'COD' ? 'Cash on Delivery' : 'UPI';
+    document.getElementById('payUPIOpt').classList.toggle('sel', method !== 'COD');
+    document.getElementById('payCODOpt').classList.toggle('sel', method === 'COD');
+    document.getElementById('upiInline').classList.toggle('show', method !== 'COD');
+  }
+
+  function applyCoupon() {
+    const input = document.getElementById('couponInput');
+    const msg = document.getElementById('couponMsg');
+    const code = input.value.trim().toUpperCase();
+    if (!code) { coupon = null; msg.textContent = ''; renderCheckoutSummary(); return; }
+    if (COUPONS[code]) {
+      coupon = { code, percent: COUPONS[code] };
+      msg.className = 'coupon-msg ok';
+      msg.textContent = `“${code}” applied — ${COUPONS[code]}% off!`;
+    } else {
+      coupon = null;
+      msg.className = 'coupon-msg bad';
+      msg.textContent = 'Invalid or expired coupon code.';
+    }
+    renderCheckoutSummary();
+  }
+
+  function renderCheckoutSummary() {
+    const itemsEl = document.getElementById('coItems');
+    itemsEl.innerHTML = cart.map(i => `
+      <div class="co-item">
+        <div class="ci-img ${i.bg}"><svg class="icon"><use href="#${i.icon}"/></svg></div>
+        <div class="ci-info">
+          <div class="ci-name">${i.name}</div>
+          <div class="ci-qty">Qty ${i.qty} × ₹${i.price.toLocaleString()}</div>
+        </div>
+        <div class="ci-price">₹${(i.price * i.qty).toLocaleString()}</div>
+      </div>`).join('');
+    const subtotal = cartSubtotal();
+    const discount = coupon ? Math.round(subtotal * coupon.percent / 100) : 0;
+    const total = subtotal - discount;
+    document.getElementById('coSubtotal').textContent = `₹${subtotal.toLocaleString()}`;
+    const discLine = document.getElementById('coDiscLine');
+    if (discount > 0) {
+      discLine.style.display = 'flex';
+      document.getElementById('coDiscLabel').textContent = `Discount (${coupon.code})`;
+      document.getElementById('coDiscount').textContent = `-₹${discount.toLocaleString()}`;
+    } else {
+      discLine.style.display = 'none';
+    }
+    document.getElementById('coTotal').textContent = `₹${total.toLocaleString()}`;
+  }
+
+  function placeOrder(e) {
+    e.preventDefault();
+    const form = e.target;
+    const fd = new FormData(form);
+    const subtotal = cartSubtotal();
+    const discount = coupon ? Math.round(subtotal * coupon.percent / 100) : 0;
+    const total = subtotal - discount;
+    const itemsText = cart.map(i => `${i.name} x${i.qty} = ₹${(i.price * i.qty).toLocaleString()}`).join('; ')
+      + (coupon ? ` | Coupon ${coupon.code} (-₹${discount})` : '');
+    const firstName = fd.get('firstName') || '';
+
+    // Capture the order in Netlify Forms (so the owner sees it)
+    const params = new URLSearchParams({
+      'form-name': 'order',
+      name: `${firstName} ${fd.get('lastName') || ''}`.trim(),
+      phone: fd.get('phone') || '',
+      email: fd.get('email') || '',
+      address: `${fd.get('address') || ''}, ${fd.get('city') || ''}, ${fd.get('state') || ''} - ${fd.get('pin') || ''}`,
+      city: fd.get('city') || '', state: fd.get('state') || '', pin: fd.get('pin') || '',
+      notes: fd.get('notes') || '', payment: paymentMethod, items: itemsText,
+      total: `₹${total.toLocaleString()}`
+    });
+    fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() }).catch(() => {});
+
+    // Success screen
+    const isUPI = paymentMethod === 'UPI';
+    document.getElementById('successTitle').textContent = 'Order Placed!';
+    document.getElementById('successMsg').innerHTML =
+      `Thank you, <strong>${firstName || 'friend'}</strong>! Your order of <strong>₹${total.toLocaleString()}</strong> is confirmed and we'll be in touch on WhatsApp shortly.`;
+    document.getElementById('successPay').innerHTML = isUPI ? `
+      <div class="co-card" style="text-align:center;max-width:360px;margin:18px auto 0;">
+        <p style="color:var(--muted);font-size:.85rem;margin-bottom:14px;">Complete payment via UPI — we'll confirm within 30 minutes.</p>
+        <div style="background:var(--cream);border-radius:12px;padding:14px;margin-bottom:14px;border:1.5px solid var(--warm);">
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:4px;">UPI ID</div>
+          <div style="font-size:1.1rem;font-weight:bold;color:var(--brown);font-family:monospace;">h-and-a-hampers@axl</div>
+        </div>
+        <button onclick="copyUPI()" id="copyUPIBtn2" class="btn btn-primary" style="width:100%;justify-content:center;"><svg class="icon" style="width:16px;height:16px;"><use href="#i-card"/></svg> Copy UPI ID</button>
+        <p style="font-size:.74rem;color:var(--muted);margin-top:12px;">After paying, send a screenshot to <strong>@h_and_a_hampers</strong> on Instagram or WhatsApp.</p>
+      </div>` : `
+      <div class="co-card" style="text-align:center;max-width:360px;margin:18px auto 0;">
+        <p style="color:var(--muted);font-size:.88rem;">Pay <strong>₹${total.toLocaleString()}</strong> in cash when your hamper is delivered. 🎁</p>
+      </div>`;
+
+    document.getElementById('checkoutContent').style.display = 'none';
+    document.getElementById('checkoutSuccess').classList.add('show');
+    document.getElementById('checkoutOverlay').scrollTop = 0;
+    if (typeof gsap !== 'undefined' && !prefersReduced) {
+      gsap.from('#checkoutSuccess', { scale: 0.96, opacity: 0, duration: 0.5, ease: 'back.out(1.4)' });
+    }
+
+    // Empty the bag now that the order is placed
+    cart = [];
+    coupon = null;
+    updateCartUI();
   }
 
   function copyUPI() {
