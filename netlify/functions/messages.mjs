@@ -58,8 +58,22 @@ export default async (req, context) => {
     created: s.created_at
   }));
 
+  const orders = (subs || []).filter((s) => s.form_name === 'order').map((s) => ({
+    id: s.id,
+    name: s.name || s.data?.name || '',
+    phone: s.data?.phone || '',
+    email: s.email || s.data?.email || '',
+    address: s.data?.address || '',
+    items: s.data?.items || '',
+    total: s.data?.total || '',
+    payment: s.data?.payment || '',
+    notes: s.data?.notes || '',
+    created: s.created_at
+  }));
+
   return json({
     contact: norm.filter((s) => s.form === 'contact'),
-    newsletter: norm.filter((s) => s.form === 'newsletter')
+    newsletter: norm.filter((s) => s.form === 'newsletter'),
+    orders
   });
 };

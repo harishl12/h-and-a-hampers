@@ -1110,7 +1110,7 @@
 
 <script>
   // ── Product Data ──
-  const products = [
+  let products = [
     { id:1, name:'Rustic Gift Hamper', desc:'Curated handmade items in a beautiful wicker basket', price:1299, orig:1599, icon:'i-basket', bg:'p-bg-1', cat:'handmade', badge:'Bestseller' },
     { id:2, name:'Personalized Name Jar', desc:'Custom engraved glass jar with your loved one\'s name', price:599, orig:799, icon:'i-jar', bg:'p-bg-2', cat:'personalized', badge:'Custom' },
     { id:3, name:'Diwali Celebration Box', desc:'Festive goodies — sweets, candles & handcrafted decor', price:1899, orig:2299, icon:'i-diya', bg:'p-bg-3', cat:'seasonal', badge:'Festive' },
@@ -1483,10 +1483,25 @@
     } catch (e) { /* analytics must never break the page */ }
   }
 
+  // ── Load catalog from the store (owner-managed via the dashboard) ──
+  async function loadProducts() {
+    try {
+      const r = await fetch('/.netlify/functions/products');
+      if (r.ok) {
+        const d = await r.json();
+        if (Array.isArray(d.products) && d.products.length) {
+          products = d.products;
+          renderProducts(activeFilter);
+        }
+      }
+    } catch (e) { /* keep built-in defaults */ }
+  }
+
   // ── Init data ──
-  renderProducts('all');
+  renderProducts('all');   // instant render with built-in defaults
   updateCartUI();
   track('view');
+  loadProducts();          // refresh from the live catalog
 
   /* ============================================================
      VISUAL EXPERIENCE LAYER  —  GSAP + Three.js
