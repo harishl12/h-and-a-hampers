@@ -25,8 +25,10 @@ export default async (req) => {
       data.daily[today] = (data.daily[today] || 0) + 1;
     } else if (type === 'add') {
       const id = String(body.id || '').slice(0, 40);
-      if (id) {
-        const p = data.products[id] || { name: String(body.name || id).slice(0, 80), count: 0 };
+      const existing = data.products[id];
+      // Public endpoint: never let the products map grow without bound
+      if (id && (existing || Object.keys(data.products).length < 200)) {
+        const p = existing || { name: String(body.name || id).slice(0, 80), count: 0 };
         p.count += 1;
         if (body.name) p.name = String(body.name).slice(0, 80);
         data.products[id] = p;

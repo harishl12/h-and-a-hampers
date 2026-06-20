@@ -1126,26 +1126,29 @@
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Escape any product/catalog text before putting it in innerHTML (defense-in-depth XSS guard)
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+
   // ── Render Products ──
   function renderProducts(filter) {
     const grid = document.getElementById('productsGrid');
     const filtered = filter === 'all' ? products : products.filter(p => p.cat === filter);
     grid.innerHTML = filtered.map(p => `
-      <div class="product-card" data-cat="${p.cat}">
-        <div class="product-img ${p.bg}">
-          <svg class="icon product-icon"><use href="#${p.icon}"/></svg>
-          ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+      <div class="product-card" data-cat="${esc(p.cat)}">
+        <div class="product-img ${esc(p.bg)}">
+          <svg class="icon product-icon"><use href="#${esc(p.icon)}"/></svg>
+          ${p.badge ? `<span class="product-badge">${esc(p.badge)}</span>` : ''}
           <button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button>
         </div>
         <div class="product-body">
-          <h4>${p.name}</h4>
-          <p>${p.desc}</p>
+          <h4>${esc(p.name)}</h4>
+          <p>${esc(p.desc)}</p>
           <div class="product-footer">
             <div>
-              <span class="price">₹${p.price.toLocaleString()}</span>
-              ${p.orig ? `<span class="price-orig">₹${p.orig.toLocaleString()}</span>` : ''}
+              <span class="price">₹${Number(p.price).toLocaleString()}</span>
+              ${p.orig ? `<span class="price-orig">₹${Number(p.orig).toLocaleString()}</span>` : ''}
             </div>
-            <button class="add-btn" onclick="addToCart(${p.id})">Add to Bag</button>
+            <button class="add-btn" onclick="addToCart(${Number(p.id) || 0})">Add to Bag</button>
           </div>
         </div>
       </div>
@@ -1225,17 +1228,17 @@
     } else {
       itemsEl.innerHTML = cart.map(i => `
         <div class="cart-item">
-          <div class="cart-item-img ${i.bg}"><svg class="icon"><use href="#${i.icon}"/></svg></div>
+          <div class="cart-item-img ${esc(i.bg)}"><svg class="icon"><use href="#${esc(i.icon)}"/></svg></div>
           <div class="cart-item-info">
-            <div class="cart-item-name">${i.name}</div>
+            <div class="cart-item-name">${esc(i.name)}</div>
             <div class="cart-item-price">₹${(i.price * i.qty).toLocaleString()}</div>
             <div class="cart-item-qty">
-              <button class="qty-btn" onclick="changeQty(${i.id},-1)">−</button>
+              <button class="qty-btn" onclick="changeQty(${Number(i.id) || 0},-1)">−</button>
               <span class="qty-val">${i.qty}</span>
-              <button class="qty-btn" onclick="changeQty(${i.id},1)">+</button>
+              <button class="qty-btn" onclick="changeQty(${Number(i.id) || 0},1)">+</button>
             </div>
           </div>
-          <button class="cart-remove" onclick="removeFromCart(${i.id})"><svg class="icon"><use href="#i-trash"/></svg></button>
+          <button class="cart-remove" onclick="removeFromCart(${Number(i.id) || 0})"><svg class="icon"><use href="#i-trash"/></svg></button>
         </div>
       `).join('');
       footerEl.style.display = 'block';
@@ -1308,10 +1311,10 @@
     const itemsEl = document.getElementById('coItems');
     itemsEl.innerHTML = cart.map(i => `
       <div class="co-item">
-        <div class="ci-img ${i.bg}"><svg class="icon"><use href="#${i.icon}"/></svg></div>
+        <div class="ci-img ${esc(i.bg)}"><svg class="icon"><use href="#${esc(i.icon)}"/></svg></div>
         <div class="ci-info">
-          <div class="ci-name">${i.name}</div>
-          <div class="ci-qty">Qty ${i.qty} × ₹${i.price.toLocaleString()}</div>
+          <div class="ci-name">${esc(i.name)}</div>
+          <div class="ci-qty">Qty ${i.qty} × ₹${Number(i.price).toLocaleString()}</div>
         </div>
         <div class="ci-price">₹${(i.price * i.qty).toLocaleString()}</div>
       </div>`).join('');
@@ -1358,7 +1361,7 @@
     const isUPI = paymentMethod === 'UPI';
     document.getElementById('successTitle').textContent = 'Order Placed!';
     document.getElementById('successMsg').innerHTML =
-      `Thank you, <strong>${firstName || 'friend'}</strong>! Your order of <strong>₹${total.toLocaleString()}</strong> is confirmed and we'll be in touch on WhatsApp shortly.`;
+      `Thank you, <strong>${esc(firstName) || 'friend'}</strong>! Your order of <strong>₹${total.toLocaleString()}</strong> is confirmed and we'll be in touch on WhatsApp shortly.`;
     document.getElementById('successPay').innerHTML = isUPI ? `
       <div class="co-card" style="text-align:center;max-width:360px;margin:18px auto 0;">
         <p style="color:var(--muted);font-size:.85rem;margin-bottom:14px;">Complete payment via UPI — we'll confirm within 30 minutes.</p>

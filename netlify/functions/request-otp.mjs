@@ -39,7 +39,7 @@ export default async (req) => {
   if (rec.sent >= MAX_SENDS) return json({ error: 'Too many requests. Try again in a few minutes.' }, 429);
   if (rec.lastSent && now - rec.lastSent < COOLDOWN) return json({ error: 'Please wait a few seconds before requesting another code.' }, 429);
 
-  const otp = String(Math.floor(100000 + Math.random() * 900000));
+  const otp = String(crypto.randomInt(100000, 1000000)); // CSPRNG, always 6 digits
   rec.otpHash = crypto.createHmac('sha256', secret).update(email + ':' + otp).digest('hex');
   rec.exp = now + OTP_TTL;
   rec.attempts = 0;

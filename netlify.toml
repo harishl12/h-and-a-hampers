@@ -10,9 +10,20 @@
 [functions]
   node_bundler = "esbuild"
 
-# Cache-bust the dashboard so owners always get the latest build
+# Security headers for the whole site
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(), payment=()"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; form-action 'self'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'"
+
+# Cache-bust the dashboard, keep it out of search engines, and forbid framing
 [[headers]]
   for = "/dashboard/*"
   [headers.values]
     Cache-Control = "no-cache"
-    X-Robots-Tag = "noindex"   # keep the dashboard out of search engines
+    X-Robots-Tag = "noindex"
+    X-Frame-Options = "DENY"
