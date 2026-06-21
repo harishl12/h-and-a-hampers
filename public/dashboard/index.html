@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="theme-color" content="#1e3d34" />
+  <meta name="theme-color" content="#4e4068" />
   <title>Owner Dashboard · H &amp; A Hampers</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,10 +12,10 @@
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --cream:#f4f1e8; --warm:#ece3d2; --rose:#d56f4c; --rose-dk:#bb5836;
-      --gold:#c6a24c; --brown:#1e3d34; --green:#2c5446; --sage:#e6ece4; --blush:#ecccb9;
-      --text:#262019; --muted:#6c655b; --surface:#fffdf8; --line:rgba(30,61,52,.1);
-      --shadow:rgba(30,61,52,.13);
+      --cream:#f5f1ea; --warm:#ebe6f2; --rose:#7a66a4; --rose-dk:#5e4e73;
+      --gold:#bfa46b; --gold-dk:#9c8550; --brown:#4e4068; --green:#7c6aa0; --sage:#ebe6f2; --blush:#e3d4e8;
+      --text:#2a2433; --muted:#6e6678; --surface:#fffdff; --line:rgba(74,61,94,.1);
+      --shadow:rgba(74,61,94,.13);
       --serif:'Cormorant Garamond',Georgia,serif; --sans:'Jost','Helvetica Neue',Arial,sans-serif;
     }
     body{font-family:var(--sans);background:var(--cream);color:var(--text);font-weight:300;min-height:100vh}
@@ -27,7 +27,7 @@
 
     /* ── Login ── */
     .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
-      background:linear-gradient(135deg,var(--sage),#f3eee4 50%,var(--blush))}
+      background:linear-gradient(135deg,var(--sage),#f2eef6 50%,var(--blush))}
     .login-card{background:var(--surface);border-radius:22px;padding:42px 38px;width:100%;max-width:400px;
       box-shadow:0 24px 60px var(--shadow);text-align:center}
     .login-logo{width:64px;height:64px;margin:0 auto 14px;display:block}
@@ -72,7 +72,7 @@
     .tbtn .icon{width:15px;height:15px}
 
     .wrap{max-width:1140px;margin:0 auto;padding:26px 22px 60px}
-    .banner{background:#fff5ef;border:1.5px solid var(--blush);color:var(--rose-dk);border-radius:12px;
+    .banner{background:#f8f2fe;border:1.5px solid var(--blush);color:var(--rose-dk);border-radius:12px;
       padding:12px 16px;font-size:.84rem;margin-bottom:22px;display:none;align-items:center;gap:10px}
     .banner .icon{width:18px;height:18px;flex:none}
 
@@ -85,9 +85,9 @@
     .card .num{font-family:var(--serif);font-size:2.3rem;font-weight:600;color:var(--brown);line-height:1}
     .card .lbl{font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:6px}
     .ic.views{background:var(--sage);color:var(--green)}
-    .ic.msgs{background:#fbe6dc;color:var(--rose)}
-    .ic.subs{background:#f4ecd2;color:var(--gold-dk,#a8853a)}
-    .ic.bag{background:#e7e9e0;color:var(--brown)}
+    .ic.msgs{background:#ece4f4;color:var(--rose)}
+    .ic.subs{background:#efe7d4;color:var(--gold-dk,#9c8550)}
+    .ic.bag{background:#e9e4f0;color:var(--brown)}
 
     /* ── Panels ── */
     .panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;
@@ -126,7 +126,7 @@
 
     .msg{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px;transition:box-shadow .2s}
     .msg:hover{box-shadow:0 4px 14px var(--shadow)}
-    .msg.unread{border-left:3px solid var(--rose);background:#fffaf6}
+    .msg.unread{border-left:3px solid var(--rose);background:#fbf8fe}
     .msg-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
     .msg-name{font-weight:500;color:var(--brown);font-size:.92rem;display:flex;align-items:center;gap:8px}
     .dot{width:7px;height:7px;border-radius:50%;background:var(--rose);flex:none}
@@ -145,8 +145,8 @@
     .sub-row .dt{color:var(--muted);font-size:.74rem}
 
     /* Stat card tints */
-    .ic.orders{background:#fbe6dc;color:var(--rose)}
-    .ic.rev{background:#e7e9e0;color:var(--green);font-family:var(--serif);font-weight:600;font-size:1.3rem}
+    .ic.orders{background:#ece4f4;color:var(--rose)}
+    .ic.rev{background:#e9e4f0;color:var(--green);font-family:var(--serif);font-weight:600;font-size:1.3rem}
 
     /* Manage products */
     .padmin{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
@@ -162,7 +162,7 @@
     .iconbtn{background:var(--cream);border:1px solid var(--line);border-radius:9px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--green);transition:all .2s}
     .iconbtn:hover{background:var(--sage);border-color:var(--green)}
     .iconbtn.del{color:var(--rose-dk)}
-    .iconbtn.del:hover{background:#fbe6dc;border-color:var(--rose)}
+    .iconbtn.del:hover{background:#ece4f4;border-color:var(--rose)}
     .iconbtn .icon{width:17px;height:17px}
 
     /* Product editor modal */

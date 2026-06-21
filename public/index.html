@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="theme-color" content="#1e3d34" />
+  <meta name="theme-color" content="#4e4068" />
   <title>H &amp; A Hampers – Gifted with Love</title>
   <meta name="description" content="Handcrafted hampers, personalized gifts and seasonal surprises — made with love, wrapped with care, delivered across India." />
 
@@ -16,22 +16,22 @@
     /* ── Reset & Base ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      /* ── "Forest & Clay" palette ── */
-      --cream:    #f4f1e8;   /* page background (porcelain ivory) */
-      --warm:     #ece3d2;   /* warm sand surface */
-      --rose:     #d56f4c;   /* primary accent — clay / terracotta */
-      --rose-dk:  #bb5836;
-      --gold:     #c6a24c;   /* champagne brass */
-      --gold-dk:  #a8853a;
-      --brown:    #1e3d34;   /* deep pine green (dark anchor) */
-      --green:    #2c5446;   /* mid forest green */
-      --sage:     #e6ece4;   /* pale sage tint */
-      --blush:    #ecccb9;   /* soft blush */
-      --text:     #262019;
-      --muted:    #6c655b;
+      /* ── "Lavender Haze" palette ── */
+      --cream:    #f5f1ea;   /* page background (soft lavender cream) */
+      --warm:     #ebe6f2;   /* soft lavender surface */
+      --rose:     #7a66a4;   /* primary accent — muted purple */
+      --rose-dk:  #5e4e73;
+      --gold:     #bfa46b;   /* soft antique gold */
+      --gold-dk:  #9c8550;
+      --brown:    #4e4068;   /* deep plum (dark anchor) */
+      --green:    #7c6aa0;   /* mid lavender-purple */
+      --sage:     #ebe6f2;   /* pale lavender tint */
+      --blush:    #e3d4e8;   /* soft orchid */
+      --text:     #2a2433;
+      --muted:    #6e6678;
       --white:    #ffffff;
-      --surface:  #fffdf8;
-      --shadow:   rgba(30,61,52,0.13);
+      --surface:  #fffdff;
+      --shadow:   rgba(74,61,94,0.13);
       --serif:    'Cormorant Garamond', 'Georgia', serif;
       --sans:     'Jost', 'Helvetica Neue', Arial, sans-serif;
     }
@@ -125,7 +125,7 @@
     .hero {
       position: relative; overflow: hidden;
       padding: 120px 24px 110px;
-      background: linear-gradient(135deg, var(--sage) 0%, #f3eee4 46%, var(--blush) 100%);
+      background: linear-gradient(135deg, var(--sage) 0%, #f2eef6 46%, var(--blush) 100%);
     }
     #hero-canvas {
       position: absolute; inset: 0; width: 100%; height: 100%;
@@ -171,9 +171,9 @@
       transition: transform 0.6s cubic-bezier(.2,.8,.2,1);
     }
     .cat-card:hover .cat-bg { transform: scale(1.08); }
-    .cat-bg-1 { background: linear-gradient(160deg, #e6a283, #cf6a45); }
-    .cat-bg-2 { background: linear-gradient(160deg, #e3cd93, #c19a45); }
-    .cat-bg-3 { background: linear-gradient(160deg, #6f9a86, #2c5446); }
+    .cat-bg-1 { background: linear-gradient(160deg, #c9bbdf, #9b86b8); }
+    .cat-bg-2 { background: linear-gradient(160deg, #e2d2e8, #c2a06a); }
+    .cat-bg-3 { background: linear-gradient(160deg, #b0a0cc, #6a5784); }
     .cat-emoji { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-58%); color:#fff; opacity:.5; }
     .cat-emoji .icon { width: 64px; height: 64px; stroke-width: 1.3; transition: transform .5s; }
     .cat-card:hover .cat-emoji .icon { transform: scale(1.12) rotate(6deg); }
@@ -234,14 +234,14 @@
     .add-btn:hover { background: var(--brown); transform: scale(1.06); }
 
     /* Product image backgrounds (refined palette tints) */
-    .p-bg-1 { background: linear-gradient(135deg, #f3e2d4, #e7c2a9); }
-    .p-bg-2 { background: linear-gradient(135deg, #f4ead2, #e3cd95); }
-    .p-bg-3 { background: linear-gradient(135deg, #e3ebe3, #bcd1c4); }
-    .p-bg-4 { background: linear-gradient(135deg, #f2e5dd, #e4c0b0); }
-    .p-bg-5 { background: linear-gradient(135deg, #f1e0d3, #e0b69d); }
-    .p-bg-6 { background: linear-gradient(135deg, #e5ece7, #bdd3c6); }
-    .p-bg-7 { background: linear-gradient(135deg, #f5ecd3, #e6d39a); }
-    .p-bg-8 { background: linear-gradient(135deg, #f1e3df, #ddbcb5); }
+    .p-bg-1 { background: linear-gradient(135deg, #efe8f4, #d6c6e2); }
+    .p-bg-2 { background: linear-gradient(135deg, #f1eaf0, #e0cddf); }
+    .p-bg-3 { background: linear-gradient(135deg, #eae6f2, #c9bcdd); }
+    .p-bg-4 { background: linear-gradient(135deg, #f0e9f2, #d8c7e0); }
+    .p-bg-5 { background: linear-gradient(135deg, #eee7f0, #d2c0dc); }
+    .p-bg-6 { background: linear-gradient(135deg, #e9e7f3, #c7bbdd); }
+    .p-bg-7 { background: linear-gradient(135deg, #f1ecf2, #dccde0); }
+    .p-bg-8 { background: linear-gradient(135deg, #efe6ef, #d8c3dc); }
 
     /* ── Personalization Banner ── */
     .personalize {
@@ -283,7 +283,7 @@
     .about-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
     .about-visual {
       height: 380px; border-radius: 24px; position: relative; overflow: hidden;
-      background: linear-gradient(160deg, var(--green) 0%, var(--rose) 100%);
+      background: linear-gradient(160deg, var(--brown) 0%, var(--green) 100%);
       display: flex; align-items: center; justify-content: center;
       box-shadow: 0 16px 44px var(--shadow);
     }
@@ -332,7 +332,7 @@
 
     /* ── Cart Sidebar ── */
     .cart-overlay {
-      position: fixed; inset: 0; background: rgba(20,40,33,0.45); z-index: 200;
+      position: fixed; inset: 0; background: rgba(40,30,55,0.45); z-index: 200;
       opacity: 0; pointer-events: none; transition: opacity 0.3s;
     }
     .cart-overlay.open { opacity: 1; pointer-events: all; }
@@ -406,7 +406,7 @@
     /* Payment options */
     .pay-opt { display: flex; align-items: center; gap: 12px; border: 1.5px solid var(--warm); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; cursor: pointer; transition: border-color .2s, background .2s; }
     .pay-opt:hover { border-color: var(--blush); }
-    .pay-opt.sel { border-color: var(--rose); background: #fff6f1; }
+    .pay-opt.sel { border-color: var(--rose); background: #f8f3fe; }
     .pay-opt input { accent-color: var(--rose); width: 18px; height: 18px; }
     .pay-opt .pay-ic { width: 36px; height: 36px; border-radius: 10px; background: var(--sage); color: var(--green); display: flex; align-items: center; justify-content: center; }
     .pay-opt .pay-ic .icon { width: 20px; height: 20px; }
@@ -1615,17 +1615,17 @@
     camera.position.z = 18;
     scene.add(group);
 
-    scene.add(new THREE.AmbientLight(0xfff1e0, 0.95));
-    const key = new THREE.DirectionalLight(0xffe2b8, 1.1); key.position.set(5, 8, 10); scene.add(key);
-    const rim = new THREE.DirectionalLight(0x2c5446, 0.6); rim.position.set(-8, -4, 6); scene.add(rim);
+    scene.add(new THREE.AmbientLight(0xf1ecf8, 0.95));
+    const key = new THREE.DirectionalLight(0xf4ecd8, 1.1); key.position.set(5, 8, 10); scene.add(key);
+    const rim = new THREE.DirectionalLight(0x6a5784, 0.6); rim.position.set(-8, -4, 6); scene.add(rim);
 
     const sprite = (() => {
       const c = document.createElement('canvas'); c.width = c.height = 64;
       const g = c.getContext('2d');
       const grd = g.createRadialGradient(32, 32, 0, 32, 32, 32);
       grd.addColorStop(0, 'rgba(255,255,255,1)');
-      grd.addColorStop(0.3, 'rgba(245,222,170,0.9)');
-      grd.addColorStop(1, 'rgba(245,222,170,0)');
+      grd.addColorStop(0.3, 'rgba(220,208,238,0.9)');
+      grd.addColorStop(1, 'rgba(220,208,238,0)');
       g.fillStyle = grd; g.fillRect(0, 0, 64, 64);
       return new THREE.CanvasTexture(c);
     })();
@@ -1643,16 +1643,16 @@
     pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     const pMat = new THREE.PointsMaterial({
       size: 1.5, map: sprite, transparent: true, depthWrite: false,
-      blending: THREE.AdditiveBlending, color: 0xddb778, opacity: 0.85
+      blending: THREE.AdditiveBlending, color: 0xcbbce0, opacity: 0.85
     });
     group.add(new THREE.Points(pGeo, pMat));
 
     const boxes = [];
-    const palette = [0xd56f4c, 0xc6a24c, 0x2c5446, 0xe0a07e];
+    const palette = [0x8c77b0, 0x6a5784, 0xc2a06a, 0xc7b9dd];
     function makeGift(scale, color) {
       const g = new THREE.Group();
       const matBox = new THREE.MeshStandardMaterial({ color, roughness: 0.55, metalness: 0.05 });
-      const matRibbon = new THREE.MeshStandardMaterial({ color: 0xf2dcbf, roughness: 0.4 });
+      const matRibbon = new THREE.MeshStandardMaterial({ color: 0xede6f3, roughness: 0.4 });
       const body = new THREE.Mesh(new THREE.BoxGeometry(1, 0.85, 1), matBox);
       const lid  = new THREE.Mesh(new THREE.BoxGeometry(1.12, 0.22, 1.12), matBox);
       lid.position.y = 0.52;
