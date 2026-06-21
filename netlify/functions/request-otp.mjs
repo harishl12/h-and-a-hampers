@@ -47,8 +47,9 @@ export default async (req) => {
   rec.lastSent = now;
   await store.setJSON(key, rec);
 
-  const appPass = process.env.GMAIL_APP_PASSWORD;
-  const fromEmail = process.env.OTP_EMAIL || OFFICIAL;
+  // Gmail shows App Passwords as "abcd efgh ijkl mnop" — strip any spaces the owner pasted.
+  const appPass = (process.env.GMAIL_APP_PASSWORD || '').replace(/\s+/g, '');
+  const fromEmail = (process.env.OTP_EMAIL || OFFICIAL).trim();
 
   if (!appPass) {
     // No mail credentials yet — log it so the owner can test from Netlify function logs.
@@ -57,7 +58,10 @@ export default async (req) => {
   }
 
   try {
-    const transporter = nodemailer.createTransport({ service: 'gmail', auth: { user: fromEmail, pass: appPass } });
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com', port: 465, secure: true,
+      auth: { user: fromEmail, pass: appPass }
+    });
     await transporter.sendMail({
       from: `"H & A Hampers" <${fromEmail}>`,
       to: email,
@@ -74,7 +78,18 @@ export default async (req) => {
       </div>`
     });
   } catch (e) {
-    return json({ error: 'Could not send the email. Check the Gmail App Password setup.' }, 502);
+    // Surface the real reason in the function logs (Netlify → Functions → request-otp → logs)
+    console.error('[OTP] Gmail send failed —',
+      'message:', e && e.message,
+      '| code:', e && e.code,
+      '| responseCode:', e && e.responseCode,
+      '| response:', e && e.response);
+    const authErr = e && (e.responseCode === 535 || e.code === 'EAUTH');
+    return json({
+      error: authErr
+        ? 'Gmail rejected the login. Check that 2-Step Verification is ON, the App Password is for h.and.a.gifts.hampers@gmail.com, and OTP_EMAIL matches that address.'
+        : 'Could not send the email — see Netlify function logs for the exact error.'
+    }, 502);
   }
 
   return json({ ok: true });
