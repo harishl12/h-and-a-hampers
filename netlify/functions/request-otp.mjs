@@ -47,50 +47,67 @@ export default async (req) => {
   rec.lastSent = now;
   await store.setJSON(key, rec);
 
+  // Email content (shared across providers)
+  const subject = `${otp} is your H & A Hampers dashboard code`;
+  const text = `Your owner dashboard login code is ${otp}. It expires in 10 minutes. If you didn't request this, you can ignore this email.`;
+  const html = `<div style="font-family:Georgia,serif;max-width:440px;margin:auto;padding:28px;background:#f4f1e8;border-radius:16px;color:#262019">
+      <h2 style="color:#1e3d34;font-weight:600;margin:0 0 6px">H &amp; A Hampers</h2>
+      <p style="color:#6c655b;font-size:14px;margin:0 0 20px">Owner dashboard login</p>
+      <div style="background:#fff;border-radius:12px;padding:20px;text-align:center;border:1px solid #ece3d2">
+        <div style="font-size:12px;letter-spacing:.1em;color:#6c655b;text-transform:uppercase">Your code</div>
+        <div style="font-size:34px;letter-spacing:.3em;font-weight:bold;color:#d56f4c;margin-top:6px">${otp}</div>
+      </div>
+      <p style="color:#6c655b;font-size:13px;margin-top:18px">This code expires in 10 minutes. If you didn't request it, ignore this email.</p>
+    </div>`;
+
+  const resendKey = process.env.RESEND_API_KEY;
   // Gmail shows App Passwords as "abcd efgh ijkl mnop" — strip any spaces the owner pasted.
   const appPass = (process.env.GMAIL_APP_PASSWORD || '').replace(/\s+/g, '');
   const fromEmail = (process.env.OTP_EMAIL || OFFICIAL).trim();
 
-  if (!appPass) {
-    // No mail credentials yet — log it so the owner can test from Netlify function logs.
-    console.log(`[OTP] Dashboard login code for ${email}: ${otp} (set GMAIL_APP_PASSWORD to email it instead)`);
-    return json({ ok: true, devMode: true });
+  // ── Option 1: Resend (simple HTTP API, no SMTP/2FA) ──
+  if (resendKey) {
+    try {
+      const r = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ from: process.env.RESEND_FROM || 'H & A Hampers <onboarding@resend.dev>', to: [email], subject, text, html })
+      });
+      if (!r.ok) {
+        const detail = await r.text().catch(() => '');
+        console.error('[OTP] Resend failed —', r.status, detail);
+        return json({ error: 'Could not send the email via Resend — see Netlify function logs.' }, 502);
+      }
+      return json({ ok: true });
+    } catch (e) {
+      console.error('[OTP] Resend error —', e && e.message);
+      return json({ error: 'Could not reach Resend — see Netlify function logs.' }, 502);
+    }
   }
 
-  try {
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com', port: 465, secure: true,
-      auth: { user: fromEmail, pass: appPass }
-    });
-    await transporter.sendMail({
-      from: `"H & A Hampers" <${fromEmail}>`,
-      to: email,
-      subject: `${otp} is your H & A Hampers dashboard code`,
-      text: `Your owner dashboard login code is ${otp}. It expires in 10 minutes. If you didn't request this, you can ignore this email.`,
-      html: `<div style="font-family:Georgia,serif;max-width:440px;margin:auto;padding:28px;background:#f4f1e8;border-radius:16px;color:#262019">
-        <h2 style="color:#1e3d34;font-weight:600;margin:0 0 6px">H &amp; A Hampers</h2>
-        <p style="color:#6c655b;font-size:14px;margin:0 0 20px">Owner dashboard login</p>
-        <div style="background:#fff;border-radius:12px;padding:20px;text-align:center;border:1px solid #ece3d2">
-          <div style="font-size:12px;letter-spacing:.1em;color:#6c655b;text-transform:uppercase">Your code</div>
-          <div style="font-size:34px;letter-spacing:.3em;font-weight:bold;color:#d56f4c;margin-top:6px">${otp}</div>
-        </div>
-        <p style="color:#6c655b;font-size:13px;margin-top:18px">This code expires in 10 minutes. If you didn't request it, ignore this email.</p>
-      </div>`
-    });
-  } catch (e) {
-    // Surface the real reason in the function logs (Netlify → Functions → request-otp → logs)
-    console.error('[OTP] Gmail send failed —',
-      'message:', e && e.message,
-      '| code:', e && e.code,
-      '| responseCode:', e && e.responseCode,
-      '| response:', e && e.response);
-    const authErr = e && (e.responseCode === 535 || e.code === 'EAUTH');
-    return json({
-      error: authErr
-        ? 'Gmail rejected the login. Check that 2-Step Verification is ON, the App Password is for h.and.a.gifts.hampers@gmail.com, and OTP_EMAIL matches that address.'
-        : 'Could not send the email — see Netlify function logs for the exact error.'
-    }, 502);
+  // ── Option 2: Gmail SMTP (App Password) ──
+  if (appPass) {
+    try {
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com', port: 465, secure: true,
+        auth: { user: fromEmail, pass: appPass }
+      });
+      await transporter.sendMail({ from: `"H & A Hampers" <${fromEmail}>`, to: email, subject, text, html });
+      return json({ ok: true });
+    } catch (e) {
+      console.error('[OTP] Gmail send failed —',
+        'message:', e && e.message, '| code:', e && e.code,
+        '| responseCode:', e && e.responseCode, '| response:', e && e.response);
+      const authErr = e && (e.responseCode === 535 || e.code === 'EAUTH');
+      return json({
+        error: authErr
+          ? 'Gmail rejected the login. Turn ON 2-Step Verification for h.and.a.gifts.hampers@gmail.com and use an App Password from that account — or set RESEND_API_KEY to use Resend instead.'
+          : 'Could not send the email — see Netlify function logs for the exact error.'
+      }, 502);
+    }
   }
 
-  return json({ ok: true });
+  // ── Option 3: no provider configured — log for testing ──
+  console.log(`[OTP] Dashboard login code for ${email}: ${otp} (set RESEND_API_KEY or GMAIL_APP_PASSWORD to email it)`);
+  return json({ ok: true, devMode: true });
 };
