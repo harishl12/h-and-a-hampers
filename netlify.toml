@@ -10,10 +10,12 @@
 [functions]
   node_bundler = "esbuild"
 
-# Clean URLs for uploaded product photos (served from Netlify Blobs)
+# Clean URLs for uploaded product photos (served from Netlify Blobs).
+# The function reads the key from the request path itself (see image.mjs) —
+# the incoming URL is preserved as-is rather than the rewritten query string.
 [[redirects]]
   from = "/img/*"
-  to = "/.netlify/functions/image?key=:splat"
+  to = "/.netlify/functions/image"
   status = 200
 
 # Security headers for the whole site

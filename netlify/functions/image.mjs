@@ -9,11 +9,16 @@ function guessType(k) {
 }
 
 export default async (req) => {
-  const key = new URL(req.url).searchParams.get('key') || '';
-  if (!/^[A-Za-z0-9._-]{1,80}$/.test(key)) {
-    // TEMP DIAGNOSTIC — remove once the /img/* redirect is confirmed working.
-    return new Response(`Bad request. Debug: url=${req.url} key=${JSON.stringify(key)}`, { status: 400 });
+  const u = new URL(req.url);
+  // The /img/* redirect (see netlify.toml) hands the function the original
+  // incoming URL rather than rewriting the query string, so read the key
+  // from the path itself; ?key=... is kept as a fallback for direct calls.
+  let key = u.searchParams.get('key') || '';
+  if (!key) {
+    const parts = u.pathname.split('/').filter(Boolean);
+    key = parts[parts.length - 1] || '';
   }
+  if (!/^[A-Za-z0-9._-]{1,80}$/.test(key)) return new Response('Bad request', { status: 400 });
 
   try {
     const store = getStore('ha-images');
