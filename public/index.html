@@ -7,6 +7,39 @@
   <title>H &amp; A Hampers – Gifted with Love</title>
   <meta name="description" content="Handcrafted hampers, personalized gifts and seasonal surprises — made with love, wrapped with care, delivered across India." />
 
+  <!-- Structured data for Google (local business + product catalog). Mirrors the static
+       product fallback below — update both together if the default catalog changes. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "H & A Hampers",
+    "description": "Handcrafted hampers, personalized gifts and seasonal surprises, delivered across India.",
+    "url": "https://h-and-a-hampers.com/",
+    "telephone": "+91-98765-43210",
+    "email": "h.and.a.gifts.hampers@gmail.com",
+    "address": { "@type": "PostalAddress", "addressLocality": "Bengaluru", "addressRegion": "Karnataka", "addressCountry": "IN" },
+    "sameAs": ["https://www.instagram.com/h_and_a_hampers/"],
+    "openingHoursSpecification": { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"], "opens": "09:00", "closes": "19:00" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": [
+      { "@type": "Product", "position": 1, "name": "Rustic Gift Hamper", "description": "Curated handmade items in a beautiful wicker basket", "category": "Handmade Crafts", "offers": { "@type": "Offer", "price": "1299", "priceCurrency": "INR", "availability": "https://schema.org/InStock" } },
+      { "@type": "Product", "position": 2, "name": "Personalized Name Jar", "description": "Custom engraved glass jar with your loved one's name", "category": "Personalized Gifts", "offers": { "@type": "Offer", "price": "599", "priceCurrency": "INR", "availability": "https://schema.org/InStock" } },
+      { "@type": "Product", "position": 3, "name": "Diwali Celebration Box", "description": "Festive goodies — sweets, candles & handcrafted decor", "category": "Seasonal Hampers", "offers": { "@type": "Offer", "price": "1899", "priceCurrency": "INR", "availability": "https://schema.org/InStock" } },
+      { "@type": "Product", "position": 4, "name": "Macramé Wall Hanging", "description": "Handwoven bohemian wall art, made to order", "category": "Handmade Crafts", "offers": { "@type": "Offer", "price": "849", "priceCurrency": "INR", "availability": "https://schema.org/InStock" } },
+      { "@type": "Product", "position": 5, "name": "Anniversary Love Box", "description": "Rose petals, chocolates & a personalised note card", "category": "Personalized Gifts", "offers": { "@type": "Offer", "price": "1499", "priceCurrency": "INR", "availability": "https://schema.org/InStock" } },
+      { "@type": "Product", "position": 6, "name": "Scented Candle Set", "description": "Set of 3 hand-poured soy candles in seasonal scents", "category": "Handmade Crafts", "offers": { "@type": "Offer", "price": "749", "priceCurrency": "INR", "availability": "https://schema.org/InStock" } },
+      { "@type": "Product", "position": 7, "name": "Birthday Surprise Hamper", "description": "Balloons, treats, handmade goodies & personalised card", "category": "Seasonal Hampers", "offers": { "@type": "Offer", "price": "1199", "priceCurrency": "INR", "availability": "https://schema.org/InStock" } },
+      { "@type": "Product", "position": 8, "name": "Custom Photo Memory Box", "description": "Wooden keepsake box engraved with a photo & message", "category": "Personalized Gifts", "offers": { "@type": "Offer", "price": "1699", "priceCurrency": "INR", "availability": "https://schema.org/InStock" } }
+    ]
+  }
+  </script>
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -274,6 +307,30 @@
     .btn-gold { background: var(--gold); color: var(--brown); box-shadow: 0 6px 18px rgba(198,162,76,0.4); position:relative; font-weight:500; }
     .btn-gold:hover { background: #d8b75e; transform: translateY(-2px); }
 
+    /* ── How It Works ── */
+    .howitworks { padding: 90px 0; background: var(--surface); }
+    .hiw-grid { display: flex; align-items: flex-start; justify-content: center; gap: 18px; max-width: 980px; margin: 0 auto; }
+    .hiw-step { flex: 1; max-width: 240px; text-align: center; position: relative; }
+    .hiw-num {
+      position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+      width: 26px; height: 26px; border-radius: 50%; background: var(--rose); color: #fff;
+      font-size: 0.78rem; font-weight: 600; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 10px var(--shadow);
+    }
+    .hiw-ic {
+      width: 78px; height: 78px; border-radius: 50%; background: var(--sage); color: var(--green);
+      display: flex; align-items: center; justify-content: center; margin: 18px auto 18px;
+    }
+    .hiw-ic .icon { width: 34px; height: 34px; stroke-width: 1.4; }
+    .hiw-step h3 { font-family: var(--serif); font-size: 1.3rem; color: var(--brown); font-weight: 600; margin-bottom: 8px; }
+    .hiw-step p { color: var(--muted); font-size: 0.88rem; line-height: 1.6; font-weight: 300; }
+    .hiw-arrow { color: var(--blush); font-size: 2rem; align-self: center; margin-top: 50px; }
+    @media (max-width: 720px) {
+      .hiw-grid { flex-direction: column; align-items: center; gap: 36px; }
+      .hiw-arrow { display: none; }
+      .hiw-step { max-width: 320px; }
+    }
+
     /* ── Testimonials ── */
     .testimonials { padding: 96px 0; }
     .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
@@ -311,6 +368,24 @@
     .stat { text-align: center; }
     .stat-num { font-family: var(--serif); font-size: 2.6rem; color: var(--rose); font-weight: 600; line-height: 1; }
     .stat-lbl { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 6px; }
+
+    /* ── Corporate Gifting ── */
+    .corporate { padding: 96px 0; background: var(--surface); }
+    .corp-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 56px; align-items: center; }
+    .corp-text h2 { font-family: var(--serif); font-size: 2.4rem; color: var(--brown); font-weight: 500; margin: 18px 0 16px; line-height: 1.2; }
+    .corp-text p { color: var(--muted); line-height: 1.85; margin-bottom: 22px; font-weight: 300; }
+    .corp-features { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+    .corp-feature { display: flex; align-items: center; gap: 10px; color: var(--brown); font-size: 0.92rem; }
+    .corp-feature .icon { width: 19px; height: 19px; color: var(--rose); flex: none; }
+    .corp-visual {
+      height: 280px; border-radius: 24px; background: linear-gradient(160deg, var(--sage) 0%, var(--blush) 100%);
+      display: flex; align-items: center; justify-content: center; box-shadow: 0 16px 44px var(--shadow);
+    }
+    .corp-visual .icon { width: 96px; height: 96px; color: var(--green); stroke-width: 1.2; }
+    @media (max-width: 720px) {
+      .corp-grid { grid-template-columns: 1fr; gap: 32px; }
+      .corp-visual { height: 200px; order: -1; }
+    }
 
     /* ── Contact ── */
     .contact { padding: 96px 0; }
@@ -477,6 +552,29 @@
     .toast .icon { width: 17px; height: 17px; color: var(--gold); }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
+    /* ── Floating WhatsApp button ── */
+    .wa-float {
+      position: fixed; right: 22px; bottom: 22px; z-index: 250;
+      width: 58px; height: 58px; border-radius: 50%; background: #25D366;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 24px rgba(37,211,102,0.45); transition: transform .25s, box-shadow .25s;
+    }
+    .wa-float:hover { transform: scale(1.08); box-shadow: 0 10px 30px rgba(37,211,102,0.55); }
+    .wa-float .icon { width: 30px; height: 30px; color: #fff; }
+    .wa-float .ping { position: absolute; inset: 0; border-radius: 50%; background: #25D366; opacity: .55; animation: waPing 2.2s ease-out infinite; }
+    @keyframes waPing { 0% { transform: scale(1); opacity: .55; } 100% { transform: scale(1.7); opacity: 0; } }
+    @media (max-width: 720px) { .wa-float { right: 16px; bottom: 16px; width: 52px; height: 52px; } .wa-float .icon { width: 26px; height: 26px; } }
+
+    /* Per-product WhatsApp quick-order icon */
+    .product-whatsapp {
+      position: absolute; top: 12px; right: 56px;
+      background: #25D366; border: none; width: 34px; height: 34px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px var(--shadow); transition: all 0.25s; color: #fff;
+    }
+    .product-whatsapp .icon { width: 17px; height: 17px; }
+    .product-whatsapp:hover { transform: scale(1.1); }
+
     /* ── Footer ── */
     footer { background: var(--brown); color: var(--cream); padding: 64px 0 24px; }
     .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.2fr; gap: 40px; margin-bottom: 48px; }
@@ -586,7 +684,7 @@
 </defs></svg>
 
 <!-- Announcement -->
-<div class="announcement"><span class="announcement-track"><svg class="icon"><use href="#i-gift"/></svg> Free gift wrapping on all orders above ₹999 &nbsp;|&nbsp; <svg class="icon"><use href="#i-truck"/></svg> Pan-India delivery available</span></div>
+<div class="announcement"><span class="announcement-track"><svg class="icon"><use href="#i-gift"/></svg> Free gift wrapping on all orders above ₹999 &nbsp;|&nbsp; <svg class="icon"><use href="#i-truck"/></svg> Pan-India delivery available &nbsp;|&nbsp; <svg class="icon"><use href="#i-sparkle"/></svg> Festive &amp; occasion hampers — order early to avoid the rush</span></div>
 
 <!-- Header -->
 <header id="siteHeader">
@@ -651,6 +749,7 @@
     <ul class="nav-links">
       <li><a href="#categories">Shop</a></li>
       <li><a href="#products">Products</a></li>
+      <li><a href="#corporate">Corporate Gifting</a></li>
       <li><a href="#about">Our Story</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -745,7 +844,42 @@
       <button class="filter-tab" onclick="filterProducts('personalized', this)">Personalized</button>
       <button class="filter-tab" onclick="filterProducts('seasonal', this)">Seasonal</button>
     </div>
-    <div class="products-grid" id="productsGrid"></div>
+    <div class="products-grid" id="productsGrid">
+      <!-- Static fallback so crawlers, link-preview bots and no-JS visitors see real products & prices.
+           Replaced instantly by the live, dashboard-managed catalog once the page's script runs. -->
+      <div class="product-card" data-cat="handmade">
+        <div class="product-img p-bg-1"><svg class="icon product-icon"><use href="#i-basket"/></svg><span class="product-badge">Bestseller</span><a class="product-whatsapp" title="Order on WhatsApp" target="_blank" rel="noopener" href="https://wa.me/919876543210?text=Hi!%20I%20am%20interested%20in%20the%20%22Rustic%20Gift%20Hamper%22%20(%E2%82%B91%2C299).%20Could%20you%20share%20more%20details%3F"><svg class="icon"><use href="#i-chat"/></svg></a><button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button></div>
+        <div class="product-body"><h4>Rustic Gift Hamper</h4><p>Curated handmade items in a beautiful wicker basket</p><div class="product-footer"><div><span class="price">₹1,299</span><span class="price-orig">₹1,599</span></div><button class="add-btn" onclick="addToCart(1)">Add to Bag</button></div></div>
+      </div>
+      <div class="product-card" data-cat="personalized">
+        <div class="product-img p-bg-2"><svg class="icon product-icon"><use href="#i-jar"/></svg><span class="product-badge">Custom</span><a class="product-whatsapp" title="Order on WhatsApp" target="_blank" rel="noopener" href="https://wa.me/919876543210?text=Hi!%20I%20am%20interested%20in%20the%20%22Personalized%20Name%20Jar%22%20(%E2%82%B9599).%20Could%20you%20share%20more%20details%3F"><svg class="icon"><use href="#i-chat"/></svg></a><button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button></div>
+        <div class="product-body"><h4>Personalized Name Jar</h4><p>Custom engraved glass jar with your loved one's name</p><div class="product-footer"><div><span class="price">₹599</span><span class="price-orig">₹799</span></div><button class="add-btn" onclick="addToCart(2)">Add to Bag</button></div></div>
+      </div>
+      <div class="product-card" data-cat="seasonal">
+        <div class="product-img p-bg-3"><svg class="icon product-icon"><use href="#i-diya"/></svg><span class="product-badge">Festive</span><a class="product-whatsapp" title="Order on WhatsApp" target="_blank" rel="noopener" href="https://wa.me/919876543210?text=Hi!%20I%20am%20interested%20in%20the%20%22Diwali%20Celebration%20Box%22%20(%E2%82%B91%2C899).%20Could%20you%20share%20more%20details%3F"><svg class="icon"><use href="#i-chat"/></svg></a><button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button></div>
+        <div class="product-body"><h4>Diwali Celebration Box</h4><p>Festive goodies — sweets, candles &amp; handcrafted decor</p><div class="product-footer"><div><span class="price">₹1,899</span><span class="price-orig">₹2,299</span></div><button class="add-btn" onclick="addToCart(3)">Add to Bag</button></div></div>
+      </div>
+      <div class="product-card" data-cat="handmade">
+        <div class="product-img p-bg-4"><svg class="icon product-icon"><use href="#i-macrame"/></svg><a class="product-whatsapp" title="Order on WhatsApp" target="_blank" rel="noopener" href="https://wa.me/919876543210?text=Hi!%20I%20am%20interested%20in%20the%20%22Macram%C3%A9%20Wall%20Hanging%22%20(%E2%82%B9849).%20Could%20you%20share%20more%20details%3F"><svg class="icon"><use href="#i-chat"/></svg></a><button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button></div>
+        <div class="product-body"><h4>Macramé Wall Hanging</h4><p>Handwoven bohemian wall art, made to order</p><div class="product-footer"><div><span class="price">₹849</span></div><button class="add-btn" onclick="addToCart(4)">Add to Bag</button></div></div>
+      </div>
+      <div class="product-card" data-cat="personalized">
+        <div class="product-img p-bg-5"><svg class="icon product-icon"><use href="#i-lovebox"/></svg><span class="product-badge">Popular</span><a class="product-whatsapp" title="Order on WhatsApp" target="_blank" rel="noopener" href="https://wa.me/919876543210?text=Hi!%20I%20am%20interested%20in%20the%20%22Anniversary%20Love%20Box%22%20(%E2%82%B91%2C499).%20Could%20you%20share%20more%20details%3F"><svg class="icon"><use href="#i-chat"/></svg></a><button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button></div>
+        <div class="product-body"><h4>Anniversary Love Box</h4><p>Rose petals, chocolates &amp; a personalised note card</p><div class="product-footer"><div><span class="price">₹1,499</span><span class="price-orig">₹1,799</span></div><button class="add-btn" onclick="addToCart(5)">Add to Bag</button></div></div>
+      </div>
+      <div class="product-card" data-cat="handmade">
+        <div class="product-img p-bg-6"><svg class="icon product-icon"><use href="#i-candle"/></svg><a class="product-whatsapp" title="Order on WhatsApp" target="_blank" rel="noopener" href="https://wa.me/919876543210?text=Hi!%20I%20am%20interested%20in%20the%20%22Scented%20Candle%20Set%22%20(%E2%82%B9749).%20Could%20you%20share%20more%20details%3F"><svg class="icon"><use href="#i-chat"/></svg></a><button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button></div>
+        <div class="product-body"><h4>Scented Candle Set</h4><p>Set of 3 hand-poured soy candles in seasonal scents</p><div class="product-footer"><div><span class="price">₹749</span><span class="price-orig">₹999</span></div><button class="add-btn" onclick="addToCart(6)">Add to Bag</button></div></div>
+      </div>
+      <div class="product-card" data-cat="seasonal">
+        <div class="product-img p-bg-7"><svg class="icon product-icon"><use href="#i-cake"/></svg><span class="product-badge">New</span><a class="product-whatsapp" title="Order on WhatsApp" target="_blank" rel="noopener" href="https://wa.me/919876543210?text=Hi!%20I%20am%20interested%20in%20the%20%22Birthday%20Surprise%20Hamper%22%20(%E2%82%B91%2C199).%20Could%20you%20share%20more%20details%3F"><svg class="icon"><use href="#i-chat"/></svg></a><button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button></div>
+        <div class="product-body"><h4>Birthday Surprise Hamper</h4><p>Balloons, treats, handmade goodies &amp; personalised card</p><div class="product-footer"><div><span class="price">₹1,199</span><span class="price-orig">₹1,499</span></div><button class="add-btn" onclick="addToCart(7)">Add to Bag</button></div></div>
+      </div>
+      <div class="product-card" data-cat="personalized">
+        <div class="product-img p-bg-8"><svg class="icon product-icon"><use href="#i-photo"/></svg><span class="product-badge">Premium</span><a class="product-whatsapp" title="Order on WhatsApp" target="_blank" rel="noopener" href="https://wa.me/919876543210?text=Hi!%20I%20am%20interested%20in%20the%20%22Custom%20Photo%20Memory%20Box%22%20(%E2%82%B91%2C699).%20Could%20you%20share%20more%20details%3F"><svg class="icon"><use href="#i-chat"/></svg></a><button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button></div>
+        <div class="product-body"><h4>Custom Photo Memory Box</h4><p>Wooden keepsake box engraved with a photo &amp; message</p><div class="product-footer"><div><span class="price">₹1,699</span></div><button class="add-btn" onclick="addToCart(8)">Add to Bag</button></div></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -756,6 +890,36 @@
   <h2 class="reveal">Make It Truly Theirs <svg class="icon"><use href="#i-heart"/></svg></h2>
   <p class="reveal">Add a personal touch — names, dates, heartfelt messages. We customize every gift to make it uniquely special for the people you love.</p>
   <a href="#contact" class="btn btn-gold reveal">Request Personalization</a>
+</section>
+
+<!-- How It Works -->
+<section class="howitworks" id="how-it-works">
+  <div class="container">
+    <h2 class="section-title reveal">How It Works</h2>
+    <p class="section-sub reveal">From browsing to your doorstep — in three simple steps</p>
+    <div class="hiw-grid">
+      <div class="hiw-step reveal">
+        <div class="hiw-num">1</div>
+        <div class="hiw-ic"><svg class="icon"><use href="#i-bag"/></svg></div>
+        <h3>Choose</h3>
+        <p>Browse our handmade hampers and gifts, or tell us the occasion you're shopping for.</p>
+      </div>
+      <div class="hiw-arrow reveal">›</div>
+      <div class="hiw-step reveal">
+        <div class="hiw-num">2</div>
+        <div class="hiw-ic"><svg class="icon"><use href="#i-pen"/></svg></div>
+        <h3>Customise</h3>
+        <p>Add names, messages or photos — we'll tailor every detail to make it personal.</p>
+      </div>
+      <div class="hiw-arrow reveal">›</div>
+      <div class="hiw-step reveal">
+        <div class="hiw-num">3</div>
+        <div class="hiw-ic"><svg class="icon"><use href="#i-truck"/></svg></div>
+        <h3>Delivered</h3>
+        <p>We pack it with care and ship it straight to your loved one's door.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- Testimonials -->
@@ -818,19 +982,39 @@
         <p class="reveal">Whether it's a birthday, anniversary, festival, or just a "thinking of you" moment — we've got the perfect gift for every occasion.</p>
         <div class="about-stats reveal">
           <div class="stat">
-            <div class="stat-num" data-count="500" data-suffix="+">0</div>
+            <div class="stat-num" data-count="500" data-suffix="+">500+</div>
             <div class="stat-lbl">Happy Customers</div>
           </div>
           <div class="stat">
-            <div class="stat-num" data-count="50" data-suffix="+">0</div>
+            <div class="stat-num" data-count="50" data-suffix="+">50+</div>
             <div class="stat-lbl">Unique Products</div>
           </div>
           <div class="stat">
-            <div class="stat-num" data-count="100" data-suffix="%">0</div>
+            <div class="stat-num" data-count="100" data-suffix="%">100%</div>
             <div class="stat-lbl">Handcrafted</div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- Corporate Gifting -->
+<section class="corporate" id="corporate">
+  <div class="container">
+    <div class="corp-grid">
+      <div class="corp-text">
+        <div class="hero-badge"><svg class="icon"><use href="#i-bag"/></svg> For Businesses</div>
+        <h2 class="reveal">Corporate Gifting, Made Personal</h2>
+        <p class="reveal">Celebrate clients, employees and milestones with handcrafted hampers your brand can be proud of. From festive bulk orders to branded welcome kits — we handle it end to end.</p>
+        <div class="corp-features reveal">
+          <div class="corp-feature"><svg class="icon"><use href="#i-bag"/></svg> Bulk order pricing</div>
+          <div class="corp-feature"><svg class="icon"><use href="#i-tag"/></svg> Custom branding &amp; notes</div>
+          <div class="corp-feature"><svg class="icon"><use href="#i-truck"/></svg> Pan-India delivery</div>
+        </div>
+        <button class="btn btn-primary reveal" onclick="requestCorporateQuote()">Request a Corporate Quote</button>
+      </div>
+      <div class="corp-visual reveal"><svg class="icon"><use href="#i-bag"/></svg></div>
     </div>
   </div>
 </section>
@@ -844,7 +1028,8 @@
         <p class="reveal">Have a custom order in mind? Want to know more about our products? We'd love to hear from you!</p>
         <div class="contact-items">
           <div class="contact-item reveal"><div class="contact-icon"><svg class="icon"><use href="#i-pin"/></svg></div> Bengaluru, Karnataka, India</div>
-          <div class="contact-item reveal"><div class="contact-icon"><svg class="icon"><use href="#i-phone"/></svg></div> +91 98765 43210</div>
+          <div class="contact-item reveal"><div class="contact-icon"><svg class="icon"><use href="#i-phone"/></svg></div> <a href="tel:+919876543210" style="color:inherit;">+91 98765 43210</a></div>
+          <div class="contact-item reveal"><div class="contact-icon"><svg class="icon"><use href="#i-chat"/></svg></div> <a href="https://wa.me/919876543210?text=Hi!%20I'd%20like%20to%20know%20more%20about%20your%20hampers." target="_blank" rel="noopener" style="color:var(--rose);">Chat with us on WhatsApp</a></div>
           <div class="contact-item reveal"><div class="contact-icon"><svg class="icon"><use href="#i-mail"/></svg></div> h.and.a.gifts.hampers@gmail.com</div>
           <div class="contact-item reveal"><div class="contact-icon"><svg class="icon"><use href="#i-clock"/></svg></div> Mon – Sat, 9 AM – 7 PM</div>
           <div class="contact-item reveal"><div class="contact-icon"><svg class="icon"><use href="#i-instagram"/></svg></div> <a href="https://www.instagram.com/h_and_a_hampers/" target="_blank" style="color:var(--rose);">@h_and_a_hampers</a> on Instagram</div>
@@ -890,7 +1075,7 @@
           </div>
           <div class="form-group">
             <label>What are you looking for?</label>
-            <select name="category">
+            <select name="category" id="contactCategory">
               <option value="">Select a category...</option>
               <option>Handmade Crafts</option>
               <option>Personalized Gift</option>
@@ -946,9 +1131,7 @@
         <p>Handcrafted gifts made with love, wrapped with care, delivered to your door. Every gift tells a story — let us help you tell yours.</p>
         <div class="footer-socials">
           <a class="social-btn" href="https://www.instagram.com/h_and_a_hampers/" target="_blank" title="Instagram"><svg class="icon"><use href="#i-instagram"/></svg></a>
-          <a class="social-btn" href="#" title="Facebook"><svg class="icon"><use href="#i-facebook"/></svg></a>
-          <a class="social-btn" href="#" title="WhatsApp"><svg class="icon"><use href="#i-chat"/></svg></a>
-          <a class="social-btn" href="#" title="Pinterest"><svg class="icon"><use href="#i-pinterest"/></svg></a>
+          <a class="social-btn" href="https://wa.me/919876543210?text=Hi!%20I'd%20like%20to%20know%20more%20about%20your%20hampers." target="_blank" rel="noopener" title="WhatsApp"><svg class="icon"><use href="#i-chat"/></svg></a>
         </div>
       </div>
       <div class="footer-col">
@@ -1116,6 +1299,12 @@
   </div>
 </div>
 
+<!-- Floating WhatsApp button -->
+<a class="wa-float" id="waFloat" href="https://wa.me/919876543210?text=Hi!%20I'd%20like%20to%20know%20more%20about%20your%20hampers." target="_blank" rel="noopener" title="Chat with us on WhatsApp" aria-label="Chat on WhatsApp">
+  <span class="ping"></span>
+  <svg class="icon"><use href="#i-chat"/></svg>
+</a>
+
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
@@ -1125,6 +1314,24 @@
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <script>
+  // ── WhatsApp ── (TODO: replace with the real WhatsApp Business number, digits only with country code)
+  const WHATSAPP_NUMBER = '919876543210';
+  function waLink(message) {
+    return 'https://wa.me/' + WHATSAPP_NUMBER + (message ? '?text=' + encodeURIComponent(message) : '');
+  }
+  function orderViaWhatsApp(id, e) {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    const p = products.find(x => x.id === id);
+    const msg = p ? `Hi! I'm interested in the "${p.name}" (₹${Number(p.price).toLocaleString()}). Could you share more details?` : "Hi! I'd like to know more about your hampers.";
+    window.open(waLink(msg), '_blank', 'noopener');
+  }
+
+  function requestCorporateQuote() {
+    const sel = document.getElementById('contactCategory');
+    if (sel) sel.value = 'Bulk / Corporate Order';
+    document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+  }
+
   // ── Product Data ──
   let products = [
     { id:1, name:'Rustic Gift Hamper', desc:'Curated handmade items in a beautiful wicker basket', price:1299, orig:1599, icon:'i-basket', bg:'p-bg-1', cat:'handmade', badge:'Bestseller' },
@@ -1165,6 +1372,7 @@
         <div class="product-img ${esc(p.bg)}">
           ${media}
           ${p.badge ? `<span class="product-badge">${esc(p.badge)}</span>` : ''}
+          <a class="product-whatsapp" title="Order on WhatsApp" target="_blank" rel="noopener" href="${esc(waLink(`Hi! I'm interested in the "${p.name}" (₹${Number(p.price).toLocaleString()}). Could you share more details?`))}"><svg class="icon"><use href="#i-chat"/></svg></a>
           <button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button>
         </div>
         <div class="product-body">
@@ -1546,6 +1754,8 @@
   updateCartUI();
   track('view');
   loadProducts();          // refresh from the live catalog
+  const waFloatEl = document.getElementById('waFloat');
+  if (waFloatEl) waFloatEl.href = waLink("Hi! I'd like to know more about your hampers.");
 
   /* ============================================================
      VISUAL EXPERIENCE LAYER  —  GSAP + Three.js
