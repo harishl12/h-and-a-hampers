@@ -857,7 +857,7 @@
             <span class="upi-glyph"><svg class="icon"><use href="#i-phone"/></svg></span>
             <div>
               <div class="upi-id-lbl">UPI ID</div>
-              <div class="upi-id">h-and-a-hampers@axl</div>
+              <div class="upi-id">dummy-upi-id@bank</div>
             </div>
             <button onclick="copyUPI()" class="upi-copy" id="copyUPIBtn">Copy</button>
           </div>
@@ -1069,7 +1069,7 @@
                 <div class="row">
                   <div>
                     <div style="font-size:.72rem;color:var(--muted);margin-bottom:3px;">Our UPI ID</div>
-                    <div class="uid">h-and-a-hampers@axl</div>
+                    <div class="uid">dummy-upi-id@bank</div>
                   </div>
                   <button type="button" class="coupon-btn" onclick="copyUPI()" id="copyUPIBtn">Copy</button>
                 </div>
@@ -1408,7 +1408,7 @@
         <p style="color:var(--muted);font-size:.85rem;margin-bottom:14px;">Complete payment via UPI — we'll confirm within 30 minutes.</p>
         <div style="background:var(--cream);border-radius:12px;padding:14px;margin-bottom:14px;border:1.5px solid var(--warm);">
           <div style="font-size:.72rem;color:var(--muted);margin-bottom:4px;">UPI ID</div>
-          <div style="font-size:1.1rem;font-weight:bold;color:var(--brown);font-family:monospace;">h-and-a-hampers@axl</div>
+          <div style="font-size:1.1rem;font-weight:bold;color:var(--brown);font-family:monospace;">dummy-upi-id@bank</div>
         </div>
         <button onclick="copyUPI()" id="copyUPIBtn2" class="btn btn-primary" style="width:100%;justify-content:center;"><svg class="icon" style="width:16px;height:16px;"><use href="#i-card"/></svg> Copy UPI ID</button>
         <p style="font-size:.74rem;color:var(--muted);margin-top:12px;">After paying, send a screenshot to <strong>@h_and_a_hampers</strong> on Instagram or WhatsApp.</p>
@@ -1431,7 +1431,7 @@
   }
 
   function copyUPI() {
-    navigator.clipboard.writeText('h-and-a-hampers@axl').then(() => {
+    navigator.clipboard.writeText('dummy-upi-id@bank').then(() => {
       showToast('UPI ID copied', 'i-check');
       document.getElementById('copyUPIBtn') && (document.getElementById('copyUPIBtn').textContent = 'Copied!');
       document.getElementById('copyUPIBtn2') && (document.getElementById('copyUPIBtn2').innerHTML = '<svg class="icon" style="width:16px;height:16px;"><use href="#i-check"/></svg> Copied!');
