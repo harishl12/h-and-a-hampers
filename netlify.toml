@@ -10,6 +10,12 @@
 [functions]
   node_bundler = "esbuild"
 
+# Clean URLs for uploaded product photos (served from Netlify Blobs)
+[[redirects]]
+  from = "/img/*"
+  to = "/.netlify/functions/image?key=:splat"
+  status = 200
+
 # Security headers for the whole site
 [[headers]]
   for = "/*"

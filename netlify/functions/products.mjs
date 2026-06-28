@@ -49,7 +49,9 @@ function clean(list) {
       icon: ICONS.includes(p.icon) ? p.icon : 'i-gift',
       bg: /^p-bg-[1-8]$/.test(p.bg || '') ? p.bg : `p-bg-${(idx % 8) + 1}`,
       cat: CATS.includes(p.cat) ? p.cat : 'handmade',
-      badge: p.badge ? String(p.badge).slice(0, 24) : null
+      badge: p.badge ? String(p.badge).slice(0, 24) : null,
+      // Only same-origin image paths (e.g. /img/p1-abc.jpg) — blocks external/script URLs
+      image: typeof p.image === 'string' && /^\/[A-Za-z0-9._/?=&-]{1,160}$/.test(p.image) ? p.image : null
     };
   });
 }

@@ -181,6 +181,14 @@
     .pm-field textarea{resize:vertical;min-height:64px}
     .pm-prev{width:46px;height:46px;border-radius:10px;background:var(--sage);display:flex;align-items:center;justify-content:center;flex:none}
     .pm-prev .icon{width:28px;height:28px;color:var(--green);stroke-width:1.5}
+    .photo-drop{display:flex;align-items:center;gap:14px;border:1.5px dashed var(--warm);border-radius:12px;padding:12px;transition:border-color .2s,background .2s}
+    .photo-drop.drag{border-color:var(--rose);background:var(--sage)}
+    .photo-prev{width:64px;height:64px;border-radius:10px;background:var(--sage);display:flex;align-items:center;justify-content:center;flex:none;overflow:hidden}
+    .photo-prev .icon{width:32px;height:32px;color:var(--green);stroke-width:1.5}
+    .photo-prev img{width:100%;height:100%;object-fit:cover}
+    .photo-meta{flex:1;min-width:0}
+    .photo-hint{font-size:.72rem;color:var(--muted);margin-top:7px;line-height:1.4}
+    .pa-ic img{width:100%;height:100%;object-fit:cover;border-radius:10px}
     .pmodal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
 
     /* Toast */
@@ -214,6 +222,8 @@
   <symbol id="d-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-.5 4"/><path d="M20 5v6h-6"/></symbol>
   <symbol id="d-out" viewBox="0 0 24 24"><path d="M14 7V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-2"/><path d="M10 12h10M17 9l3 3-3 3"/></symbol>
   <symbol id="d-download" viewBox="0 0 24 24"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M5 20h14"/></symbol>
+  <symbol id="d-upload" viewBox="0 0 24 24"><path d="M12 16V5"/><path d="M8 9l4-4 4 4"/><path d="M5 20h14"/></symbol>
+  <symbol id="d-image" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.7"/><path d="M4.5 16.5l4.2-3.8 3 2.6 3.8-3.4 4 3.6"/></symbol>
   <symbol id="d-chart" viewBox="0 0 24 24"><path d="M4 20V4"/><path d="M4 20h16"/><rect x="7" y="12" width="3" height="5"/><rect x="12" y="8" width="3" height="9"/><rect x="17" y="14" width="3" height="3"/></symbol>
   <symbol id="d-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 5.5L20.5 7"/></symbol>
   <symbol id="d-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
@@ -387,6 +397,20 @@
       </div>
       <form id="prodForm" onsubmit="App.saveProduct(event)">
         <input type="hidden" name="id" />
+        <div class="pm-field">
+          <label>Photo (optional)</label>
+          <div class="photo-drop" id="photoDrop">
+            <div class="photo-prev" id="photoPrev"><svg class="icon"><use href="#i-gift"/></svg></div>
+            <div class="photo-meta">
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button type="button" class="mini" onclick="document.getElementById('photoFile').click()"><svg class="icon"><use href="#d-upload"/></svg> Upload photo</button>
+                <button type="button" class="mini" id="photoRemoveBtn" onclick="App.removePhoto()" style="display:none"><svg class="icon"><use href="#d-trash"/></svg> Remove</button>
+              </div>
+              <div class="photo-hint">JPG or PNG — drag &amp; drop or click. Falls back to the icon if empty.</div>
+            </div>
+            <input type="file" id="photoFile" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="App.onPhotoPick(this.files[0])" />
+          </div>
+        </div>
         <div class="pm-field"><label>Name</label><input name="name" required maxlength="80" placeholder="e.g. Rustic Gift Hamper" /></div>
         <div class="pm-field"><label>Description</label><textarea name="desc" maxlength="220" placeholder="Short description shown on the card"></textarea></div>
         <div class="pm-row">
@@ -728,7 +752,7 @@ const App = (() => {
     if (!state.products.length) { el.innerHTML = `<div class="empty"><svg class="icon"><use href="#d-bag"/></svg><div>No products yet. Click “Add product”.</div></div>`; return; }
     el.innerHTML = state.products.map(p => `
       <div class="padmin">
-        <div class="pa-ic ${esc(p.bg)}"><svg class="icon"><use href="#${esc(p.icon)}"/></svg></div>
+        <div class="pa-ic ${esc(p.bg)}">${p.image ? `<img src="${esc(p.image)}" alt="">` : `<svg class="icon"><use href="#${esc(p.icon)}"/></svg>`}</div>
         <div class="pa-info">
           <div class="pa-name">${esc(p.name)} ${p.badge ? `<span class="chip">${esc(p.badge)}</span>` : ''}</div>
           <div class="pa-meta">${esc(p.cat)}</div>
@@ -739,6 +763,50 @@ const App = (() => {
           <button class="iconbtn del" title="Delete" onclick="App.deleteProduct('${esc(String(p.id))}')"><svg class="icon"><use href="#d-trash"/></svg></button>
         </div>
       </div>`).join('');
+  }
+
+  /* ── Photo handling ── */
+  let pendingImage = null;     // data URL of a newly picked photo (this session)
+  let removeImage = false;     // owner cleared the existing photo
+
+  function resizeImage(file, maxDim = 1000, quality = 0.82) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxDim || height > maxDim) {
+          const s = maxDim / Math.max(width, height);
+          width = Math.round(width * s); height = Math.round(height * s);
+        }
+        const c = document.createElement('canvas'); c.width = width; c.height = height;
+        c.getContext('2d').drawImage(img, 0, 0, width, height);
+        URL.revokeObjectURL(img.src);
+        resolve(c.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  async function onPhotoPick(file) {
+    if (!file || !/^image\/(jpeg|png|webp)$/.test(file.type)) { dtoast('Please choose a JPG, PNG or WebP image'); return; }
+    try {
+      pendingImage = await resizeImage(file);
+      removeImage = false;
+      setPhotoPreview(pendingImage);
+    } catch { dtoast('Could not read that image'); }
+  }
+
+  function removePhoto() {
+    pendingImage = null; removeImage = true;
+    $('photoFile').value = '';
+    setPhotoPreview(null);
+  }
+
+  function setPhotoPreview(src) {
+    const pv = $('photoPrev');
+    if (src) { pv.innerHTML = `<img src="${esc(src)}" alt="">`; $('photoRemoveBtn').style.display = ''; }
+    else { pv.innerHTML = `<svg class="icon"><use href="#${esc($('prodForm').icon.value)}"/></svg>`; $('photoRemoveBtn').style.display = 'none'; }
   }
 
   function editProduct(id) {
@@ -753,17 +821,25 @@ const App = (() => {
     f.cat.value = p ? p.cat : 'handmade';
     f.icon.value = p ? p.icon : 'i-gift';
     f.badge.value = (p && p.badge) ? p.badge : '';
+    pendingImage = null; removeImage = false; f.querySelector('#photoFile').value = '';
     $('pmTitle').textContent = p ? 'Edit Product' : 'Add Product';
     previewIcon();
+    setPhotoPreview(p && p.image ? p.image : null);
     $('prodModal').classList.add('open');
   }
   function closeProduct() { $('prodModal').classList.remove('open'); }
-  function previewIcon() { $('pmIconPrev').querySelector('use').setAttribute('href', '#' + $('prodForm').icon.value); }
+  function previewIcon() {
+    const ic = $('prodForm').icon.value;
+    $('pmIconPrev').querySelector('use').setAttribute('href', '#' + ic);
+    const pv = $('photoPrev');
+    if (!pv.querySelector('img')) pv.innerHTML = `<svg class="icon"><use href="#${esc(ic)}"/></svg>`;
+  }
 
-  function saveProduct(e) {
+  async function saveProduct(e) {
     e.preventDefault();
     const fd = new FormData(e.target);
     const id = fd.get('id');
+    const btn = e.target.querySelector('button[type="submit"]');
     const prod = {
       name: fd.get('name'), desc: fd.get('desc'),
       price: Number(fd.get('price')) || 0,
@@ -771,15 +847,35 @@ const App = (() => {
       cat: fd.get('cat'), icon: fd.get('icon'),
       badge: (fd.get('badge') || '').trim() || null
     };
-    if (id) {
-      const i = state.products.findIndex(p => String(p.id) === String(id));
-      if (i >= 0) { prod.id = state.products[i].id; prod.bg = state.products[i].bg; state.products[i] = prod; }
-    } else {
-      const maxId = state.products.reduce((m, p) => Math.max(m, Number(p.id) || 0), 0);
-      prod.id = maxId + 1;
+    const existing = id ? state.products.find(p => String(p.id) === String(id)) : null;
+    if (id) { prod.id = existing ? existing.id : id; prod.bg = existing ? existing.bg : 'p-bg-1'; }
+    else {
+      prod.id = state.products.reduce((m, p) => Math.max(m, Number(p.id) || 0), 0) + 1;
       prod.bg = 'p-bg-' + ((state.products.length % 8) + 1);
-      state.products.push(prod);
     }
+
+    // Resolve the photo
+    if (removeImage) prod.image = null;
+    else if (pendingImage) {
+      if (isDemo()) { prod.image = pendingImage; }
+      else {
+        if (btn) { btn.disabled = true; btn.textContent = 'Uploading…'; }
+        try {
+          const res = await apiPost('upload-image', { data: pendingImage, contentType: 'image/jpeg', productId: prod.id });
+          if (!res.ok) throw new Error(res.data.error || 'Upload failed');
+          prod.image = res.data.url;
+        } catch (err) {
+          if (btn) { btn.disabled = false; btn.textContent = 'Save'; }
+          dtoast(err.message || 'Could not upload the photo');
+          return;
+        }
+        if (btn) { btn.disabled = false; btn.textContent = 'Save'; }
+      }
+    } else { prod.image = existing ? (existing.image || null) : null; }
+
+    if (existing) { const i = state.products.indexOf(existing); state.products[i] = prod; }
+    else state.products.push(prod);
+
     closeProduct();
     renderProductsAdmin();
     persistProducts(id ? 'Product updated' : 'Product added');
@@ -821,13 +917,19 @@ const App = (() => {
         doPasswordLogin();
       }
     });
+    const drop = $('photoDrop');
+    if (drop) {
+      ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('drag'); }));
+      ['dragleave', 'dragend'].forEach(ev => drop.addEventListener(ev, () => drop.classList.remove('drag')));
+      drop.addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('drag'); const f = e.dataTransfer.files && e.dataTransfer.files[0]; if (f) onPhotoPick(f); });
+    }
     window.addEventListener('hashchange', load);
     load();
   }
 
   return { init, load, logout, markRead, markAllRead, exportSubs, exportMsgs, exportOrders,
            editProduct, closeProduct, previewIcon, saveProduct, deleteProduct, renderAll,
-           loginMode, sendOtp, verifyOtp, otpBack };
+           onPhotoPick, removePhoto, loginMode, sendOtp, verifyOtp, otpBack };
 })();
 
 /* ── Demo data (open /dashboard/#demo to preview the layout) ── */

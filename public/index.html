@@ -206,6 +206,9 @@
     }
     .product-icon { width: 86px; height: 86px; stroke-width: 1.35; color: var(--brown); transition: transform .45s cubic-bezier(.2,.8,.2,1); }
     .product-card:hover .product-icon { transform: scale(1.12) rotate(-4deg); }
+    .product-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+    .product-card:hover .product-photo { transform: scale(1.06); }
+    .cart-item-img img, .ci-img img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
     .product-badge {
       position: absolute; top: 12px; left: 12px;
       background: var(--gold); color: white; padding: 4px 11px;
@@ -1136,7 +1139,7 @@
     grid.innerHTML = filtered.map(p => `
       <div class="product-card" data-cat="${esc(p.cat)}">
         <div class="product-img ${esc(p.bg)}">
-          <svg class="icon product-icon"><use href="#${esc(p.icon)}"/></svg>
+          ${p.image ? `<img class="product-photo" src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy">` : `<svg class="icon product-icon"><use href="#${esc(p.icon)}"/></svg>`}
           ${p.badge ? `<span class="product-badge">${esc(p.badge)}</span>` : ''}
           <button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button>
         </div>
@@ -1228,7 +1231,7 @@
     } else {
       itemsEl.innerHTML = cart.map(i => `
         <div class="cart-item">
-          <div class="cart-item-img ${esc(i.bg)}"><svg class="icon"><use href="#${esc(i.icon)}"/></svg></div>
+          <div class="cart-item-img ${esc(i.bg)}">${i.image ? `<img src="${esc(i.image)}" alt="">` : `<svg class="icon"><use href="#${esc(i.icon)}"/></svg>`}</div>
           <div class="cart-item-info">
             <div class="cart-item-name">${esc(i.name)}</div>
             <div class="cart-item-price">₹${(i.price * i.qty).toLocaleString()}</div>
@@ -1311,7 +1314,7 @@
     const itemsEl = document.getElementById('coItems');
     itemsEl.innerHTML = cart.map(i => `
       <div class="co-item">
-        <div class="ci-img ${esc(i.bg)}"><svg class="icon"><use href="#${esc(i.icon)}"/></svg></div>
+        <div class="ci-img ${esc(i.bg)}">${i.image ? `<img src="${esc(i.image)}" alt="">` : `<svg class="icon"><use href="#${esc(i.icon)}"/></svg>`}</div>
         <div class="ci-info">
           <div class="ci-name">${esc(i.name)}</div>
           <div class="ci-qty">Qty ${i.qty} × ₹${Number(i.price).toLocaleString()}</div>
