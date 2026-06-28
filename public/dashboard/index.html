@@ -572,15 +572,29 @@ const App = (() => {
     $('pw').value = '';
   }
 
+  // A stalled connection (e.g. slow mobile data mid-upload) would otherwise hang
+  // a plain fetch() forever — leaving a button stuck on "Uploading…" with no way
+  // to recover. Give every API call a hard ceiling so it always settles.
+  async function fetchWithTimeout(url, opts, ms = 30000) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), ms);
+    try { return await fetch(url, { ...opts, signal: ctrl.signal }); }
+    catch (e) {
+      if (e.name === 'AbortError') throw new Error('Request timed out — check your connection and try again');
+      throw e;
+    }
+    finally { clearTimeout(timer); }
+  }
+
   async function api(path) {
-    const r = await fetch(API + '/' + path, { headers: { Authorization: 'Bearer ' + token() } });
+    const r = await fetchWithTimeout(API + '/' + path, { headers: { Authorization: 'Bearer ' + token() } });
     if (r.status === 401) { logout(); throw new Error('Session expired'); }
     const data = await r.json().catch(() => ({}));
     return { ok: r.ok, status: r.status, data };
   }
 
   async function apiPost(path, body) {
-    const r = await fetch(API + '/' + path, {
+    const r = await fetchWithTimeout(API + '/' + path, {
       method: 'POST',
       headers: { Authorization: 'Bearer ' + token(), 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
@@ -882,6 +896,8 @@ const App = (() => {
                : (p && p.image ? [p.image] : []);
     $('photoFile').value = '';
     $('pmTitle').textContent = p ? 'Edit Product' : 'Add Product';
+    const saveBtn = f.querySelector('button[type="submit"]');
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save'; }
     previewIcon();
     renderPhotoGrid();
     $('prodModal').classList.add('open');
@@ -893,58 +909,57 @@ const App = (() => {
 
   async function saveProduct(e) {
     e.preventDefault();
-    const fd = new FormData(e.target);
-    const id = fd.get('id');
     const btn = e.target.querySelector('button[type="submit"]');
-    const prod = {
-      name: fd.get('name'), desc: fd.get('desc'),
-      price: Number(fd.get('price')) || 0,
-      orig: fd.get('orig') ? Number(fd.get('orig')) : null,
-      cat: fd.get('cat'), icon: fd.get('icon'),
-      badge: (fd.get('badge') || '').trim() || null
-    };
-    const existing = id ? state.products.find(p => String(p.id) === String(id)) : null;
-    if (id) { prod.id = existing ? existing.id : id; prod.bg = existing ? existing.bg : 'p-bg-1'; }
-    else {
-      prod.id = state.products.reduce((m, p) => Math.max(m, Number(p.id) || 0), 0) + 1;
-      prod.bg = 'p-bg-' + ((state.products.length % 8) + 1);
-    }
+    // Whatever happens below — success, a known error, or a bug we didn't anticipate —
+    // the button must never end up stuck disabled with no way to retry.
+    try {
+      const fd = new FormData(e.target);
+      const id = fd.get('id');
+      const prod = {
+        name: fd.get('name'), desc: fd.get('desc'),
+        price: Number(fd.get('price')) || 0,
+        orig: fd.get('orig') ? Number(fd.get('orig')) : null,
+        cat: fd.get('cat'), icon: fd.get('icon'),
+        badge: (fd.get('badge') || '').trim() || null
+      };
+      const existing = id ? state.products.find(p => String(p.id) === String(id)) : null;
+      if (id) { prod.id = existing ? existing.id : id; prod.bg = existing ? existing.bg : 'p-bg-1'; }
+      else {
+        prod.id = state.products.reduce((m, p) => Math.max(m, Number(p.id) || 0), 0) + 1;
+        prod.bg = 'p-bg-' + ((state.products.length % 8) + 1);
+      }
 
-    // Resolve photos — upload any new (data URL) images, keep already-stored ones, preserve order
-    const imgs = [];
-    const hasNew = editImages.some(s => s.startsWith('data:'));
-    if (hasNew && !isDemo() && btn) { btn.disabled = true; btn.textContent = 'Uploading…'; }
-    for (const src of editImages) {
-      if (src.startsWith('data:')) {
-        if (isDemo()) { imgs.push(src); continue; }
-        try {
+      // Resolve photos — upload any new (data URL) images, keep already-stored ones, preserve order
+      const imgs = [];
+      const hasNew = editImages.some(s => s.startsWith('data:'));
+      if (hasNew && !isDemo() && btn) { btn.disabled = true; btn.textContent = 'Uploading…'; }
+      for (const src of editImages) {
+        if (src.startsWith('data:')) {
+          if (isDemo()) { imgs.push(src); continue; }
           const res = await apiPost('upload-image', { data: src, contentType: 'image/jpeg', productId: prod.id });
-          if (!res.ok) throw new Error(res.data.error || 'Upload failed');
+          if (!res.ok) throw new Error(res.data.error || 'Could not upload a photo');
           imgs.push(res.data.url);
-        } catch (err) {
-          if (btn) { btn.disabled = false; btn.textContent = 'Save'; }
-          dtoast(err.message || 'Could not upload a photo');
-          return;
-        }
-      } else imgs.push(src);
+        } else imgs.push(src);
+      }
+      prod.images = imgs;
+      prod.image = imgs[0] || null;
+
+      // Build the candidate list but don't commit to state/UI until the server confirms it saved —
+      // otherwise a failed save still looks successful in the dashboard (modal closes, list updates)
+      // while the live site never gets the change.
+      const candidate = state.products.slice();
+      if (existing) { const i = candidate.indexOf(existing); candidate[i] = prod; }
+      else candidate.push(prod);
+
+      if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+      const ok = await persistProducts(candidate, id ? 'Product updated' : 'Product added');
+      if (ok) closeProduct();
+      // on failure: modal stays open (with the photo/fields intact) so the owner can just hit Save again
+    } catch (err) {
+      dtoast(err.message || 'Something went wrong — please try again', true);
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = 'Save'; }
     }
-    if (btn) { btn.disabled = false; btn.textContent = 'Save'; }
-    prod.images = imgs;
-    prod.image = imgs[0] || null;
-
-    // Build the candidate list but don't commit to state/UI until the server confirms it saved —
-    // otherwise a failed save still looks successful in the dashboard (modal closes, list updates)
-    // while the live site never gets the change.
-    const candidate = state.products.slice();
-    if (existing) { const i = candidate.indexOf(existing); candidate[i] = prod; }
-    else candidate.push(prod);
-
-    if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
-    const ok = await persistProducts(candidate, id ? 'Product updated' : 'Product added');
-    if (btn) { btn.disabled = false; btn.textContent = 'Save'; }
-
-    if (ok) closeProduct();
-    // on failure: modal stays open (with the photo/fields intact) so the owner can just hit Save again
   }
 
   async function deleteProduct(id) {
