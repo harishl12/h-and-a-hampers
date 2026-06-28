@@ -10,7 +10,10 @@ function guessType(k) {
 
 export default async (req) => {
   const key = new URL(req.url).searchParams.get('key') || '';
-  if (!/^[A-Za-z0-9._-]{1,80}$/.test(key)) return new Response('Bad request', { status: 400 });
+  if (!/^[A-Za-z0-9._-]{1,80}$/.test(key)) {
+    // TEMP DIAGNOSTIC — remove once the /img/* redirect is confirmed working.
+    return new Response(`Bad request. Debug: url=${req.url} key=${JSON.stringify(key)}`, { status: 400 });
+  }
 
   try {
     const store = getStore('ha-images');
