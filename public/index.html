@@ -209,6 +209,19 @@
     .product-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .45s cubic-bezier(.2,.8,.2,1); }
     .product-card:hover .product-photo { transform: scale(1.06); }
     .cart-item-img img, .ci-img img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+    /* product-card photo carousel */
+    .pgallery { position: absolute; inset: 0; }
+    .pg-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .4s ease; }
+    .pg-img.on { opacity: 1; }
+    .pg-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(255,255,255,0.85); color: var(--brown); border: none; font-size: 1.1rem; line-height: 1;
+      display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .25s, background .2s; z-index: 3; }
+    .pg-nav.prev { left: 8px; } .pg-nav.next { right: 8px; }
+    .product-card:hover .pg-nav { opacity: 1; }
+    .pg-nav:hover { background: #fff; }
+    .pg-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 3; }
+    .pg-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.6); transition: background .2s, transform .2s; }
+    .pg-dot.on { background: #fff; transform: scale(1.25); }
     .product-badge {
       position: absolute; top: 12px; left: 12px;
       background: var(--gold); color: white; padding: 4px 11px;
@@ -1136,10 +1149,21 @@
   function renderProducts(filter) {
     const grid = document.getElementById('productsGrid');
     const filtered = filter === 'all' ? products : products.filter(p => p.cat === filter);
-    grid.innerHTML = filtered.map(p => `
+    grid.innerHTML = filtered.map(p => {
+      const imgs = (Array.isArray(p.images) && p.images.length) ? p.images : (p.image ? [p.image] : []);
+      const media = imgs.length
+        ? `<div class="pgallery" data-i="0">
+             ${imgs.map((u, i) => `<img class="pg-img${i === 0 ? ' on' : ''}" src="${esc(u)}" alt="${esc(p.name)}" loading="lazy">`).join('')}
+             ${imgs.length > 1 ? `
+               <button class="pg-nav prev" onclick="galleryNav(event,this,-1)" aria-label="Previous photo">‹</button>
+               <button class="pg-nav next" onclick="galleryNav(event,this,1)" aria-label="Next photo">›</button>
+               <div class="pg-dots">${imgs.map((_, i) => `<span class="pg-dot${i === 0 ? ' on' : ''}"></span>`).join('')}</div>` : ''}
+           </div>`
+        : `<svg class="icon product-icon"><use href="#${esc(p.icon)}"/></svg>`;
+      return `
       <div class="product-card" data-cat="${esc(p.cat)}">
         <div class="product-img ${esc(p.bg)}">
-          ${p.image ? `<img class="product-photo" src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy">` : `<svg class="icon product-icon"><use href="#${esc(p.icon)}"/></svg>`}
+          ${media}
           ${p.badge ? `<span class="product-badge">${esc(p.badge)}</span>` : ''}
           <button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button>
         </div>
@@ -1154,9 +1178,23 @@
             <button class="add-btn" onclick="addToCart(${Number(p.id) || 0})">Add to Bag</button>
           </div>
         </div>
-      </div>
-    `).join('');
+      </div>`;
+    }).join('');
     animateProductCards();
+  }
+
+  // Storefront product-card photo carousel
+  function galleryNav(e, btn, dir) {
+    e.preventDefault(); e.stopPropagation();
+    const g = btn.closest('.pgallery');
+    const imgs = g.querySelectorAll('.pg-img');
+    const dots = g.querySelectorAll('.pg-dot');
+    let i = (Number(g.dataset.i) || 0) + dir;
+    if (i < 0) i = imgs.length - 1;
+    if (i >= imgs.length) i = 0;
+    g.dataset.i = i;
+    imgs.forEach((im, n) => im.classList.toggle('on', n === i));
+    dots.forEach((d, n) => d.classList.toggle('on', n === i));
   }
 
   function animateProductCards() {

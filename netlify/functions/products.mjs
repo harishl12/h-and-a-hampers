@@ -38,8 +38,12 @@ const CATS = ['handmade', 'personalized', 'seasonal'];
 const ICONS = ['i-basket', 'i-jar', 'i-diya', 'i-macrame', 'i-lovebox', 'i-candle', 'i-cake', 'i-photo', 'i-gift'];
 
 function clean(list) {
+  // Only same-origin image paths (e.g. /img/p1-abc.jpg) — blocks external/script URLs
+  const validPath = (s) => typeof s === 'string' && /^\/[A-Za-z0-9._/?=&-]{1,160}$/.test(s);
   return (Array.isArray(list) ? list : []).slice(0, 100).map((p, idx) => {
     const num = (v) => { const n = Math.round(Number(v)); return Number.isFinite(n) && n > 0 ? n : null; };
+    let images = Array.isArray(p.images) ? p.images.filter(validPath).slice(0, 8) : [];
+    if (!images.length && validPath(p.image)) images = [p.image];
     return {
       id: Number(p.id) || idx + 1,
       name: String(p.name || 'Untitled').slice(0, 80),
@@ -50,8 +54,8 @@ function clean(list) {
       bg: /^p-bg-[1-8]$/.test(p.bg || '') ? p.bg : `p-bg-${(idx % 8) + 1}`,
       cat: CATS.includes(p.cat) ? p.cat : 'handmade',
       badge: p.badge ? String(p.badge).slice(0, 24) : null,
-      // Only same-origin image paths (e.g. /img/p1-abc.jpg) — blocks external/script URLs
-      image: typeof p.image === 'string' && /^\/[A-Za-z0-9._/?=&-]{1,160}$/.test(p.image) ? p.image : null
+      images,
+      image: images[0] || null   // cover photo (back-compat with single-image clients)
     };
   });
 }
