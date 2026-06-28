@@ -202,7 +202,8 @@
     .pmodal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
 
     /* Toast */
-    .dtoast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--brown);color:#fff;padding:12px 22px;border-radius:30px;font-size:.85rem;z-index:80;transition:transform .35s cubic-bezier(.2,1.2,.3,1);box-shadow:0 8px 28px rgba(0,0,0,.25)}
+    .dtoast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--brown);color:#fff;padding:12px 22px;border-radius:30px;font-size:.85rem;z-index:80;transition:transform .35s cubic-bezier(.2,1.2,.3,1);box-shadow:0 8px 28px rgba(0,0,0,.25);max-width:88vw;text-align:center}
+    .dtoast.err{background:#9c3b3b}
     .dtoast.show{transform:translateX(-50%) translateY(0)}
 
     @media(max-width:1024px){ .cards{grid-template-columns:repeat(3,1fr)} }
@@ -590,9 +591,10 @@ const App = (() => {
   }
 
   let toastTimer;
-  function dtoast(msg) {
+  function dtoast(msg, isError) {
     const t = $('dtoast'); t.textContent = msg; t.classList.add('show');
-    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+    t.classList.toggle('err', !!isError);
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), isError ? 6000 : 2600);
   }
   function parseAmount(str) { const n = parseInt(String(str || '').replace(/[^0-9]/g, ''), 10); return Number.isFinite(n) ? n : 0; }
 
@@ -891,30 +893,47 @@ const App = (() => {
     prod.images = imgs;
     prod.image = imgs[0] || null;
 
-    if (existing) { const i = state.products.indexOf(existing); state.products[i] = prod; }
-    else state.products.push(prod);
+    // Build the candidate list but don't commit to state/UI until the server confirms it saved —
+    // otherwise a failed save still looks successful in the dashboard (modal closes, list updates)
+    // while the live site never gets the change.
+    const candidate = state.products.slice();
+    if (existing) { const i = candidate.indexOf(existing); candidate[i] = prod; }
+    else candidate.push(prod);
 
-    closeProduct();
-    renderProductsAdmin();
-    persistProducts(id ? 'Product updated' : 'Product added');
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+    const ok = await persistProducts(candidate, id ? 'Product updated' : 'Product added');
+    if (btn) { btn.disabled = false; btn.textContent = 'Save'; }
+
+    if (ok) closeProduct();
+    // on failure: modal stays open (with the photo/fields intact) so the owner can just hit Save again
   }
 
-  function deleteProduct(id) {
+  async function deleteProduct(id) {
     const p = state.products.find(x => String(x.id) === String(id));
     if (!p) return;
     if (!confirm(`Delete “${p.name}”? It will be removed from the shop.`)) return;
-    state.products = state.products.filter(x => String(x.id) !== String(id));
-    renderProductsAdmin();
-    persistProducts('Product deleted');
+    const candidate = state.products.filter(x => String(x.id) !== String(id));
+    await persistProducts(candidate, 'Product deleted');
   }
 
-  async function persistProducts(okMsg) {
-    if (isDemo()) { dtoast('Demo mode — changes are not saved'); return; }
+  // Saves `candidate` to the server FIRST; only updates the on-screen list once the save is confirmed.
+  // Returns true on success, false on failure (and leaves the dashboard showing the last-saved state).
+  async function persistProducts(candidate, okMsg) {
+    if (isDemo()) { state.products = candidate; renderProductsAdmin(); dtoast('Demo mode — not saved to the real shop'); return true; }
     try {
-      const res = await apiPost('products', { products: state.products });
-      if (res.ok) { state.products = res.data.products || state.products; renderProductsAdmin(); dtoast((okMsg || 'Saved') + ' — live on the shop'); }
-      else dtoast(res.data.error || 'Could not save');
-    } catch (e) { dtoast(e.message || 'Could not save'); }
+      const res = await apiPost('products', { products: candidate });
+      if (res.ok) {
+        state.products = res.data.products || candidate;
+        renderProductsAdmin();
+        dtoast((okMsg || 'Saved') + ' — live on the shop');
+        return true;
+      }
+      dtoast(res.data.error || 'Could not save — please try again', true);
+      return false;
+    } catch (e) {
+      dtoast(e.message || 'Could not save — please try again', true);
+      return false;
+    }
   }
 
   /* ── View switch ── */
