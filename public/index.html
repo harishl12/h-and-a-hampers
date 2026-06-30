@@ -565,15 +565,24 @@
     @keyframes waPing { 0% { transform: scale(1); opacity: .55; } 100% { transform: scale(1.7); opacity: 0; } }
     @media (max-width: 720px) { .wa-float { right: 16px; bottom: 16px; width: 52px; height: 52px; } .wa-float .icon { width: 26px; height: 26px; } }
 
-    /* Per-product WhatsApp quick-order icon */
+    /* Per-product WhatsApp quick-order icon (on image) */
     .product-whatsapp {
       position: absolute; top: 12px; right: 56px;
       background: #25D366; border: none; width: 34px; height: 34px;
       border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 2px 8px var(--shadow); transition: all 0.25s; color: #fff;
+      box-shadow: 0 2px 8px var(--shadow); transition: all 0.25s; color: #fff; z-index: 4;
     }
     .product-whatsapp .icon { width: 17px; height: 17px; }
     .product-whatsapp:hover { transform: scale(1.1); }
+    /* Labelled WhatsApp link in product card body */
+    .product-wa-link {
+      display: flex; align-items: center; gap: 6px; justify-content: center;
+      margin-top: 10px; padding: 7px 0; border-radius: 8px;
+      background: #e8faf0; color: #128C7E; font-size: 0.82rem; font-weight: 600;
+      text-decoration: none; transition: background .2s, color .2s; border: 1px solid #c3ecd8;
+    }
+    .product-wa-link .icon { width: 15px; height: 15px; stroke-width: 2; }
+    .product-wa-link:hover { background: #25D366; color: #fff; border-color: #25D366; }
 
     /* ── Footer ── */
     footer { background: var(--brown); color: var(--cream); padding: 64px 0 24px; }
@@ -849,35 +858,35 @@
            Replaced instantly by the live, dashboard-managed catalog once the page's script runs. -->
       <div class="product-card" data-cat="handmade">
         <div class="product-img p-bg-1"><svg class="icon product-icon"><use href="#i-basket"/></svg><span class="product-badge">Bestseller</span><a class="product-whatsapp" title="Order on WhatsApp" target="_blank" rel="noopener" href="https://wa.me/919876543210?text=Hi!%20I%20am%20interested%20in%20the%20%22Rustic%20Gift%20Hamper%22%20(%E2%82%B91%2C299).%20Could%20you%20share%20more%20details%3F"><svg class="icon"><use href="#i-chat"/></svg></a><button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button></div>
-        <div class="product-body"><h4>Rustic Gift Hamper</h4><p>Curated handmade items in a beautiful wicker basket</p><div class="product-footer"><div><span class="price">₹1,299</span><span class="price-orig">₹1,599</span></div><button class="add-btn" onclick="addToCart(1)">Add to Bag</button></div></div>
+        <div class="product-body"><h4>Rustic Gift Hamper</h4><p>Curated handmade items in a beautiful wicker basket</p><div class="product-footer"><div><span class="price">₹1,299</span><span class="price-orig">₹1,599</span></div><button class="add-btn" onclick="addToCart(1)">Add to Bag</button></div><a class="product-wa-link" href="https://wa.me/919876543210?text=Hi!%20I'm%20interested%20in%20the%20%22Rustic%20Gift%20Hamper%22%20(%E2%82%B91%2C299).%20Could%20you%20share%20more%20details%3F" target="_blank" rel="noopener"><svg class="icon"><use href="#i-chat"/></svg> Order via WhatsApp</a></div>
       </div>
       <div class="product-card" data-cat="personalized">
         <div class="product-img p-bg-2"><svg class="icon product-icon"><use href="#i-jar"/></svg><span class="product-badge">Custom</span><a class="product-whatsapp" title="Order on WhatsApp" target="_blank" rel="noopener" href="https://wa.me/919876543210?text=Hi!%20I%20am%20interested%20in%20the%20%22Personalized%20Name%20Jar%22%20(%E2%82%B9599).%20Could%20you%20share%20more%20details%3F"><svg class="icon"><use href="#i-chat"/></svg></a><button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button></div>
-        <div class="product-body"><h4>Personalized Name Jar</h4><p>Custom engraved glass jar with your loved one's name</p><div class="product-footer"><div><span class="price">₹599</span><span class="price-orig">₹799</span></div><button class="add-btn" onclick="addToCart(2)">Add to Bag</button></div></div>
+        <div class="product-body"><h4>Personalized Name Jar</h4><p>Custom engraved glass jar with your loved one's name</p><div class="product-footer"><div><span class="price">₹599</span><span class="price-orig">₹799</span></div><button class="add-btn" onclick="addToCart(2)">Add to Bag</button></div><a class="product-wa-link" href="https://wa.me/919876543210?text=Hi!%20I'm%20interested%20in%20the%20%22Personalized%20Name%20Jar%22%20(%E2%82%B9599).%20Could%20you%20share%20more%20details%3F" target="_blank" rel="noopener"><svg class="icon"><use href="#i-chat"/></svg> Order via WhatsApp</a></div>
       </div>
       <div class="product-card" data-cat="seasonal">
         <div class="product-img p-bg-3"><svg class="icon product-icon"><use href="#i-diya"/></svg><span class="product-badge">Festive</span><a class="product-whatsapp" title="Order on WhatsApp" target="_blank" rel="noopener" href="https://wa.me/919876543210?text=Hi!%20I%20am%20interested%20in%20the%20%22Diwali%20Celebration%20Box%22%20(%E2%82%B91%2C899).%20Could%20you%20share%20more%20details%3F"><svg class="icon"><use href="#i-chat"/></svg></a><button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button></div>
-        <div class="product-body"><h4>Diwali Celebration Box</h4><p>Festive goodies — sweets, candles &amp; handcrafted decor</p><div class="product-footer"><div><span class="price">₹1,899</span><span class="price-orig">₹2,299</span></div><button class="add-btn" onclick="addToCart(3)">Add to Bag</button></div></div>
+        <div class="product-body"><h4>Diwali Celebration Box</h4><p>Festive goodies — sweets, candles &amp; handcrafted decor</p><div class="product-footer"><div><span class="price">₹1,899</span><span class="price-orig">₹2,299</span></div><button class="add-btn" onclick="addToCart(3)">Add to Bag</button></div><a class="product-wa-link" href="https://wa.me/919876543210?text=Hi!%20I'm%20interested%20in%20the%20%22Diwali%20Celebration%20Box%22%20(%E2%82%B91%2C899).%20Could%20you%20share%20more%20details%3F" target="_blank" rel="noopener"><svg class="icon"><use href="#i-chat"/></svg> Order via WhatsApp</a></div>
       </div>
       <div class="product-card" data-cat="handmade">
         <div class="product-img p-bg-4"><svg class="icon product-icon"><use href="#i-macrame"/></svg><a class="product-whatsapp" title="Order on WhatsApp" target="_blank" rel="noopener" href="https://wa.me/919876543210?text=Hi!%20I%20am%20interested%20in%20the%20%22Macram%C3%A9%20Wall%20Hanging%22%20(%E2%82%B9849).%20Could%20you%20share%20more%20details%3F"><svg class="icon"><use href="#i-chat"/></svg></a><button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button></div>
-        <div class="product-body"><h4>Macramé Wall Hanging</h4><p>Handwoven bohemian wall art, made to order</p><div class="product-footer"><div><span class="price">₹849</span></div><button class="add-btn" onclick="addToCart(4)">Add to Bag</button></div></div>
+        <div class="product-body"><h4>Macramé Wall Hanging</h4><p>Handwoven bohemian wall art, made to order</p><div class="product-footer"><div><span class="price">₹849</span></div><button class="add-btn" onclick="addToCart(4)">Add to Bag</button></div><a class="product-wa-link" href="https://wa.me/919876543210?text=Hi!%20I'm%20interested%20in%20the%20%22Macram%C3%A9%20Wall%20Hanging%22%20(%E2%82%B9849).%20Could%20you%20share%20more%20details%3F" target="_blank" rel="noopener"><svg class="icon"><use href="#i-chat"/></svg> Order via WhatsApp</a></div>
       </div>
       <div class="product-card" data-cat="personalized">
         <div class="product-img p-bg-5"><svg class="icon product-icon"><use href="#i-lovebox"/></svg><span class="product-badge">Popular</span><a class="product-whatsapp" title="Order on WhatsApp" target="_blank" rel="noopener" href="https://wa.me/919876543210?text=Hi!%20I%20am%20interested%20in%20the%20%22Anniversary%20Love%20Box%22%20(%E2%82%B91%2C499).%20Could%20you%20share%20more%20details%3F"><svg class="icon"><use href="#i-chat"/></svg></a><button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button></div>
-        <div class="product-body"><h4>Anniversary Love Box</h4><p>Rose petals, chocolates &amp; a personalised note card</p><div class="product-footer"><div><span class="price">₹1,499</span><span class="price-orig">₹1,799</span></div><button class="add-btn" onclick="addToCart(5)">Add to Bag</button></div></div>
+        <div class="product-body"><h4>Anniversary Love Box</h4><p>Rose petals, chocolates &amp; a personalised note card</p><div class="product-footer"><div><span class="price">₹1,499</span><span class="price-orig">₹1,799</span></div><button class="add-btn" onclick="addToCart(5)">Add to Bag</button></div><a class="product-wa-link" href="https://wa.me/919876543210?text=Hi!%20I'm%20interested%20in%20the%20%22Anniversary%20Love%20Box%22%20(%E2%82%B91%2C499).%20Could%20you%20share%20more%20details%3F" target="_blank" rel="noopener"><svg class="icon"><use href="#i-chat"/></svg> Order via WhatsApp</a></div>
       </div>
       <div class="product-card" data-cat="handmade">
         <div class="product-img p-bg-6"><svg class="icon product-icon"><use href="#i-candle"/></svg><a class="product-whatsapp" title="Order on WhatsApp" target="_blank" rel="noopener" href="https://wa.me/919876543210?text=Hi!%20I%20am%20interested%20in%20the%20%22Scented%20Candle%20Set%22%20(%E2%82%B9749).%20Could%20you%20share%20more%20details%3F"><svg class="icon"><use href="#i-chat"/></svg></a><button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button></div>
-        <div class="product-body"><h4>Scented Candle Set</h4><p>Set of 3 hand-poured soy candles in seasonal scents</p><div class="product-footer"><div><span class="price">₹749</span><span class="price-orig">₹999</span></div><button class="add-btn" onclick="addToCart(6)">Add to Bag</button></div></div>
+        <div class="product-body"><h4>Scented Candle Set</h4><p>Set of 3 hand-poured soy candles in seasonal scents</p><div class="product-footer"><div><span class="price">₹749</span><span class="price-orig">₹999</span></div><button class="add-btn" onclick="addToCart(6)">Add to Bag</button></div><a class="product-wa-link" href="https://wa.me/919876543210?text=Hi!%20I'm%20interested%20in%20the%20%22Scented%20Candle%20Set%22%20(%E2%82%B9749).%20Could%20you%20share%20more%20details%3F" target="_blank" rel="noopener"><svg class="icon"><use href="#i-chat"/></svg> Order via WhatsApp</a></div>
       </div>
       <div class="product-card" data-cat="seasonal">
         <div class="product-img p-bg-7"><svg class="icon product-icon"><use href="#i-cake"/></svg><span class="product-badge">New</span><a class="product-whatsapp" title="Order on WhatsApp" target="_blank" rel="noopener" href="https://wa.me/919876543210?text=Hi!%20I%20am%20interested%20in%20the%20%22Birthday%20Surprise%20Hamper%22%20(%E2%82%B91%2C199).%20Could%20you%20share%20more%20details%3F"><svg class="icon"><use href="#i-chat"/></svg></a><button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button></div>
-        <div class="product-body"><h4>Birthday Surprise Hamper</h4><p>Balloons, treats, handmade goodies &amp; personalised card</p><div class="product-footer"><div><span class="price">₹1,199</span><span class="price-orig">₹1,499</span></div><button class="add-btn" onclick="addToCart(7)">Add to Bag</button></div></div>
+        <div class="product-body"><h4>Birthday Surprise Hamper</h4><p>Balloons, treats, handmade goodies &amp; personalised card</p><div class="product-footer"><div><span class="price">₹1,199</span><span class="price-orig">₹1,499</span></div><button class="add-btn" onclick="addToCart(7)">Add to Bag</button></div><a class="product-wa-link" href="https://wa.me/919876543210?text=Hi!%20I'm%20interested%20in%20the%20%22Birthday%20Surprise%20Hamper%22%20(%E2%82%B91%2C199).%20Could%20you%20share%20more%20details%3F" target="_blank" rel="noopener"><svg class="icon"><use href="#i-chat"/></svg> Order via WhatsApp</a></div>
       </div>
       <div class="product-card" data-cat="personalized">
         <div class="product-img p-bg-8"><svg class="icon product-icon"><use href="#i-photo"/></svg><span class="product-badge">Premium</span><a class="product-whatsapp" title="Order on WhatsApp" target="_blank" rel="noopener" href="https://wa.me/919876543210?text=Hi!%20I%20am%20interested%20in%20the%20%22Custom%20Photo%20Memory%20Box%22%20(%E2%82%B91%2C699).%20Could%20you%20share%20more%20details%3F"><svg class="icon"><use href="#i-chat"/></svg></a><button class="product-wishlist" title="Add to wishlist" onclick="toggleWish(this)"><svg class="icon"><use href="#i-heart"/></svg></button></div>
-        <div class="product-body"><h4>Custom Photo Memory Box</h4><p>Wooden keepsake box engraved with a photo &amp; message</p><div class="product-footer"><div><span class="price">₹1,699</span></div><button class="add-btn" onclick="addToCart(8)">Add to Bag</button></div></div>
+        <div class="product-body"><h4>Custom Photo Memory Box</h4><p>Wooden keepsake box engraved with a photo &amp; message</p><div class="product-footer"><div><span class="price">₹1,699</span></div><button class="add-btn" onclick="addToCart(8)">Add to Bag</button></div><a class="product-wa-link" href="https://wa.me/919876543210?text=Hi!%20I'm%20interested%20in%20the%20%22Custom%20Photo%20Memory%20Box%22%20(%E2%82%B91%2C699).%20Could%20you%20share%20more%20details%3F" target="_blank" rel="noopener"><svg class="icon"><use href="#i-chat"/></svg> Order via WhatsApp</a></div>
       </div>
     </div>
   </div>
@@ -1385,6 +1394,7 @@
             </div>
             <button class="add-btn" onclick="addToCart(${Number(p.id) || 0})">Add to Bag</button>
           </div>
+          <a class="product-wa-link" href="${esc(waLink(`Hi! I'm interested in the "${p.name}" (₹${Number(p.price).toLocaleString()}). Could you share more details?`))}" target="_blank" rel="noopener"><svg class="icon"><use href="#i-chat"/></svg> Order via WhatsApp</a>
         </div>
       </div>`;
     }).join('');
