@@ -222,6 +222,27 @@
       .pm-row{grid-template-columns:1fr}
       .padmin .pa-meta{display:none}
     }
+    /* ── Instagram kit panel ── */
+    .ig-kit details{border:1.5px solid var(--warm);border-radius:12px;margin-bottom:10px;background:var(--surface);overflow:hidden}
+    .ig-kit summary{cursor:pointer;padding:13px 16px;font-weight:500;color:var(--brown);list-style:none;display:flex;align-items:center;gap:8px}
+    .ig-kit summary::-webkit-details-marker{display:none}
+    .ig-kit summary::after{content:'+';margin-left:auto;color:var(--rose);font-size:1.1rem;font-weight:400}
+    .ig-kit details[open] summary::after{content:'–'}
+    .ig-kit .ig-body{padding:2px 16px 16px;font-size:.9rem;line-height:1.65}
+    .ig-kit .ig-body h4{color:var(--brown);font-size:.86rem;margin:14px 0 6px;letter-spacing:.03em}
+    .ig-kit .ig-copy{position:relative;background:var(--cream);border:1px dashed var(--warm);border-radius:10px;padding:12px 14px;margin:8px 0;white-space:pre-wrap;word-break:break-word;font-size:.86rem}
+    .ig-kit .ig-copy button{position:absolute;top:8px;right:8px;background:var(--rose);color:#fff;border:none;border-radius:20px;padding:4px 12px;font-size:.72rem;font-weight:500}
+    .ig-kit .ig-tablewrap{overflow-x:auto;border:1px solid var(--warm);border-radius:10px;margin:8px 0}
+    .ig-kit table{border-collapse:collapse;width:100%;min-width:520px;font-size:.82rem}
+    .ig-kit th{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1.5px solid var(--warm);white-space:nowrap}
+    .ig-kit td{padding:7px 10px;vertical-align:top;border-top:1px solid var(--line)}
+    .ig-kit td.d{white-space:nowrap;color:var(--muted);font-variant-numeric:tabular-nums}
+    .ig-kit .tag-reel{display:inline-block;background:var(--rose);color:#fff;border-radius:20px;padding:1px 9px;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+    .ig-kit .tag-post{display:inline-block;background:var(--warm);color:var(--brown);border-radius:20px;padding:1px 9px;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+    .ig-kit .fest{color:var(--gold-dk);font-weight:500}
+    .ig-kit ol,.ig-kit ul{padding-left:20px;margin:6px 0}
+    .ig-kit li{margin:4px 0}
+    .ig-kit .hint{color:var(--muted);font-size:.82rem}
   </style>
 </head>
 <body>
@@ -403,6 +424,152 @@
         </div>
       </div>
       <div class="scroll" id="messages"></div>
+    </div>
+
+    <!-- Instagram growth kit -->
+    <div class="panel ig-kit">
+      <div class="panel-head">
+        <div><h2><svg class="icon"><use href="#d-chat"/></svg> Instagram Kit</h2><div class="desc">@h_and_a_hampers — 30-day plan, captions &amp; reel scripts. Tap Copy, paste into Instagram.</div></div>
+      </div>
+
+      <details>
+        <summary>1 · Bio — paste into your profile</summary>
+        <div class="ig-body">
+          <div class="ig-copy"><button onclick="igCopy(this)">Copy</button>🎁 Handmade hampers &amp; personalized gifts
+🪡 Crafted in Bengaluru, delivered across India
+💜 Customised with names, dates &amp; love
+👇 Shop or WhatsApp us</div>
+          <p class="hint">Link: h-and-a-hampers.com · Category: Gift Shop · Contact button: WhatsApp</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>2 · 30-day calendar (23 Jul → 28 Aug)</summary>
+        <div class="ig-body">
+          <p class="hint">Rhythm: 4 posts/week — 2 reels, 1 carousel/photo, 1 story day. Reels grow the account; the grid converts.</p>
+          <div class="ig-tablewrap"><table>
+            <thead><tr><th>Date</th><th>Format</th><th>Post</th></tr></thead>
+            <tbody>
+              <tr><td class="d">Thu Jul 23</td><td><span class="tag-reel">Reel</span></td><td><b>Packing an order</b> — hands-only assembly, trending audio, overlay “packing order #217 💜” (script A)</td></tr>
+              <tr><td class="d">Sat Jul 25</td><td><span class="tag-post">Carousel</span></td><td><b>Meet the maker</b> — who’s behind H &amp; A, why handmade. Pin this post.</td></tr>
+              <tr><td class="d">Mon Jul 27</td><td><span class="tag-post">Photo</span></td><td>Name Jar close-up + customization story (caption 1)</td></tr>
+              <tr><td class="d">Wed Jul 29</td><td><span class="tag-reel">Reel</span></td><td><b>Ribbon &amp; wrapping ASMR</b> — 15s, no talking, natural sound (script B)</td></tr>
+              <tr><td class="d">Sat Aug 1</td><td><span class="tag-post">Carousel</span></td><td><b>FAQ: “Can I customise a hamper?”</b></td></tr>
+              <tr><td class="d">Mon Aug 3</td><td><span class="tag-reel">Reel</span></td><td><b>Before/after</b> — empty basket → finished hamper, 3 jump cuts (script C)</td></tr>
+              <tr><td class="d">Wed Aug 5</td><td><span class="tag-post">Photo</span></td><td>Candle Set styled shot — evening / self-gift angle (caption 2)</td></tr>
+              <tr><td class="d">Fri Aug 7</td><td><span class="tag-reel">Reel</span></td><td><b>“3 gifts under ₹999”</b> — Name Jar ₹599 · Candles ₹749 · Macramé ₹849 (script D)</td></tr>
+              <tr><td class="d">Sun Aug 9</td><td><span class="tag-post">Carousel</span></td><td><b>FAQ: “How does delivery work?”</b></td></tr>
+              <tr><td class="d">Tue Aug 11</td><td><span class="tag-reel">Reel</span></td><td><b>Rakhi teaser</b> — “Raksha Bandhan is in 17 days. Sisters, this one’s for you.”</td></tr>
+              <tr><td class="d">Thu Aug 13</td><td><span class="tag-post">Photo</span></td><td>Customer unboxing repost — ask a recent WhatsApp customer</td></tr>
+              <tr><td class="d">Sat Aug 15</td><td><span class="tag-post">Story+Photo</span></td><td><span class="fest">Independence Day</span> — tricolour-styled detail, “handmade in India 🇮🇳”</td></tr>
+              <tr><td class="d">Mon Aug 17</td><td><span class="tag-reel">Reel</span></td><td><b>Packing a Rakhi order</b> — script A, overlay “order by Aug 24 for Rakhi delivery”</td></tr>
+              <tr><td class="d">Wed Aug 19</td><td><span class="tag-post">Carousel</span></td><td><b>FAQ: “What’s inside each hamper?”</b></td></tr>
+              <tr><td class="d">Fri Aug 21</td><td><span class="tag-post">Photo</span></td><td><span class="fest">Varamahalakshmi</span> — festive greeting + box styled for the pooja</td></tr>
+              <tr><td class="d">Sun Aug 23</td><td><span class="tag-reel">Reel</span></td><td><b>Rakhi last call</b> — “5 days to go” + fast montage of 3 hampers (script E)</td></tr>
+              <tr><td class="d">Tue Aug 25</td><td><span class="tag-post">Carousel</span></td><td><b>FAQ: “Do you do bulk / corporate orders?”</b></td></tr>
+              <tr><td class="d">Thu Aug 27</td><td><span class="tag-post">Story</span></td><td>Countdown sticker + “last orders for Bengaluru same-week delivery”</td></tr>
+              <tr><td class="d">Fri Aug 28</td><td><span class="tag-post">Photo</span></td><td><span class="fest">Happy Raksha Bandhan</span> greeting + soft CTA for belated gifts</td></tr>
+            </tbody>
+          </table></div>
+          <p class="hint">Daily stories (2 min): a behind-the-scenes clip, a poll (“Which ribbon? 🎀”), or reshare the day’s post. After Aug 28: start the Diwali corporate push — corporates pick vendors in Sept–Oct.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>3 · Hashtag sets (≈15 per post: all of B + pick from others)</summary>
+        <div class="ig-body">
+          <h4>A — General</h4>
+          <div class="ig-copy"><button onclick="igCopy(this)">Copy</button>#gifthampers #handmadegifts #giftideas #personalizedgifts #hampersofinstagram #giftbox #handmadewithlove #smallbusinessindia #shopsmallindia #madeinindia</div>
+          <h4>B — Local (add to every post — this is where you rank)</h4>
+          <div class="ig-copy"><button onclick="igCopy(this)">Copy</button>#bangaloregifts #gifthampersbangalore #bengaluru #bangaloresmallbusiness #bangaloreshopping #namma_bengaluru #giftsbangalore</div>
+          <h4>C — Festival (Rakhi window)</h4>
+          <div class="ig-copy"><button onclick="igCopy(this)">Copy</button>#rakshabandhan #rakhigifts #rakhihamper #rakhi2026 #giftsforsister #giftsforbrother #rakhispecial</div>
+          <h4>D — Occasion (rotate per product)</h4>
+          <div class="ig-copy"><button onclick="igCopy(this)">Copy</button>#birthdayhamper #anniversarygifts #corporategifting #weddinggifts #housewarminggift #diwaligifts</div>
+          <p class="hint">Always add a location tag (Bengaluru or your neighbourhood).</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>4 · Reel scripts (15–30s, filmed on your phone)</summary>
+        <div class="ig-body">
+          <h4>A — “Packing your order” (the workhorse — reuse weekly)</h4>
+          <ol>
+            <li>2s — order note / WhatsApp order on phone, name blurred</li>
+            <li>3s — empty basket placed on table, top-down</li>
+            <li>3s — items placed one by one, jump cut per item</li>
+            <li>3s — shred / filler fluffed in</li>
+            <li>3s — ribbon tied; slow-mo the pull</li>
+            <li>2s — finished hamper spin or H &amp; A sticker slides in</li>
+            <li>2s — end card: logo + “Order on WhatsApp — link in bio”</li>
+          </ol>
+          <p class="hint">Overlay: “POV: you ordered a handmade hamper from a small Bengaluru business 💜”</p>
+          <h4>B — Wrapping ASMR (no talking)</h4>
+          <p>Close-up hands only: paper creases, scissors gliding, ribbon curl. Natural audio, no music — the caption sells. These earn shares and saves.</p>
+          <h4>C — Before / after</h4>
+          <ol>
+            <li>2s — text: “They asked for a birthday hamper for their mom 🥹”</li>
+            <li>4s — flat lay of loose items</li>
+            <li>1s — hand snap / transition</li>
+            <li>5s — finished hamper, slow pan</li>
+            <li>3s — end card: “Tell us the occasion. We’ll make it special — link in bio”</li>
+          </ol>
+          <h4>D — “3 handmade gifts under ₹999”</h4>
+          <p>3s per product: Name Jar ₹599 → Candle Set ₹749 → Macramé ₹849, price overlays, upbeat audio, end card “all handmade in Bengaluru 🛍”. The most-saved format in gifting.</p>
+          <h4>E — Festival last call (adapt per festival)</h4>
+          <p>Fast montage (1.5s/shot) + big text: “RAKHI IS IN 5 DAYS” → “we deliver across India” → “order by Aug 24” → logo. Urgency converts lurkers.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>5 · FAQ posts (carousels: slide 1 = question big, 2–4 = answer, last = CTA)</summary>
+        <div class="ig-body">
+          <ul>
+            <li><b>“Can I customise a hamper?”</b> — Yes, everything: items, names, dates, notes, budget. Example: Custom Photo Memory Box ₹1,699 engraved with their photo. CTA: “WhatsApp us your occasion.”</li>
+            <li><b>“How does delivery work?”</b> — Pan-India; free wrapping above ₹999; Bengaluru fastest. Order 4–5 days early for festivals.</li>
+            <li><b>“What’s inside the hampers?”</b> — Walk through the Rustic Gift Hamper ₹1,299 item by item. Show, don’t list.</li>
+            <li><b>“Do you do bulk / corporate orders?”</b> — Yes: Diwali employee gifts, client hampers, wedding favours, custom branding. CTA: site’s Corporate Gifting section.</li>
+            <li><b>“Why handmade?”</b> — The story post: mass-produced vs. made-for-you. Ends with your maker photo. Pin this too.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details>
+        <summary>6 · Caption bank</summary>
+        <div class="ig-body">
+          <h4>Name Jar (product story)</h4>
+          <div class="ig-copy"><button onclick="igCopy(this)">Copy</button>Some gifts say “I saw this and thought of you.”
+A personalized name jar says “this exists *because* of you.” ✨
+Custom engraved with any name — ₹599, made to order in Bengaluru, delivered anywhere in India.
+📲 Order via the link in bio or WhatsApp us.</div>
+          <h4>Candle Set (self-gift angle)</h4>
+          <div class="ig-copy"><button onclick="igCopy(this)">Copy</button>Not every hamper has to be for someone else. 🕯
+Three hand-poured soy candles, seasonal scents, ₹749.
+Tag someone who deserves a quiet evening — or just screenshot this and treat yourself.</div>
+          <h4>Customer repost</h4>
+          <div class="ig-copy"><button onclick="igCopy(this)">Copy</button>This is why we do it. 🥹 Thank you @[customer] for sharing!
+Want your gift to land like this? Link in bio.</div>
+          <h4>Rakhi push</h4>
+          <div class="ig-copy"><button onclick="igCopy(this)">Copy</button>Your brother will lose the card. He will NOT lose this hamper. 🎁
+Raksha Bandhan hampers now open — customised, handmade, delivered across India.
+Order by Aug 24 to make it in time. Link in bio.</div>
+          <h4>Ask every happy WhatsApp customer</h4>
+          <div class="ig-copy"><button onclick="igCopy(this)">Copy</button>Would you mind sharing a quick photo of the hamper when it arrives? We’d love to feature you (or keep it anonymous)!</div>
+          <p class="hint">→ steady free content + social proof.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>7 · Weekly routine (≈2 hrs/week)</summary>
+        <div class="ig-body">
+          <ul>
+            <li><b>While packing real orders (0 extra min):</b> prop the phone up and film everything — one session = 2–3 reels of footage.</li>
+            <li><b>Sunday (45 min):</b> cut 2 reels in CapCut / IG editor; schedule the week in the free Meta Business Suite app.</li>
+            <li><b>Daily (10 min):</b> post the story; reply to every comment and DM within a few hours — speed feeds the algorithm and sales.</li>
+          </ul>
+          <p><b>Track monthly</b> (Instagram Insights): followers, reach, saves, and profile visits → link clicks — the one that pays.</p>
+        </div>
+      </details>
     </div>
   </div>
 
@@ -613,6 +780,15 @@ const App = (() => {
     clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), isError ? 6000 : 2600);
   }
   function parseAmount(str) { const n = parseInt(String(str || '').replace(/[^0-9]/g, ''), 10); return Number.isFinite(n) ? n : 0; }
+
+  /* Instagram-kit copy buttons: copy the block's text minus the button label */
+  function igCopy(btn) {
+    const block = btn.parentElement.cloneNode(true);
+    block.querySelector('button').remove();
+    navigator.clipboard.writeText(block.textContent.trim())
+      .then(() => dtoast('Copied — paste into Instagram'))
+      .catch(() => dtoast('Could not copy — select the text manually', true));
+  }
 
   /* ── Load + render ── */
   async function load() {
