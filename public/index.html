@@ -274,6 +274,33 @@
       .lb-nav.prev { left: 8px; } .lb-nav.next { right: 8px; }
       .lb-img { max-width: 96vw; }
     }
+    .lb-video { max-height: 86vh; max-width: min(92vw, 480px); border-radius: 10px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); background: #000; }
+
+    /* ── Reels: Watch Us Create ── */
+    .reels { padding: 90px 0; background: var(--warm); }
+    .reels-strip { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x proximity; padding: 10px 4px 18px; -webkit-overflow-scrolling: touch; }
+    .reel-card {
+      flex: 0 0 210px; aspect-ratio: 9 / 16; border-radius: 16px; overflow: hidden;
+      position: relative; cursor: pointer; scroll-snap-align: start; background: #221c2e;
+      border: none; padding: 0; text-align: left; box-shadow: 0 8px 24px var(--shadow);
+      transition: transform .3s cubic-bezier(.2,.8,.2,1);
+    }
+    .reel-card:hover { transform: translateY(-5px); }
+    .reel-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .reel-card .rc-shade { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 45%, rgba(20,14,28,0.85)); }
+    .reel-card .rc-play {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.22);
+      backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
+      transition: transform .25s, background .25s;
+    }
+    .reel-card:hover .rc-play { transform: translate(-50%,-50%) scale(1.12); background: var(--rose); }
+    .reel-card .rc-play::after { content: ''; margin-left: 4px; border-style: solid; border-width: 9px 0 9px 15px; border-color: transparent transparent transparent #fff; }
+    .reel-card .rc-meta { position: absolute; left: 12px; right: 12px; bottom: 12px; color: #fff; }
+    .reel-card .rc-title { font-size: 0.85rem; font-weight: 500; line-height: 1.35; }
+    .reel-card .rc-date { font-size: 0.7rem; opacity: 0.75; margin-top: 3px; letter-spacing: 0.04em; }
+    .reels-cta { text-align: center; margin-top: 26px; }
+    @media (max-width: 720px) { .reel-card { flex-basis: 165px; } .reels { padding: 70px 0; } }
     .product-badge {
       position: absolute; top: 12px; left: 12px;
       background: var(--gold); color: white; padding: 4px 11px;
@@ -882,6 +909,55 @@
   </div>
 </section>
 
+<!-- Reels: Watch Us Create -->
+<section class="reels" id="reels">
+  <div class="container">
+    <h2 class="section-title reveal">Watch Us Create</h2>
+    <p class="section-sub reveal">Real orders, packed by hand — straight from our Instagram</p>
+    <div class="reels-strip">
+      <button class="reel-card" onclick="openReel(0)" aria-label="Play: Raksha Bandhan hamper">
+        <img src="/videos/posters/reel-01.jpg" alt="Raksha Bandhan hamper reel" loading="lazy"><span class="rc-shade"></span><span class="rc-play"></span>
+        <span class="rc-meta"><span class="rc-title">Thoughtful Rakhi hampers for the strongest bonds</span><span class="rc-date">Jul 2026</span></span>
+      </button>
+      <button class="reel-card" onclick="openReel(1)" aria-label="Play: the perfect Rakhi gift">
+        <img src="/videos/posters/reel-02.jpg" alt="Rakhi gift hamper reel" loading="lazy"><span class="rc-shade"></span><span class="rc-play"></span>
+        <span class="rc-meta"><span class="rc-title">The perfect Rakhi gift — buy 5, get 1 free</span><span class="rc-date">Jul 2026</span></span>
+      </button>
+      <button class="reel-card" onclick="openReel(2)" aria-label="Play: return gifts under ₹120">
+        <img src="/videos/posters/reel-03.jpg" alt="Affordable return gifts reel" loading="lazy"><span class="rc-shade"></span><span class="rc-play"></span>
+        <span class="rc-meta"><span class="rc-title">Affordable return gifts under ₹120</span><span class="rc-date">Jul 2026</span></span>
+      </button>
+      <button class="reel-card" onclick="openReel(3)" aria-label="Play: return gifts that stand out">
+        <img src="/videos/posters/reel-04.jpg" alt="Return gifts reel" loading="lazy"><span class="rc-shade"></span><span class="rc-play"></span>
+        <span class="rc-meta"><span class="rc-title">Return gifts that truly stand out</span><span class="rc-date">Jul 2026</span></span>
+      </button>
+      <button class="reel-card" onclick="openReel(4)" aria-label="Play: creative process">
+        <img src="/videos/posters/reel-05.jpg" alt="Creative process reel" loading="lazy"><span class="rc-shade"></span><span class="rc-play"></span>
+        <span class="rc-meta"><span class="rc-title">Still water, quiet mind, creative soul</span><span class="rc-date">Jan 2026</span></span>
+      </button>
+      <button class="reel-card" onclick="openReel(5)" aria-label="Play: orders going out">
+        <img src="/videos/posters/reel-06.jpg" alt="Order packing reel" loading="lazy"><span class="rc-shade"></span><span class="rc-play"></span>
+        <span class="rc-meta"><span class="rc-title">Orders going out, love coming in</span><span class="rc-date">Oct 2025</span></span>
+      </button>
+      <button class="reel-card" onclick="openReel(6)" aria-label="Play: watch the magic flow">
+        <img src="/videos/posters/reel-07.jpg" alt="Resin art reel" loading="lazy"><span class="rc-shade"></span><span class="rc-play"></span>
+        <span class="rc-meta"><span class="rc-title">Watch the magic flow</span><span class="rc-date">Oct 2025</span></span>
+      </button>
+      <button class="reel-card" onclick="openReel(7)" aria-label="Play: first rose, frozen in forever">
+        <img src="/videos/posters/reel-08.jpg" alt="Preserved rose reel" loading="lazy"><span class="rc-shade"></span><span class="rc-play"></span>
+        <span class="rc-meta"><span class="rc-title">First rose, frozen in forever</span><span class="rc-date">Oct 2025</span></span>
+      </button>
+      <button class="reel-card" onclick="openReel(8)" aria-label="Play: handmade coasters">
+        <img src="/videos/posters/reel-09.jpg" alt="Handmade coasters reel" loading="lazy"><span class="rc-shade"></span><span class="rc-play"></span>
+        <span class="rc-meta"><span class="rc-title">A stylish landing pad for your coffee</span><span class="rc-date">Sep 2025</span></span>
+      </button>
+    </div>
+    <div class="reels-cta reveal">
+      <a class="btn btn-gold" href="https://www.instagram.com/h_and_a_hampers/" target="_blank" rel="noopener">Follow @h_and_a_hampers <svg class="icon"><use href="#i-instagram"/></svg></a>
+    </div>
+  </div>
+</section>
+
 <!-- Testimonials -->
 <section class="testimonials">
   <div class="container">
@@ -1268,6 +1344,15 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
+<!-- Video lightbox (reels) -->
+<div class="lightbox" id="vlightbox" role="dialog" aria-modal="true" aria-label="Video player">
+  <button class="lb-close" onclick="closeReel()" aria-label="Close video">&times;</button>
+  <button class="lb-nav prev" onclick="reelNav(-1)" aria-label="Previous video">&#8249;</button>
+  <video class="lb-video" id="vlbVideo" controls playsinline></video>
+  <button class="lb-nav next" onclick="reelNav(1)" aria-label="Next video">&#8250;</button>
+  <div class="lb-caption"><span id="vlbName"></span><span class="lb-count" id="vlbCount"></span></div>
+</div>
+
 <!-- Photo lightbox -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Product photo viewer">
   <button class="lb-close" onclick="closeLightbox()" aria-label="Close photo viewer">&times;</button>
@@ -1406,6 +1491,52 @@
     else if (e.key === 'ArrowLeft') lightboxNav(-1);
     else if (e.key === 'ArrowRight') lightboxNav(1);
   });
+  // ── Reels video lightbox ──
+  const REELS = [
+    { s: '/videos/reel-01.mp4', t: 'Thoughtful Rakhi hampers for the strongest bonds' },
+    { s: '/videos/reel-02.mp4', t: 'The perfect Rakhi gift — buy 5, get 1 free' },
+    { s: '/videos/reel-03.mp4', t: 'Affordable return gifts under ₹120' },
+    { s: '/videos/reel-04.mp4', t: 'Return gifts that truly stand out' },
+    { s: '/videos/reel-05.mp4', t: 'Still water, quiet mind, creative soul' },
+    { s: '/videos/reel-06.mp4', t: 'Orders going out, love coming in' },
+    { s: '/videos/reel-07.mp4', t: 'Watch the magic flow' },
+    { s: '/videos/reel-08.mp4', t: 'First rose, frozen in forever' },
+    { s: '/videos/reel-09.mp4', t: 'A stylish landing pad for your coffee' }
+  ];
+  let reelIndex = 0;
+  function openReel(i) {
+    reelIndex = i;
+    reelShow();
+    document.getElementById('vlightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function reelShow() {
+    const v = document.getElementById('vlbVideo');
+    v.src = REELS[reelIndex].s;
+    v.play().catch(() => {});   // some browsers require a tap on the controls
+    document.getElementById('vlbName').textContent = REELS[reelIndex].t;
+    document.getElementById('vlbCount').textContent = `${reelIndex + 1} / ${REELS.length}`;
+  }
+  function reelNav(dir) {
+    reelIndex = (reelIndex + dir + REELS.length) % REELS.length;
+    reelShow();
+  }
+  function closeReel() {
+    const v = document.getElementById('vlbVideo');
+    v.pause(); v.removeAttribute('src'); v.load();
+    document.getElementById('vlightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('vlightbox').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeReel();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (!document.getElementById('vlightbox').classList.contains('open')) return;
+    if (e.key === 'Escape') closeReel();
+    else if (e.key === 'ArrowLeft') reelNav(-1);
+    else if (e.key === 'ArrowRight') reelNav(1);
+  });
+
   // Swipe between photos on touch devices
   let lbTouchX = null;
   document.getElementById('lightbox').addEventListener('touchstart', (e) => { lbTouchX = e.touches[0].clientX; }, { passive: true });
