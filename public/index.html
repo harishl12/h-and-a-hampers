@@ -1279,7 +1279,7 @@
             <div class="co-card">
               <h3 class="co-h"><svg class="icon"><use href="#i-card"/></svg> Payment Method</h3>
               <label class="pay-opt sel" id="payUPIOpt">
-                <input type="radio" name="payment" value="UPI" checked onchange="selectPayment('UPI')" />
+                <input type="radio" name="payment" value="UPI" checked />
                 <span class="pay-ic"><svg class="icon"><use href="#i-phone"/></svg></span>
                 <span><span class="pay-name">UPI</span><br><span class="pay-desc">GPay · PhonePe · Paytm — pay after placing the order</span></span>
               </label>
@@ -1287,11 +1287,6 @@
                 <div style="font-size:.85rem;color:var(--muted);">We'll send you our UPI details on WhatsApp right after you place the order.</div>
                 <div class="apps"><span>GPay</span><span>PhonePe</span><span>Paytm</span><span>Any UPI App</span></div>
               </div>
-              <label class="pay-opt" id="payCODOpt">
-                <input type="radio" name="payment" value="Cash on Delivery" onchange="selectPayment('COD')" />
-                <span class="pay-ic"><svg class="icon"><use href="#i-bag"/></svg></span>
-                <span><span class="pay-name">Cash on Delivery</span><br><span class="pay-desc">Pay in cash when your hamper arrives</span></span>
-              </label>
             </div>
           </div>
 
@@ -1639,7 +1634,7 @@
   // Add coupon codes here to activate them, e.g. { WELCOME10: 10 } gives 10% off.
   const COUPONS = {};
   let coupon = null;        // { code, percent }
-  let paymentMethod = 'UPI';
+  const paymentMethod = 'UPI';   // UPI only — COD was removed
 
   function cartSubtotal() { return cart.reduce((s, i) => s + i.price * i.qty, 0); }
 
@@ -1668,12 +1663,6 @@
     document.body.style.overflow = '';
   }
 
-  function selectPayment(method) {
-    paymentMethod = method === 'COD' ? 'Cash on Delivery' : 'UPI';
-    document.getElementById('payUPIOpt').classList.toggle('sel', method !== 'COD');
-    document.getElementById('payCODOpt').classList.toggle('sel', method === 'COD');
-    document.getElementById('upiInline').classList.toggle('show', method !== 'COD');
-  }
 
   function applyCoupon() {
     const input = document.getElementById('couponInput');
@@ -1765,16 +1754,12 @@
     fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() }).catch(() => {});
 
     // Success screen
-    const isUPI = paymentMethod === 'UPI';
     document.getElementById('successTitle').textContent = 'Order Placed!';
     document.getElementById('successMsg').innerHTML =
       `Thank you, <strong>${esc(firstName) || 'friend'}</strong>! Your order of <strong>₹${total.toLocaleString()}</strong> is confirmed and we'll be in touch on WhatsApp shortly.`;
-    document.getElementById('successPay').innerHTML = isUPI ? `
+    document.getElementById('successPay').innerHTML = `
       <div class="co-card" style="text-align:center;max-width:360px;margin:18px auto 0;">
         <p style="color:var(--muted);font-size:.88rem;">We'll message you on WhatsApp with our UPI details to complete the payment. 💜</p>
-      </div>` : `
-      <div class="co-card" style="text-align:center;max-width:360px;margin:18px auto 0;">
-        <p style="color:var(--muted);font-size:.88rem;">Pay <strong>₹${total.toLocaleString()}</strong> in cash when your hamper is delivered. 🎁</p>
       </div>`;
 
     document.getElementById('checkoutContent').style.display = 'none';
