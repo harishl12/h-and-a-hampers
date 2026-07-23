@@ -1071,8 +1071,8 @@
           <div class="contact-item reveal"><div class="contact-icon"><svg class="icon"><use href="#i-instagram"/></svg></div> <a href="https://www.instagram.com/h_and_a_hampers/" target="_blank" style="color:var(--rose);">@h_and_a_hampers</a> on Instagram</div>
         </div>
 
-        <!-- UPI Payment Box -->
-        <div class="upi-box reveal">
+        <!-- UPI Payment Box — hidden until the real UPI ID is configured; remove hidden + this note to re-enable -->
+        <div class="upi-box reveal" hidden>
           <h4><svg class="icon"><use href="#i-card"/></svg> Pay via UPI</h4>
           <div class="upi-id-row">
             <span class="upi-glyph"><svg class="icon"><use href="#i-phone"/></svg></span>
@@ -1080,7 +1080,6 @@
               <div class="upi-id-lbl">UPI ID</div>
               <div class="upi-id">dummy-upi-id@bank</div>
             </div>
-            <button onclick="copyUPI()" class="upi-copy" id="copyUPIBtn">Copy</button>
           </div>
           <div class="upi-apps">
             <span>GPay</span>
@@ -1285,13 +1284,7 @@
                 <span><span class="pay-name">UPI</span><br><span class="pay-desc">GPay · PhonePe · Paytm — pay after placing the order</span></span>
               </label>
               <div class="upi-inline show" id="upiInline">
-                <div class="row">
-                  <div>
-                    <div style="font-size:.72rem;color:var(--muted);margin-bottom:3px;">Our UPI ID</div>
-                    <div class="uid">dummy-upi-id@bank</div>
-                  </div>
-                  <button type="button" class="coupon-btn" onclick="copyUPI()" id="copyUPIBtn">Copy</button>
-                </div>
+                <div style="font-size:.85rem;color:var(--muted);">We'll send you our UPI details on WhatsApp right after you place the order.</div>
                 <div class="apps"><span>GPay</span><span>PhonePe</span><span>Paytm</span><span>Any UPI App</span></div>
               </div>
               <label class="pay-opt" id="payCODOpt">
@@ -1314,7 +1307,8 @@
               <div class="coupon-msg" id="couponMsg"></div>
               <div class="co-line"><span>Subtotal</span><span id="coSubtotal">₹0</span></div>
               <div class="co-line disc" id="coDiscLine" style="display:none;"><span id="coDiscLabel">Discount</span><span id="coDiscount">-₹0</span></div>
-              <div class="co-line"><span>Shipping</span><span style="color:var(--green);">Free</span></div>
+              <div class="co-line"><span>Shipping</span><span id="coShip">Free</span></div>
+              <div class="co-line" id="coShipHint" style="font-size:.74rem;color:var(--muted);margin-top:-6px;">Free shipping on orders of ₹1,000 or more</div>
               <div class="co-line co-total"><span>Total</span><span id="coTotal">₹0</span></div>
               <button type="submit" class="btn btn-primary place-btn">Place Order</button>
               <div class="co-secure"><svg class="icon"><use href="#i-check"/></svg> Secure UPI payment · Pan-India delivery</div>
@@ -1698,6 +1692,16 @@
     renderCheckoutSummary();
   }
 
+  // Shipping: free at or above the threshold, flat fee below it
+  const FREE_SHIP_MIN = 1000, SHIPPING_FEE = 79;
+  function shippingFor(amount) { return amount >= FREE_SHIP_MIN ? 0 : SHIPPING_FEE; }
+
+  function coChangeQty(id, delta) {
+    changeQty(id, delta);
+    if (!cart.length) { closeCheckout(); showToast('Your bag is empty', 'i-bag'); return; }
+    renderCheckoutSummary();
+  }
+
   function renderCheckoutSummary() {
     const itemsEl = document.getElementById('coItems');
     itemsEl.innerHTML = cart.map(i => `
@@ -1705,13 +1709,19 @@
         <div class="ci-img ${esc(i.bg)}">${i.image ? `<img src="${esc(i.image)}" alt="">` : `<svg class="icon"><use href="#${esc(i.icon)}"/></svg>`}</div>
         <div class="ci-info">
           <div class="ci-name">${esc(i.name)}</div>
-          <div class="ci-qty">Qty ${i.qty} × ₹${Number(i.price).toLocaleString()}</div>
+          <div class="ci-qty" style="display:flex;align-items:center;gap:8px;">
+            <button type="button" class="qty-btn" onclick="coChangeQty(${Number(i.id) || 0},-1)" aria-label="Decrease quantity">−</button>
+            <span>${i.qty}</span>
+            <button type="button" class="qty-btn" onclick="coChangeQty(${Number(i.id) || 0},1)" aria-label="Increase quantity">+</button>
+            <span style="color:var(--muted);">× ₹${Number(i.price).toLocaleString()}</span>
+          </div>
         </div>
         <div class="ci-price">₹${(i.price * i.qty).toLocaleString()}</div>
       </div>`).join('');
     const subtotal = cartSubtotal();
     const discount = coupon ? Math.round(subtotal * coupon.percent / 100) : 0;
-    const total = subtotal - discount;
+    const shipping = shippingFor(subtotal - discount);
+    const total = subtotal - discount + shipping;
     document.getElementById('coSubtotal').textContent = `₹${subtotal.toLocaleString()}`;
     const discLine = document.getElementById('coDiscLine');
     if (discount > 0) {
@@ -1721,6 +1731,10 @@
     } else {
       discLine.style.display = 'none';
     }
+    const shipEl = document.getElementById('coShip');
+    shipEl.textContent = shipping === 0 ? 'Free' : `₹${shipping}`;
+    shipEl.style.color = shipping === 0 ? 'var(--green)' : '';
+    document.getElementById('coShipHint').style.display = shipping === 0 ? 'none' : 'flex';
     document.getElementById('coTotal').textContent = `₹${total.toLocaleString()}`;
   }
 
@@ -1730,9 +1744,11 @@
     const fd = new FormData(form);
     const subtotal = cartSubtotal();
     const discount = coupon ? Math.round(subtotal * coupon.percent / 100) : 0;
-    const total = subtotal - discount;
+    const shipping = shippingFor(subtotal - discount);
+    const total = subtotal - discount + shipping;
     const itemsText = cart.map(i => `${i.name} x${i.qty} = ₹${(i.price * i.qty).toLocaleString()}`).join('; ')
-      + (coupon ? ` | Coupon ${coupon.code} (-₹${discount})` : '');
+      + (coupon ? ` | Coupon ${coupon.code} (-₹${discount})` : '')
+      + (shipping ? ` | Shipping ₹${shipping}` : ' | Free shipping');
     const firstName = fd.get('firstName') || '';
 
     // Capture the order in Netlify Forms (so the owner sees it)
@@ -1755,13 +1771,7 @@
       `Thank you, <strong>${esc(firstName) || 'friend'}</strong>! Your order of <strong>₹${total.toLocaleString()}</strong> is confirmed and we'll be in touch on WhatsApp shortly.`;
     document.getElementById('successPay').innerHTML = isUPI ? `
       <div class="co-card" style="text-align:center;max-width:360px;margin:18px auto 0;">
-        <p style="color:var(--muted);font-size:.85rem;margin-bottom:14px;">Complete payment via UPI — we'll confirm within 30 minutes.</p>
-        <div style="background:var(--cream);border-radius:12px;padding:14px;margin-bottom:14px;border:1.5px solid var(--warm);">
-          <div style="font-size:.72rem;color:var(--muted);margin-bottom:4px;">UPI ID</div>
-          <div style="font-size:1.1rem;font-weight:bold;color:var(--brown);font-family:monospace;">dummy-upi-id@bank</div>
-        </div>
-        <button onclick="copyUPI()" id="copyUPIBtn2" class="btn btn-primary" style="width:100%;justify-content:center;"><svg class="icon" style="width:16px;height:16px;"><use href="#i-card"/></svg> Copy UPI ID</button>
-        <p style="font-size:.74rem;color:var(--muted);margin-top:12px;">After paying, send a screenshot to <strong>@h_and_a_hampers</strong> on Instagram or WhatsApp.</p>
+        <p style="color:var(--muted);font-size:.88rem;">We'll message you on WhatsApp with our UPI details to complete the payment. 💜</p>
       </div>` : `
       <div class="co-card" style="text-align:center;max-width:360px;margin:18px auto 0;">
         <p style="color:var(--muted);font-size:.88rem;">Pay <strong>₹${total.toLocaleString()}</strong> in cash when your hamper is delivered. 🎁</p>
@@ -1778,18 +1788,6 @@
     cart = [];
     coupon = null;
     updateCartUI();
-  }
-
-  function copyUPI() {
-    navigator.clipboard.writeText('dummy-upi-id@bank').then(() => {
-      showToast('UPI ID copied', 'i-check');
-      document.getElementById('copyUPIBtn') && (document.getElementById('copyUPIBtn').textContent = 'Copied!');
-      document.getElementById('copyUPIBtn2') && (document.getElementById('copyUPIBtn2').innerHTML = '<svg class="icon" style="width:16px;height:16px;"><use href="#i-check"/></svg> Copied!');
-      setTimeout(() => {
-        document.getElementById('copyUPIBtn') && (document.getElementById('copyUPIBtn').textContent = 'Copy');
-        document.getElementById('copyUPIBtn2') && (document.getElementById('copyUPIBtn2').innerHTML = '<svg class="icon" style="width:16px;height:16px;"><use href="#i-card"/></svg> Copy UPI ID');
-      }, 2000);
-    });
   }
 
   // ── Toast ──
