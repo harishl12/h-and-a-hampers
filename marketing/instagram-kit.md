@@ -142,3 +142,38 @@ Fast montage (1.5s/shot) of best hampers + big text: "RAKHI IS IN 5 DAYS" → "w
 - **Daily (10 min):** post the story, reply to every comment and DM within a few hours — response speed feeds both the algorithm and sales.
 
 **Track monthly (Instagram Insights):** followers, reach, saves, and — the one that pays — profile visits → link clicks.
+
+---
+
+## 8. One Idea, Four Formats — "Packing your order"
+
+Your best content isn't a single reel — it's a well you can draw from repeatedly. Here's Script A (the packing reel) repurposed into three more formats from the same footage/idea, so one packing session becomes a week of posts.
+
+**1. The reel** — already in §4, script A. The anchor piece.
+
+**2. Carousel — "What's actually in a ₹1,299 hamper" (5 slides)**
+Use still frames pulled from the same packing footage (screenshot the video at each step).
+- Slide 1: Big text on the empty basket photo — "What's actually in a ₹1,299 Rustic Gift Hamper?"
+- Slide 2: Photo of items laid out — "Every item, chosen by hand"
+- Slide 3: Mid-assembly shot — "No two hampers packed the same way twice"
+- Slide 4: Finished hamper, ribbon tied — "This one's headed to Indiranagar today"
+- Slide 5: CTA card — "Want one for your person? Link in bio · WhatsApp us"
+Carousels get saved more than reels when they read like a mini-guide — "what's inside" is a genuine save-and-reference format for gifting.
+
+**3. WhatsApp broadcast message** (send to your existing customer list/status)
+<div class="ig-copy">
+Handmade, packed with you in mind 🎁
+Here's a peek at how your hamper comes together — from empty basket to ribboned and ready.
+Ordering for someone special this week? Just reply here and tell us the occasion — we'll help you pick.
+</div>
+Pair with a 6–10s clip of the same footage as a WhatsApp Status post — Status is under-used by small businesses and has almost no competition for attention compared to the main feed.
+
+**4. Caption variant — process angle (use on a still photo instead of the reel)**
+<div class="ig-copy">
+Every hamper starts the same way: an empty basket and a WhatsApp order.
+By the time it leaves our hands, it's been through 20 small decisions — which ribbon, how much filler, where the card goes.
+That's the difference between a gift and a *hamper*.
+📲 Order via the link in bio or WhatsApp us.
+</div>
+
+**The pattern to repeat:** film once while packing → cut the reel same day → pull 4–5 stills from the footage for a carousel a few days later → reuse a caption idea as a WhatsApp broadcast → repeat with a different product next week. One 5-minute packing session, four pieces of content, spread across 10–12 days.
