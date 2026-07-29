@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>H &amp; A Hampers — Instagram Video Maker</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#f5f1ea; --warm:#ebe6f2; --rose:#7a66a4; --rose-dk:#5e4e73;
+    --gold:#bfa46b; --gold-dk:#9c8550; --brown:#4e4068;
+    --blush:#e3d4e8; --text:#2a2433; --muted:#6e6678; --white:#fff;
+    --green:#5a8a5f; --amber:#b8863b; --red:#b0554f;
+    --serif:'Cormorant Garamond',Georgia,serif;
+    --sans:'Jost','Helvetica Neue',Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);background:#efeaf3;color:var(--text);padding:24px;display:flex;gap:28px;flex-wrap:wrap;justify-content:center;align-items:flex-start}
+
+  .panel{background:#fff;border-radius:16px;padding:22px;width:380px;box-shadow:0 4px 24px rgba(78,64,104,.12)}
+  .panel h1{font-family:var(--serif);font-size:23px;color:var(--brown);margin-bottom:4px}
+  .panel .sub{font-size:12px;color:var(--muted);margin-bottom:18px}
+  label{display:block;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:14px 0 5px;font-weight:500}
+  input[type=text],select{width:100%;padding:9px 11px;border:1px solid #ded7e6;border-radius:8px;font-family:var(--sans);font-size:13px;color:var(--text);background:#fdfcfe}
+  input:focus,select:focus{outline:none;border-color:var(--rose)}
+  input[type=file]{width:100%;font-size:12px;padding:7px 0}
+  input[type=number]{width:60px;padding:5px 6px;border:1px solid #ded7e6;border-radius:6px;font-size:12px;font-family:var(--sans)}
+  .row{display:flex;gap:9px}
+  .row>*{flex:1}
+  .btn{width:100%;margin-top:10px;padding:12px;border:none;border-radius:9px;background:var(--rose);color:#fff;font-family:var(--sans);font-size:14px;font-weight:500;letter-spacing:.04em;cursor:pointer;transition:.2s}
+  .btn:hover:not(:disabled){background:var(--rose-dk)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--rose);border:1px solid var(--rose)}
+  .btn.ghost:hover:not(:disabled){background:var(--warm)}
+  .hint{font-size:11px;color:var(--muted);margin-top:14px;line-height:1.55;border-top:1px solid #eee7f0;padding-top:12px}
+  .backlink{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--rose);text-decoration:none;margin-bottom:14px;padding:6px 12px;border:1px solid #ded7e6;border-radius:999px;background:#fdfcfe;transition:.2s}
+  .backlink:hover{background:var(--warm);border-color:var(--rose)}
+  .check{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:13px}
+  .check input{width:auto}
+
+  /* ---- media list ---- */
+  #itemList{margin-top:10px;display:flex;flex-direction:column;gap:8px;max-height:290px;overflow-y:auto}
+  .item{display:flex;gap:8px;align-items:center;background:var(--cream);border-radius:9px;padding:7px;border:1px solid #ede6dd}
+  .item .thumb{width:44px;height:44px;border-radius:6px;object-fit:cover;flex-shrink:0;background:var(--warm)}
+  .item .thumb.vid{display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--rose)}
+  .item .meta{flex:1;min-width:0}
+  .item .fname{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px}
+  .item .capinput{width:100%;font-size:11px;padding:4px 6px;border:1px solid #ded7e6;border-radius:5px;margin-top:3px}
+  .item .durwrap{display:flex;align-items:center;gap:3px;font-size:10px;color:var(--muted)}
+  .item .ctrls{display:flex;flex-direction:column;gap:2px}
+  .item .ctrls button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:1px 4px;border-radius:4px}
+  .item .ctrls button:hover{background:var(--warm);color:var(--rose)}
+  .item .rm{color:var(--red)!important}
+  .empty-list{font-size:12px;color:var(--muted);text-align:center;padding:18px 0;border:1.5px dashed #ded7e6;border-radius:9px;margin-top:10px}
+
+  .duration-badge{margin-top:10px;font-size:12px;font-weight:500;padding:8px 10px;border-radius:8px;text-align:center}
+  .duration-badge.ok{background:#e9f3ea;color:var(--green)}
+  .duration-badge.warn{background:#f7edda;color:var(--amber)}
+  .duration-badge.bad{background:#f7e6e4;color:var(--red)}
+
+  /* ---- stage ---- */
+  .stage{display:flex;flex-direction:column;align-items:center;gap:12px}
+  #stage{background:#000;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.25);max-width:min(88vw,420px);max-height:78vh;width:auto;height:auto}
+  .stagenote{font-size:12px;color:var(--muted);text-align:center;max-width:420px}
+  .status{font-size:12px;color:var(--brown);font-weight:500;min-height:16px}
+  .progress-wrap{width:100%;max-width:420px;height:5px;background:var(--warm);border-radius:99px;overflow:hidden;display:none}
+  .progress-wrap.show{display:block}
+  .progress-bar{height:100%;width:0%;background:var(--rose);transition:width .1s linear}
+  .result{margin-top:6px;display:none;flex-direction:column;align-items:center;gap:10px}
+  .result.show{display:flex}
+  .result video{max-width:min(88vw,320px);border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.2)}
+  .dl-btn{display:inline-block;background:var(--gold);color:#2a2433;text-decoration:none;font-size:13px;font-weight:600;padding:10px 22px;border-radius:999px}
+  .dl-btn:hover{background:var(--gold-dk);color:#fff}
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <a class="backlink" href="/dashboard/">← Back to dashboard</a>
+  <h1>Video Maker</h1>
+  <div class="sub">H &amp; A Hampers · @h_and_a_hampers</div>
+
+  <label>Format</label>
+  <select id="format">
+    <option value="story" selected>Reel / Story 1080×1920 (9:16)</option>
+    <option value="portrait">Feed Portrait 1080×1350 (4:5)</option>
+    <option value="square">Feed Square 1080×1080 (1:1)</option>
+  </select>
+
+  <label>Transition between clips</label>
+  <select id="transition">
+    <option value="cut">Cut</option>
+    <option value="fade" selected>Fade through black</option>
+  </select>
+
+  <label>Add photos or short video clips</label>
+  <input type="file" id="fileInput" accept="image/*,video/*" multiple>
+
+  <div id="itemList"></div>
+  <div class="empty-list" id="emptyMsg">No media yet — add photos or clips above. They'll play in this order; use ↑ ↓ to reorder.</div>
+  <div class="duration-badge" id="durBadge" style="display:none"></div>
+
+  <label style="margin-top:16px">Background music (optional)</label>
+  <input type="file" id="audioInput" accept="audio/*">
+  <div id="audioName" style="font-size:11px;color:var(--muted);margin-top:4px"></div>
+
+  <div class="check"><input type="checkbox" id="watermark" checked><label style="margin:0;text-transform:none;letter-spacing:0;font-size:13px;color:var(--text)">Show H&amp;A logo watermark</label></div>
+
+  <button class="btn ghost" id="previewBtn" disabled>▶ Preview</button>
+  <button class="btn" id="exportBtn" disabled>⬇ Export Video</button>
+
+  <div class="hint">
+    <b>How to use</b><br>
+    1. Pick a format (Reel/Story is best for Instagram)<br>
+    2. Add photos and/or short clips, set seconds per slide, reorder with ↑ ↓<br>
+    3. Add an optional caption per slide<br>
+    4. Upload your own music/voiceover — never use audio you don't have rights to; original sound or royalty-free tracks only<br>
+    5. Preview, then Export → downloads a video file ready to upload<br><br>
+    Reels perform best under 30s — the duration badge above turns amber past 30s and red past 60s.
+  </div>
+</div>
+
+<div class="stage">
+  <canvas id="stage" width="1080" height="1920"></canvas>
+  <div class="progress-wrap" id="progressWrap"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="status" id="statusEl">Add media to get started</div>
+  <div class="stagenote">Preview plays in this window · export renders at full 1080px resolution</div>
+  <div class="result" id="resultWrap">
+    <video id="resultVideo" controls playsinline></video>
+    <a class="dl-btn" id="downloadLink" download="ha-hampers-reel.mp4">Download video</a>
+  </div>
+</div>
+
+<script>
+const FORMATS = { story: [1080,1920], portrait: [1080,1350], square: [1080,1080] };
+const canvas = document.getElementById('stage');
+const ctx = canvas.getContext('2d');
+let items = [];      // {id,type,url,el(img/video),dur,cap,natW,natH}
+let uid = 0;
+let audioFile = null, audioEl = null;
+let watermarkImg = new Image();
+watermarkImg.src = '/logo.png';
+let watermarkReady = false;
+watermarkImg.onload = () => watermarkReady = true;
+
+const fileInput = document.getElementById('fileInput');
+const audioInput = document.getElementById('audioInput');
+const itemListEl = document.getElementById('itemList');
+const emptyMsg = document.getElementById('emptyMsg');
+const durBadge = document.getElementById('durBadge');
+const previewBtn = document.getElementById('previewBtn');
+const exportBtn = document.getElementById('exportBtn');
+const statusEl = document.getElementById('statusEl');
+const progressWrap = document.getElementById('progressWrap');
+const progressBar = document.getElementById('progressBar');
+const resultWrap = document.getElementById('resultWrap');
+const resultVideo = document.getElementById('resultVideo');
+const downloadLink = document.getElementById('downloadLink');
+const formatSel = document.getElementById('format');
+const transitionSel = document.getElementById('transition');
+const watermarkChk = document.getElementById('watermark');
+
+function applyFormat() {
+  const [w,h] = FORMATS[formatSel.value];
+  canvas.width = w; canvas.height = h;
+  drawIdleFrame();
+}
+formatSel.addEventListener('change', applyFormat);
+
+fileInput.addEventListener('change', async (e) => {
+  const files = [...e.target.files];
+  for (const f of files) await addItem(f);
+  fileInput.value = '';
+  refreshUI();
+});
+
+audioInput.addEventListener('change', (e) => {
+  audioFile = e.target.files[0] || null;
+  document.getElementById('audioName').textContent = audioFile ? ('🎵 ' + audioFile.name) : '';
+});
+
+async function addItem(file) {
+  const url = URL.createObjectURL(file);
+  const id = ++uid;
+  if (file.type.startsWith('image/')) {
+    const img = new Image();
+    img.src = url;
+    await img.decode().catch(() => {});
+    items.push({ id, type: 'image', url, el: img, dur: 2.5, cap: '', natW: img.naturalWidth || 1080, natH: img.naturalHeight || 1080, name: file.name });
+  } else if (file.type.startsWith('video/')) {
+    const vid = document.createElement('video');
+    vid.src = url; vid.muted = true; vid.playsInline = true; vid.preload = 'auto';
+    await new Promise((res) => { vid.onloadedmetadata = res; vid.onerror = res; });
+    const full = isFinite(vid.duration) ? vid.duration : 4;
+    items.push({ id, type: 'video', url, el: vid, dur: Math.min(full, 6), fullDur: full, cap: '', natW: vid.videoWidth || 1080, natH: vid.videoHeight || 1920, name: file.name });
+  }
+}
+
+function removeItem(id) {
+  const it = items.find(i => i.id === id);
+  if (it) URL.revokeObjectURL(it.url);
+  items = items.filter(i => i.id !== id);
+  refreshUI();
+}
+function moveItem(id, dir) {
+  const i = items.findIndex(x => x.id === id);
+  const j = i + dir;
+  if (j < 0 || j >= items.length) return;
+  [items[i], items[j]] = [items[j], items[i]];
+  refreshUI();
+}
+
+function totalDuration() { return items.reduce((s, i) => s + Number(i.dur), 0); }
+
+function refreshUI() {
+  emptyMsg.style.display = items.length ? 'none' : 'block';
+  itemListEl.innerHTML = '';
+  items.forEach((it, idx) => {
+    const row = document.createElement('div');
+    row.className = 'item';
+    const thumb = it.type === 'image'
+      ? `<img class="thumb" src="${it.url}">`
+      : `<div class="thumb vid">🎬</div>`;
+    row.innerHTML = `
+      ${thumb}
+      <div class="meta">
+        <div class="fname">${idx + 1}. ${it.name}</div>
+        <input class="capinput" placeholder="Caption (optional)" value="${it.cap.replace(/"/g,'&quot;')}">
+        <div class="durwrap">sec: <input type="number" min="0.8" max="${it.type === 'video' ? it.fullDur.toFixed(1) : 8}" step="0.1" value="${it.dur}"></div>
+      </div>
+      <div class="ctrls">
+        <button title="Move up" data-act="up">↑</button>
+        <button title="Move down" data-act="down">↓</button>
+        <button title="Remove" class="rm" data-act="rm">✕</button>
+      </div>`;
+    row.querySelector('.capinput').addEventListener('input', (e) => it.cap = e.target.value);
+    row.querySelector('input[type=number]').addEventListener('input', (e) => {
+      let v = parseFloat(e.target.value) || 1;
+      const max = it.type === 'video' ? it.fullDur : 8;
+      it.dur = Math.min(Math.max(v, 0.5), max);
+      updateDurationBadge();
+    });
+    row.querySelector('[data-act=up]').addEventListener('click', () => moveItem(it.id, -1));
+    row.querySelector('[data-act=down]').addEventListener('click', () => moveItem(it.id, 1));
+    row.querySelector('[data-act=rm]').addEventListener('click', () => removeItem(it.id));
+    itemListEl.appendChild(row);
+  });
+  const has = items.length > 0;
+  previewBtn.disabled = !has;
+  exportBtn.disabled = !has;
+  updateDurationBadge();
+  drawIdleFrame();
+}
+
+function updateDurationBadge() {
+  if (!items.length) { durBadge.style.display = 'none'; return; }
+  const t = totalDuration();
+  durBadge.style.display = 'block';
+  durBadge.textContent = `Total: ${t.toFixed(1)}s`;
+  durBadge.className = 'duration-badge ' + (t <= 30 ? 'ok' : t <= 60 ? 'warn' : 'bad');
+  if (t <= 30) durBadge.textContent += ' — great Reel length';
+  else if (t <= 60) durBadge.textContent += ' — a bit long, consider trimming';
+  else durBadge.textContent += ' — too long for a Reel, trim it down';
+}
+
+function drawIdleFrame() {
+  ctx.fillStyle = '#efeaf3';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  if (!items.length) {
+    ctx.fillStyle = '#a99cbc';
+    ctx.font = '500 40px Jost, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Add media to preview', canvas.width / 2, canvas.height / 2);
+  } else {
+    drawCover(items[0]);
+  }
+}
+
+function drawCover(it) {
+  const cw = canvas.width, ch = canvas.height;
+  const nw = it.natW, nh = it.natH;
+  const scale = Math.max(cw / nw, ch / nh);
+  const dw = nw * scale, dh = nh * scale;
+  const dx = (cw - dw) / 2, dy = (ch - dh) / 2;
+  ctx.drawImage(it.el, dx, dy, dw, dh);
+}
+
+function wrapText(text, maxWidth) {
+  const words = text.split(/\s+/);
+  const lines = [];
+  let line = '';
+  for (const w of words) {
+    const test = line ? line + ' ' + w : w;
+    if (ctx.measureText(test).width > maxWidth && line) { lines.push(line); line = w; }
+    else line = test;
+  }
+  if (line) lines.push(line);
+  return lines.slice(0, 2);
+}
+
+function drawCaption(text) {
+  if (!text) return;
+  const cw = canvas.width, ch = canvas.height;
+  const bandH = ch * 0.3;
+  const grad = ctx.createLinearGradient(0, ch - bandH, 0, ch);
+  grad.addColorStop(0, 'rgba(42,36,51,0)');
+  grad.addColorStop(0.4, 'rgba(42,36,51,0.75)');
+  grad.addColorStop(1, 'rgba(42,36,51,0.92)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, ch - bandH, cw, bandH);
+
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'center';
+  ctx.font = `600 ${Math.round(cw * 0.052)}px "Cormorant Garamond", Georgia, serif`;
+  const lines = wrapText(text, cw * 0.84);
+  const lineH = cw * 0.062;
+  let y = ch - bandH * 0.32 - (lines.length - 1) * lineH * 0.5;
+  lines.forEach((ln) => { ctx.fillText(ln, cw / 2, y); y += lineH; });
+}
+
+function drawWatermark() {
+  if (!watermarkChk.checked || !watermarkReady) return;
+  const cw = canvas.width, ch = canvas.height;
+  const r = cw * 0.032;
+  const cx = cw - r - cw * 0.045, cy = ch - r - cw * 0.045;
+  ctx.save();
+  ctx.globalAlpha = 0.88;
+  ctx.beginPath(); ctx.arc(cx, cy, r + 5, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.closePath(); ctx.clip();
+  ctx.drawImage(watermarkImg, cx - r, cy - r, r * 2, r * 2);
+  ctx.restore();
+}
+
+function kenBurnsRect(it, prog, idx) {
+  // returns extra scale factor for a subtle zoom over the slide's duration
+  const ease = prog < 0.5 ? 2*prog*prog : -1+(4-2*prog)*prog;
+  const dir = idx % 2 === 0 ? 1 : -1;
+  return 1 + 0.06 * ease * (dir === 1 ? 1 : 1); // gentle zoom-in regardless of dir, dir reserved for future pan
+}
+
+let rafId = null, mode = null; // 'preview' | 'export'
+let recorder = null, chunks = [], mediaStartTs = 0, exportAudioCtx = null, exportVideoTrack = null;
+
+function schedule() {
+  let acc = 0;
+  return items.map(it => { const start = acc; acc += it.dur; return { it, start, end: acc }; });
+}
+
+function stopAll() {
+  if (rafId) cancelAnimationFrame(rafId);
+  rafId = null; mode = null;
+  items.forEach(it => { if (it.type === 'video') { it.el.pause(); } });
+  if (audioEl) { audioEl.pause(); }
+}
+
+previewBtn.addEventListener('click', () => {
+  if (mode === 'preview') { stopAll(); previewBtn.textContent = '▶ Preview'; statusEl.textContent = 'Stopped'; return; }
+  stopAll();
+  mode = 'preview';
+  previewBtn.textContent = '⏹ Stop preview';
+  runTimeline(false);
+});
+
+exportBtn.addEventListener('click', () => runExport());
+
+function runTimeline(recording, onDone) {
+  const timeline = schedule();
+  const total = totalDuration();
+  const FADE = 0.35; // seconds
+  const transition = transitionSel.value;
+  let activePlayingId = null;
+  const start = performance.now();
+
+  function frame(now) {
+    const elapsed = (now - start) / 1000;
+    if (elapsed >= total) {
+      items.forEach(it => { if (it.type === 'video') it.el.pause(); });
+      if (recording) { onDone(); }
+      else { previewBtn.textContent = '▶ Preview'; statusEl.textContent = 'Preview finished'; }
+      mode = null; rafId = null;
+      progressWrap.classList.remove('show');
+      return;
+    }
+    const slide = timeline.find(s => elapsed >= s.start && elapsed < s.end) || timeline[timeline.length - 1];
+    const it = slide.it;
+    const localT = elapsed - slide.start;
+    const prog = Math.min(localT / it.dur, 1);
+
+    if (it.type === 'video') {
+      if (activePlayingId !== it.id) {
+        items.forEach(other => { if (other.type === 'video' && other.id !== it.id) other.el.pause(); });
+        it.el.currentTime = 0;
+        it.el.play().catch(() => {});
+        activePlayingId = it.id;
+      }
+    } else {
+      activePlayingId = null;
+    }
+
+    ctx.save();
+    if (it.type === 'image') {
+      const z = kenBurnsRect(it, prog, timeline.indexOf(slide));
+      const cw = canvas.width, ch = canvas.height;
+      const nw = it.natW, nh = it.natH;
+      const baseScale = Math.max(cw / nw, ch / nh) * z;
+      const dw = nw * baseScale, dh = nh * baseScale;
+      const dx = (cw - dw) / 2, dy = (ch - dh) / 2;
+      ctx.drawImage(it.el, dx, dy, dw, dh);
+    } else {
+      drawCover(it);
+    }
+    if (it.cap) drawCaption(it.cap);
+    drawWatermark();
+
+    if (transition === 'fade') {
+      let alpha = 0;
+      const isFirst = timeline.indexOf(slide) === 0;
+      const isLast = timeline.indexOf(slide) === timeline.length - 1;
+      if (!isFirst && localT < FADE) alpha = 1 - (localT / FADE);
+      if (!isLast && (it.dur - localT) < FADE) alpha = Math.max(alpha, 1 - ((it.dur - localT) / FADE));
+      if (alpha > 0) { ctx.fillStyle = `rgba(0,0,0,${alpha})`; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+    }
+    ctx.restore();
+
+    if (recording && exportVideoTrack) {
+      // Manual capture: push this drawn frame explicitly rather than relying on the
+      // browser's own timer-based grab, which some browsers suspend on a backgrounded tab.
+      exportVideoTrack.requestFrame();
+    }
+
+    if (recording) {
+      progressWrap.classList.add('show');
+      progressBar.style.width = Math.round((elapsed / total) * 100) + '%';
+      statusEl.textContent = `Recording… ${elapsed.toFixed(1)}s / ${total.toFixed(1)}s`;
+    } else {
+      statusEl.textContent = `Previewing… ${elapsed.toFixed(1)}s / ${total.toFixed(1)}s`;
+    }
+
+    rafId = requestAnimationFrame(frame);
+  }
+  rafId = requestAnimationFrame(frame);
+}
+
+function pickMime() {
+  const candidates = [
+    'video/mp4;codecs=avc1.42E01E,mp4a.40.2',
+    'video/mp4',
+    'video/webm;codecs=vp9,opus',
+    'video/webm;codecs=vp8,opus',
+    'video/webm'
+  ];
+  for (const c of candidates) {
+    if (window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(c)) return c;
+  }
+  return '';
+}
+
+async function runExport() {
+  if (!items.length) return;
+  stopAll();
+  resultWrap.classList.remove('show');
+  await document.fonts.ready.catch(() => {});
+  exportBtn.disabled = true; previewBtn.disabled = true;
+  statusEl.textContent = 'Preparing export…';
+
+  // 0 = manual mode: we push each frame ourselves via requestFrame() as we draw it,
+  // instead of the browser grabbing frames on its own timer (which some browsers pause
+  // when the tab is backgrounded, silently producing an empty recording).
+  const videoStream = canvas.captureStream(0);
+  exportVideoTrack = videoStream.getVideoTracks()[0];
+  let combinedStream = videoStream;
+  let audioDestNode = null;
+
+  if (audioFile) {
+    exportAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    audioEl = new Audio(URL.createObjectURL(audioFile));
+    audioEl.crossOrigin = 'anonymous';
+    await new Promise((res) => { audioEl.onloadedmetadata = res; audioEl.onerror = res; });
+    audioEl.loop = audioEl.duration < totalDuration();
+    const src = exportAudioCtx.createMediaElementSource(audioEl);
+    audioDestNode = exportAudioCtx.createMediaStreamDestination();
+    src.connect(audioDestNode);
+    src.connect(exportAudioCtx.destination);
+    combinedStream = new MediaStream([...videoStream.getVideoTracks(), ...audioDestNode.stream.getAudioTracks()]);
+  }
+
+  const mime = pickMime();
+  chunks = [];
+  recorder = new MediaRecorder(combinedStream, mime ? { mimeType: mime, videoBitsPerSecond: 6_000_000 } : { videoBitsPerSecond: 6_000_000 });
+  recorder.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data); };
+  recorder.onstop = () => {
+    const blob = new Blob(chunks, { type: mime || 'video/webm' });
+    const url = URL.createObjectURL(blob);
+    resultVideo.src = url;
+    const ext = mime.includes('mp4') ? 'mp4' : 'webm';
+    downloadLink.href = url;
+    downloadLink.download = `ha-hampers-reel.${ext}`;
+    resultWrap.classList.add('show');
+    statusEl.textContent = 'Export complete ✓';
+    progressWrap.classList.remove('show');
+    exportBtn.disabled = false; previewBtn.disabled = false;
+    if (exportAudioCtx) { exportAudioCtx.close().catch(() => {}); exportAudioCtx = null; }
+    exportVideoTrack = null;
+  };
+
+  recorder.start();
+  if (audioEl) { audioEl.currentTime = 0; audioEl.play().catch(() => {}); }
+  mode = 'export';
+  runTimeline(true, () => { if (recorder && recorder.state !== 'inactive') recorder.stop(); });
+}
+
+applyFormat();
+refreshUI();
+</script>
+</body>
+</html>
