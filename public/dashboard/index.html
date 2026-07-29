@@ -232,6 +232,25 @@
     .ig-kit .ig-body h4{color:var(--brown);font-size:.86rem;margin:14px 0 6px;letter-spacing:.03em}
     .ig-kit .ig-copy{position:relative;background:var(--cream);border:1px dashed var(--warm);border-radius:10px;padding:12px 14px;margin:8px 0;white-space:pre-wrap;word-break:break-word;font-size:.86rem}
     .ig-kit .ig-copy button{position:absolute;top:8px;right:8px;background:var(--rose);color:#fff;border:none;border-radius:20px;padding:4px 12px;font-size:.72rem;font-weight:500}
+    /* ---- Post Maker panel ---- */
+    .pm-body{padding:4px 0 2px}
+    .pm-styles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+    .pm-thumb{position:relative;aspect-ratio:4/5;border-radius:9px;border:1px solid var(--warm);overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:8px 6px;text-align:center}
+    .pm-thumb span{position:absolute;top:7px;left:8px;font-size:.68rem;font-weight:600;letter-spacing:.05em;width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.9);color:var(--brown)}
+    .pm-thumb em{font-style:normal;font-size:.63rem;line-height:1.25;letter-spacing:.02em}
+    .pm-t1{background:linear-gradient(to top,#2a2433 0%,#2a2433 42%,#c9bcd8 42%,#e3d4e8 100%)}
+    .pm-t1 em{color:#fff}
+    .pm-t2{background:var(--cream);border:2px solid var(--gold)}
+    .pm-t2 em{color:var(--brown)}
+    .pm-t3{background:linear-gradient(to right,#d9cde3 0%,#d9cde3 58%,var(--brown) 58%,var(--brown) 100%)}
+    .pm-t3 em{color:#fff;margin-left:32%}
+    .pm-t4{background:linear-gradient(150deg,var(--warm),var(--blush) 55%,var(--cream))}
+    .pm-t4 em{color:var(--brown)}
+    .pm-open{display:inline-block;background:var(--rose);color:#fff;text-decoration:none;font-size:.85rem;font-weight:500;letter-spacing:.03em;padding:11px 22px;border-radius:9px;transition:.2s}
+    .pm-open:hover{background:var(--rose-dk)}
+    .pm-body .hint{margin-top:12px}
+    @media(max-width:560px){.pm-styles{grid-template-columns:repeat(2,1fr)}}
+
     .ig-kit .ig-tablewrap{overflow-x:auto;border:1px solid var(--warm);border-radius:10px;margin:8px 0}
     .ig-kit table{border-collapse:collapse;width:100%;min-width:520px;font-size:.82rem}
     .ig-kit th{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1.5px solid var(--warm);white-space:nowrap}
@@ -424,6 +443,23 @@
         </div>
       </div>
       <div class="scroll" id="messages"></div>
+    </div>
+
+    <!-- Instagram post maker -->
+    <div class="panel pm-panel">
+      <div class="panel-head">
+        <div><h2><svg class="icon"><use href="#d-chat"/></svg> Post Maker</h2><div class="desc">Turn a product photo into a branded Instagram post — 4 styles, 3 sizes, downloads as PNG.</div></div>
+      </div>
+      <div class="pm-body">
+        <div class="pm-styles">
+          <div class="pm-thumb pm-t1"><span>A</span><em>Photo + overlay</em></div>
+          <div class="pm-thumb pm-t2"><span>B</span><em>Framed card</em></div>
+          <div class="pm-thumb pm-t3"><span>C</span><em>Side panel</em></div>
+          <div class="pm-thumb pm-t4"><span>D</span><em>Text only</em></div>
+        </div>
+        <a class="pm-open" href="/dashboard/post-maker.html">Open Post Maker →</a>
+        <p class="hint">Upload a photo, edit the text, download. Uses the H &amp; A brand colours, fonts and logo automatically.</p>
+      </div>
     </div>
 
     <!-- Instagram growth kit -->
