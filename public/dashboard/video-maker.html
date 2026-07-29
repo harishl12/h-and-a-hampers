@@ -52,6 +52,8 @@
   .item .ctrls button:hover{background:var(--warm);color:var(--rose)}
   .item .rm{color:var(--red)!important}
   .empty-list{font-size:12px;color:var(--muted);text-align:center;padding:18px 0;border:1.5px dashed #ded7e6;border-radius:9px;margin-top:10px}
+  .add-error{font-size:12px;color:var(--red);background:#fbeceb;border:1px solid #f0cfcd;border-radius:8px;padding:10px 12px;margin-top:10px;line-height:1.5;display:none}
+  .add-error.show{display:block}
 
   .duration-badge{margin-top:10px;font-size:12px;font-weight:500;padding:8px 10px;border-radius:8px;text-align:center}
   .duration-badge.ok{background:#e9f3ea;color:var(--green)}
@@ -98,6 +100,7 @@
 
   <div id="itemList"></div>
   <div class="empty-list" id="emptyMsg">No media yet — add photos or clips above. They'll play in this order; use ↑ ↓ to reorder.</div>
+  <div class="add-error" id="addError"></div>
   <div class="duration-badge" id="durBadge" style="display:none"></div>
 
   <label style="margin-top:16px">Background music (optional)</label>
@@ -147,6 +150,14 @@ const fileInput = document.getElementById('fileInput');
 const audioInput = document.getElementById('audioInput');
 const itemListEl = document.getElementById('itemList');
 const emptyMsg = document.getElementById('emptyMsg');
+const addErrorEl = document.getElementById('addError');
+let addErrorTimer = null;
+function showAddError(msg) {
+  addErrorEl.textContent = msg;
+  addErrorEl.classList.add('show');
+  clearTimeout(addErrorTimer);
+  addErrorTimer = setTimeout(() => addErrorEl.classList.remove('show'), 9000);
+}
 const durBadge = document.getElementById('durBadge');
 const previewBtn = document.getElementById('previewBtn');
 const exportBtn = document.getElementById('exportBtn');
@@ -179,14 +190,31 @@ audioInput.addEventListener('change', (e) => {
   document.getElementById('audioName').textContent = audioFile ? ('🎵 ' + audioFile.name) : '';
 });
 
+// Decode as robustly as possible: createImageBitmap handles far more real-world
+// photos correctly (CMYK JPEGs, odd color profiles) than a plain <img>.decode().
+// Falls back to <img> if that's unavailable, and reports failure rather than
+// silently adding an undecodable item that would later crash the render loop.
+async function decodeImage(file) {
+  if (window.createImageBitmap) {
+    try { return await createImageBitmap(file); } catch (e) { /* fall through */ }
+  }
+  const img = new Image();
+  img.src = URL.createObjectURL(file);
+  try { await img.decode(); return img; } catch (e) { return null; }
+}
+
 async function addItem(file) {
   const url = URL.createObjectURL(file);
   const id = ++uid;
   if (file.type.startsWith('image/')) {
-    const img = new Image();
-    img.src = url;
-    await img.decode().catch(() => {});
-    items.push({ id, type: 'image', url, el: img, dur: 2.5, cap: '', natW: img.naturalWidth || 1080, natH: img.naturalHeight || 1080, name: file.name });
+    const el = await decodeImage(file);
+    if (!el) {
+      showAddError(`Could not use "${file.name}" — try a JPG, PNG or WebP photo. (iPhone tip: Settings → Camera → Formats → “Most Compatible”, or re-save it in Photos first.)`);
+      return;
+    }
+    const natW = el.naturalWidth || el.width || 1080;
+    const natH = el.naturalHeight || el.height || 1080;
+    items.push({ id, type: 'image', url, el, dur: 2.5, cap: '', natW, natH, name: file.name });
   } else if (file.type.startsWith('video/')) {
     const vid = document.createElement('video');
     vid.src = url; vid.muted = true; vid.playsInline = true; vid.preload = 'auto';
@@ -398,27 +426,33 @@ function runTimeline(recording, onDone) {
     }
 
     ctx.save();
-    if (it.type === 'image') {
-      const z = kenBurnsRect(it, prog, timeline.indexOf(slide));
-      const cw = canvas.width, ch = canvas.height;
-      const nw = it.natW, nh = it.natH;
-      const baseScale = Math.max(cw / nw, ch / nh) * z;
-      const dw = nw * baseScale, dh = nh * baseScale;
-      const dx = (cw - dw) / 2, dy = (ch - dh) / 2;
-      ctx.drawImage(it.el, dx, dy, dw, dh);
-    } else {
-      drawCover(it);
-    }
-    if (it.cap) drawCaption(it.cap);
-    drawWatermark();
+    try {
+      if (it.type === 'image') {
+        const z = kenBurnsRect(it, prog, timeline.indexOf(slide));
+        const cw = canvas.width, ch = canvas.height;
+        const nw = it.natW, nh = it.natH;
+        const baseScale = Math.max(cw / nw, ch / nh) * z;
+        const dw = nw * baseScale, dh = nh * baseScale;
+        const dx = (cw - dw) / 2, dy = (ch - dh) / 2;
+        ctx.drawImage(it.el, dx, dy, dw, dh);
+      } else {
+        drawCover(it);
+      }
+      if (it.cap) drawCaption(it.cap);
+      drawWatermark();
 
-    if (transition === 'fade') {
-      let alpha = 0;
-      const isFirst = timeline.indexOf(slide) === 0;
-      const isLast = timeline.indexOf(slide) === timeline.length - 1;
-      if (!isFirst && localT < FADE) alpha = 1 - (localT / FADE);
-      if (!isLast && (it.dur - localT) < FADE) alpha = Math.max(alpha, 1 - ((it.dur - localT) / FADE));
-      if (alpha > 0) { ctx.fillStyle = `rgba(0,0,0,${alpha})`; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+      if (transition === 'fade') {
+        let alpha = 0;
+        const isFirst = timeline.indexOf(slide) === 0;
+        const isLast = timeline.indexOf(slide) === timeline.length - 1;
+        if (!isFirst && localT < FADE) alpha = 1 - (localT / FADE);
+        if (!isLast && (it.dur - localT) < FADE) alpha = Math.max(alpha, 1 - ((it.dur - localT) / FADE));
+        if (alpha > 0) { ctx.fillStyle = `rgba(0,0,0,${alpha})`; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+      }
+    } catch (err) {
+      // A single unreadable frame (e.g. a video seek edge case) shouldn't kill the
+      // whole render loop — skip this frame's drawing and keep going.
+      console.warn('Video Maker: skipped a frame due to a draw error', err);
     }
     ctx.restore();
 
