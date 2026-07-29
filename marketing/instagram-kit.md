@@ -177,3 +177,24 @@ That's the difference between a gift and a *hamper*.
 </div>
 
 **The pattern to repeat:** film once while packing → cut the reel same day → pull 4–5 stills from the footage for a carousel a few days later → reuse a caption idea as a WhatsApp broadcast → repeat with a different product next week. One 5-minute packing session, four pieces of content, spread across 10–12 days.
+
+---
+
+## 9. Audience Filter — check before every post
+
+Diagnosed 29 July 2026: 96.8% of views were coming from non-followers via Reels recommendations, but conversion was near-zero (27 follows from 26.6K reach, 2 link taps from 574 profile visits). Root cause: trending audio + broad "small business" hashtags pull in other creators/marketers who study the format, not people shopping for gifts. Run this checklist before hitting post.
+
+**☐ Audio — original over trending.** Trending sounds get shown to whoever engages with that *sound*, which on Instagram is mostly other small-business/creator accounts, not gift buyers. Use your own voice, ambient packing sound, or a low-view background track instead. If a trending sound is genuinely close to the moment (e.g. a soft instrumental during a wrap reveal), that's fine — the red flag is chart-topping/meme audio.
+
+**☐ Hashtags — intent over reach.** Every tag should be something an actual gift-buyer would search or follow.
+- ❌ Avoid: `#SmallBusinessIndia` `#SupportSmallBusiness` `#HandmadeWithLove` `#Entrepreneur` — these cluster you with other business owners, not customers.
+- ✅ Use: occasion + product + city, e.g. `#ReturnGiftsBangalore` `#RakhiOnlineIndia` `#PersonalizedGiftsBangalore` `#GiftsUnder500`.
+- Reuse hashtag Sets A–D from §3 — they're already built this way.
+
+**☐ Hook — buyer question, not creator bait.** The hook is the first line of the caption / first 2 seconds of the reel.
+- ❌ Avoid: polls, "which is more beautiful?", "guess what this is" — these train the algorithm toward people who like games, not gifts.
+- ✅ Use: a buyer's actual question — "Return gifts under ₹120?", "Need a Rakhi hamper by Friday?", "What's inside a ₹1,299 hamper?"
+
+**☐ CTA — one clear next step.** Every post should point to WhatsApp or the bio link, not just "follow for more."
+
+**☐ After 48 hours, check Insights on that post.** If views are high but profile visits / link taps / follows are flat, the audio or hashtags likely pulled in the wrong crowd — note it and don't repeat that exact combination.
