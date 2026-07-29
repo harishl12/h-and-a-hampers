@@ -375,7 +375,7 @@ function schedule() {
 }
 
 function stopAll() {
-  if (rafId) cancelAnimationFrame(rafId);
+  if (rafId) clearInterval(rafId);
   rafId = null; mode = null;
   items.forEach(it => { if (it.type === 'video') { it.el.pause(); } });
   if (audioEl) { audioEl.pause(); }
@@ -399,13 +399,15 @@ function runTimeline(recording, onDone) {
   let activePlayingId = null;
   const start = performance.now();
 
-  function frame(now) {
+  function frame() {
+    const now = performance.now();
     const elapsed = (now - start) / 1000;
     if (elapsed >= total) {
       items.forEach(it => { if (it.type === 'video') it.el.pause(); });
+      if (rafId) { clearInterval(rafId); rafId = null; }
+      mode = null;
       if (recording) { onDone(); }
       else { previewBtn.textContent = '▶ Preview'; statusEl.textContent = 'Preview finished'; }
-      mode = null; rafId = null;
       progressWrap.classList.remove('show');
       return;
     }
@@ -469,10 +471,12 @@ function runTimeline(recording, onDone) {
     } else {
       statusEl.textContent = `Previewing… ${elapsed.toFixed(1)}s / ${total.toFixed(1)}s`;
     }
-
-    rafId = requestAnimationFrame(frame);
   }
-  rafId = requestAnimationFrame(frame);
+  // setInterval rather than requestAnimationFrame: rAF is suspended much more
+  // aggressively than timers by browsers when a tab is backgrounded — especially
+  // once a <video> element is actively decoding — which could otherwise leave an
+  // export silently stuck if the tab loses focus mid-recording.
+  rafId = setInterval(frame, 1000 / 30);
 }
 
 function pickMime() {
