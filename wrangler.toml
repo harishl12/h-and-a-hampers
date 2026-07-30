@@ -12,7 +12,10 @@ compatibility_date = "2024-09-01"
 [assets]
 directory = "public"
 binding = "ASSETS"
-html_handling = "none"
+# Left at Cloudflare's default (auto-trailing-slash): serves index.html for
+# directory paths like / and /dashboard/. "none" was tried to stop the
+# /page.html -> /page redirect but it also disables index.html serving
+# entirely, which broke the homepage -- not worth it for a cosmetic redirect.
 
 # KV namespace binding for products, images, analytics, OTP, rate-limiting,
 # and form submissions (see functions/.netlify/functions/*.js).
