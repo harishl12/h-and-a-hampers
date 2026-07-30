@@ -1,16 +1,20 @@
-# Cloudflare Pages configuration for H & A Hampers.
-# The Pages project itself, its KV binding and env vars are set up in the
-# Cloudflare dashboard (Workers & Pages -> h-and-a-hampers -> Settings).
-# This file documents the intended binding names and is used by `wrangler
-# pages dev` for local testing.
+# Cloudflare Worker configuration for H & A Hampers.
+# This project runs under Cloudflare's unified Workers model: a single Worker
+# (src/index.js) serves static files from /public and handles the API routes
+# under /.netlify/functions/*. Env vars (DASHBOARD_PASSWORD, DASHBOARD_SECRET,
+# RESEND_API_KEY, ALLOWED_EMAILS) are set in the dashboard under
+# Settings -> Variables and Secrets.
 
 name = "h-and-a-hampers"
-pages_build_output_dir = "public"
+main = "src/index.js"
 compatibility_date = "2024-09-01"
 
-# KV namespace binding — create the namespace in the Cloudflare dashboard
-# (Workers & Pages -> KV) and bind it here as HA_KV. Replace the id below
-# with the real namespace id once created.
+[assets]
+directory = "public"
+binding = "ASSETS"
+
+# KV namespace binding for products, images, analytics, OTP, rate-limiting,
+# and form submissions (see functions/.netlify/functions/*.js).
 [[kv_namespaces]]
 binding = "HA_KV"
 id = "4f1edae719d1410fa5df9e71172e751b"
