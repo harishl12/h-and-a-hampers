@@ -13,4 +13,4 @@ compatibility_date = "2024-09-01"
 # with the real namespace id once created.
 [[kv_namespaces]]
 binding = "HA_KV"
-id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+id = "4f1edae719d1410fa5df9e71172e751b"
