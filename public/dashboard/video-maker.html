@@ -203,6 +203,39 @@ async function decodeImage(file) {
   try { await img.decode(); return img; } catch (e) { return null; }
 }
 
+function fileToDataURL(file) {
+  return new Promise((res) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = () => res(null);
+    r.readAsDataURL(file);
+  });
+}
+
+// Load a <video> from a src and confirm it actually has a real, decoded frame —
+// not just metadata. Some browser/extension security policies can reject a blob:
+// URL for media with no visible error unless you check .error afterward, and
+// "loadedmetadata" alone doesn't guarantee a paintable frame exists yet. Returns
+// the ready video element, or null if it never became usable.
+async function loadVideo(src) {
+  const vid = document.createElement('video');
+  vid.muted = true; vid.playsInline = true; vid.preload = 'auto';
+  vid.src = src;
+  await new Promise((res) => { vid.onloadedmetadata = res; vid.onerror = res; });
+  if (vid.error || vid.readyState === 0) return null;
+  if (vid.readyState < 2) {
+    await new Promise((res2) => {
+      const done = () => { vid.onseeked = null; vid.onloadeddata = null; res2(); };
+      vid.onseeked = done;
+      vid.onloadeddata = done;
+      vid.currentTime = Math.min(0.05, (vid.duration || 1) / 2);
+      setTimeout(done, 2500);
+    });
+  }
+  if (vid.error || vid.readyState === 0 || !vid.videoWidth) return null;
+  return vid;
+}
+
 async function addItem(file) {
   const url = URL.createObjectURL(file);
   const id = ++uid;
@@ -216,26 +249,22 @@ async function addItem(file) {
     const natH = el.naturalHeight || el.height || 1080;
     items.push({ id, type: 'image', url, el, dur: 2.5, cap: '', natW, natH, name: file.name });
   } else if (file.type.startsWith('video/')) {
-    const vid = document.createElement('video');
-    vid.src = url; vid.muted = true; vid.playsInline = true; vid.preload = 'auto';
-    await new Promise((res) => { vid.onloadedmetadata = res; vid.onerror = res; });
-    // "loadedmetadata" only guarantees duration/dimensions are known — it does NOT
-    // guarantee a frame has actually been decoded yet, so drawing the video right
-    // after this can silently paint nothing (a transparent frame) even though the
-    // item was added successfully. Force a real paintable frame by nudging the
-    // playhead and waiting for it to land, with a timeout so an unusual file can
-    // never hang the whole add-media flow.
-    if (vid.readyState < 2) {
-      await new Promise((res2) => {
-        const done = () => { vid.onseeked = null; vid.onloadeddata = null; res2(); };
-        vid.onseeked = done;
-        vid.onloadeddata = done;
-        vid.currentTime = Math.min(0.05, (vid.duration || 1) / 2);
-        setTimeout(done, 2500);
-      });
+    let vid = await loadVideo(url);
+    let usedUrl = url;
+    if (!vid) {
+      // A blob: URL can be silently rejected under some browser/extension security
+      // policies even though the file itself is fine. Retry once via a data: URI,
+      // which is handled through a completely different code path.
+      const dataUrl = await fileToDataURL(file);
+      vid = dataUrl ? await loadVideo(dataUrl) : null;
+      usedUrl = dataUrl;
+    }
+    if (!vid) {
+      showAddError(`Could not use "${file.name}" — the video failed to load in this browser. Try re-exporting it as a standard H.264 MP4 (e.g. via QuickTime "Export" or your phone's share/compress option).`);
+      return;
     }
     const full = isFinite(vid.duration) ? vid.duration : 4;
-    items.push({ id, type: 'video', url, el: vid, dur: Math.min(full, 6), fullDur: full, cap: '', natW: vid.videoWidth || 1080, natH: vid.videoHeight || 1920, name: file.name });
+    items.push({ id, type: 'video', url: usedUrl, el: vid, dur: Math.min(full, 6), fullDur: full, cap: '', natW: vid.videoWidth, natH: vid.videoHeight, name: file.name });
   }
 }
 
