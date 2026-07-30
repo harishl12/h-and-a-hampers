@@ -1,5 +1,5 @@
 node_modules/
-.netlify/
+/.netlify/
 *.log
 credentials.txt
 .DS_Store

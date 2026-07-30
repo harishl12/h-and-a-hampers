@@ -1,0 +1,2 @@
+# Cloudflare Pages routing — serves uploaded product photos through the image function.
+/img/*  /.netlify/functions/image  200

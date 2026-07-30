@@ -1740,7 +1740,7 @@
       + (shipping ? ` | Shipping ₹${shipping}` : ' | Free shipping');
     const firstName = fd.get('firstName') || '';
 
-    // Capture the order in Netlify Forms (so the owner sees it)
+    // Capture the order (so the owner sees it in the dashboard)
     const params = new URLSearchParams({
       'form-name': 'order',
       name: `${firstName} ${fd.get('lastName') || ''}`.trim(),
@@ -1751,7 +1751,7 @@
       notes: fd.get('notes') || '', payment: paymentMethod, items: itemsText,
       total: `₹${total.toLocaleString()}`
     });
-    fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() }).catch(() => {});
+    fetch('/.netlify/functions/submit-form', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() }).catch(() => {});
 
     // Success screen
     document.getElementById('successTitle').textContent = 'Order Placed!';
@@ -1807,7 +1807,7 @@
     const original = btn.innerHTML;
     btn.textContent = 'Sending...';
     btn.disabled = true;
-    fetch('/', {
+    fetch('/.netlify/functions/submit-form', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams(new FormData(form)).toString()
@@ -1824,7 +1824,7 @@
     });
   }
 
-  // ── Newsletter signup (Netlify form) ──
+  // ── Newsletter signup ──
   function submitNewsletter(e) {
     e.preventDefault();
     const form = e.target;
@@ -1832,7 +1832,7 @@
     const original = btn.textContent;
     btn.textContent = '…';
     btn.disabled = true;
-    fetch('/', {
+    fetch('/.netlify/functions/submit-form', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams(new FormData(form)).toString()

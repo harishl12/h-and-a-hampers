@@ -820,7 +820,7 @@ const App = (() => {
       $('otpStep2').style.display = 'block';
       $('otpCode').value = '';
       err.innerHTML = res.data.devMode
-        ? '<span style="color:var(--muted)">Dev mode: set GMAIL_APP_PASSWORD to email codes. For now read it from Netlify → Functions → logs.</span>'
+        ? '<span style="color:var(--muted)">Dev mode: set RESEND_API_KEY in Cloudflare to email codes. For now read it from Cloudflare → Workers &amp; Pages → your project → Logs.</span>'
         : '';
       setTimeout(() => $('otpCode').focus(), 40);
     } catch (e) { err.textContent = e.message; }
