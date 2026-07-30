@@ -12,6 +12,7 @@ compatibility_date = "2024-09-01"
 [assets]
 directory = "public"
 binding = "ASSETS"
+html_handling = "none"
 
 # KV namespace binding for products, images, analytics, OTP, rate-limiting,
 # and form submissions (see functions/.netlify/functions/*.js).
