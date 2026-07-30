@@ -219,6 +219,21 @@ async function addItem(file) {
     const vid = document.createElement('video');
     vid.src = url; vid.muted = true; vid.playsInline = true; vid.preload = 'auto';
     await new Promise((res) => { vid.onloadedmetadata = res; vid.onerror = res; });
+    // "loadedmetadata" only guarantees duration/dimensions are known — it does NOT
+    // guarantee a frame has actually been decoded yet, so drawing the video right
+    // after this can silently paint nothing (a transparent frame) even though the
+    // item was added successfully. Force a real paintable frame by nudging the
+    // playhead and waiting for it to land, with a timeout so an unusual file can
+    // never hang the whole add-media flow.
+    if (vid.readyState < 2) {
+      await new Promise((res2) => {
+        const done = () => { vid.onseeked = null; vid.onloadeddata = null; res2(); };
+        vid.onseeked = done;
+        vid.onloadeddata = done;
+        vid.currentTime = Math.min(0.05, (vid.duration || 1) / 2);
+        setTimeout(done, 2500);
+      });
+    }
     const full = isFinite(vid.duration) ? vid.duration : 4;
     items.push({ id, type: 'video', url, el: vid, dur: Math.min(full, 6), fullDur: full, cap: '', natW: vid.videoWidth || 1080, natH: vid.videoHeight || 1920, name: file.name });
   }
