@@ -5,14 +5,14 @@
 import { json, verifyToken } from '../../_lib/auth.js';
 
 const DEFAULTS = [
-  { id: 1, name: 'Rustic Gift Hamper', desc: 'Curated handmade items in a beautiful wicker basket', price: 1299, orig: 1599, icon: 'i-basket', bg: 'p-bg-1', cat: 'handmade', badge: 'Bestseller' },
-  { id: 2, name: 'Personalized Name Jar', desc: "Custom engraved glass jar with your loved one's name", price: 599, orig: 799, icon: 'i-jar', bg: 'p-bg-2', cat: 'personalized', badge: 'Custom' },
-  { id: 3, name: 'Diwali Celebration Box', desc: 'Festive goodies — sweets, candles & handcrafted decor', price: 1899, orig: 2299, icon: 'i-diya', bg: 'p-bg-3', cat: 'seasonal', badge: 'Festive' },
-  { id: 4, name: 'Macramé Wall Hanging', desc: 'Handwoven bohemian wall art, made to order', price: 849, orig: null, icon: 'i-macrame', bg: 'p-bg-4', cat: 'handmade', badge: null },
-  { id: 5, name: 'Anniversary Love Box', desc: 'Rose petals, chocolates & a personalised note card', price: 1499, orig: 1799, icon: 'i-lovebox', bg: 'p-bg-5', cat: 'personalized', badge: 'Popular' },
-  { id: 6, name: 'Scented Candle Set', desc: 'Set of 3 hand-poured soy candles in seasonal scents', price: 749, orig: 999, icon: 'i-candle', bg: 'p-bg-6', cat: 'handmade', badge: null },
-  { id: 7, name: 'Birthday Surprise Hamper', desc: 'Balloons, treats, handmade goodies & personalised card', price: 1199, orig: 1499, icon: 'i-cake', bg: 'p-bg-7', cat: 'seasonal', badge: 'New' },
-  { id: 8, name: 'Custom Photo Memory Box', desc: 'Wooden keepsake box engraved with a photo & message', price: 1699, orig: null, icon: 'i-photo', bg: 'p-bg-8', cat: 'personalized', badge: 'Premium' }
+  { id: 1, name: 'Rustic Gift Hamper', desc: 'Curated handmade items in a beautiful wicker basket', price: 1299, orig: 1599, icon: 'i-basket', bg: 'p-bg-1', cat: 'handmade', badge: 'Bestseller', minQty: 1 },
+  { id: 2, name: 'Personalized Name Jar', desc: "Custom engraved glass jar with your loved one's name", price: 599, orig: 799, icon: 'i-jar', bg: 'p-bg-2', cat: 'personalized', badge: 'Custom', minQty: 1 },
+  { id: 3, name: 'Diwali Celebration Box', desc: 'Festive goodies — sweets, candles & handcrafted decor', price: 1899, orig: 2299, icon: 'i-diya', bg: 'p-bg-3', cat: 'seasonal', badge: 'Festive', minQty: 1 },
+  { id: 4, name: 'Macramé Wall Hanging', desc: 'Handwoven bohemian wall art, made to order', price: 849, orig: null, icon: 'i-macrame', bg: 'p-bg-4', cat: 'handmade', badge: null, minQty: 1 },
+  { id: 5, name: 'Anniversary Love Box', desc: 'Rose petals, chocolates & a personalised note card', price: 1499, orig: 1799, icon: 'i-lovebox', bg: 'p-bg-5', cat: 'personalized', badge: 'Popular', minQty: 1 },
+  { id: 6, name: 'Scented Candle Set', desc: 'Set of 3 hand-poured soy candles in seasonal scents', price: 749, orig: 999, icon: 'i-candle', bg: 'p-bg-6', cat: 'handmade', badge: null, minQty: 1 },
+  { id: 7, name: 'Birthday Surprise Hamper', desc: 'Balloons, treats, handmade goodies & personalised card', price: 1199, orig: 1499, icon: 'i-cake', bg: 'p-bg-7', cat: 'seasonal', badge: 'New', minQty: 1 },
+  { id: 8, name: 'Custom Photo Memory Box', desc: 'Wooden keepsake box engraved with a photo & message', price: 1699, orig: null, icon: 'i-photo', bg: 'p-bg-8', cat: 'personalized', badge: 'Premium', minQty: 1 }
 ];
 
 const CATS = ['handmade', 'personalized', 'seasonal'];
@@ -24,6 +24,7 @@ function clean(list) {
     const num = (v) => { const n = Math.round(Number(v)); return Number.isFinite(n) && n > 0 ? n : null; };
     let images = Array.isArray(p.images) ? p.images.filter(validPath).slice(0, 8) : [];
     if (!images.length && validPath(p.image)) images = [p.image];
+    const minQty = Math.max(1, Math.round(Number(p.minQty)) || 1);
     return {
       id: Number(p.id) || idx + 1,
       name: String(p.name || 'Untitled').slice(0, 80),
@@ -34,6 +35,7 @@ function clean(list) {
       bg: /^p-bg-[1-8]$/.test(p.bg || '') ? p.bg : `p-bg-${(idx % 8) + 1}`,
       cat: CATS.includes(p.cat) ? p.cat : 'handmade',
       badge: p.badge ? String(p.badge).slice(0, 24) : null,
+      minQty,
       images,
       image: images[0] || null
     };

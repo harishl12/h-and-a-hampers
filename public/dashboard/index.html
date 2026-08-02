@@ -716,6 +716,9 @@ That's the difference between a gift and a *hamper*.
           <div class="pm-field"><label>Original price (₹)</label><input name="orig" type="number" min="0" step="1" placeholder="optional" /></div>
         </div>
         <div class="pm-row">
+          <div class="pm-field"><label>Minimum order quantity</label><input name="minQty" type="number" min="1" step="1" value="1" placeholder="1" /></div>
+        </div>
+        <div class="pm-row">
           <div class="pm-field"><label>Category</label>
             <select name="cat"><option value="handmade">Handmade</option><option value="personalized">Personalized</option><option value="seasonal">Seasonal</option></select>
           </div>
@@ -1078,7 +1081,7 @@ const App = (() => {
         <div class="pa-ic ${esc(p.bg)}">${(p.images && p.images[0]) || p.image ? `<img src="${esc((p.images && p.images[0]) || p.image)}" alt="">` : `<svg class="icon"><use href="#${esc(p.icon)}"/></svg>`}${(p.images && p.images.length > 1) ? `<span class="pa-count">${p.images.length}</span>` : ''}</div>
         <div class="pa-info">
           <div class="pa-name">${esc(p.name)} ${p.badge ? `<span class="chip">${esc(p.badge)}</span>` : ''}</div>
-          <div class="pa-meta">${esc(p.cat)}</div>
+          <div class="pa-meta">${esc(p.cat)}${(p.minQty && p.minQty > 1) ? ` · Min qty ${p.minQty}` : ''}</div>
         </div>
         <div class="pa-price">₹${Number(p.price).toLocaleString('en-IN')}${p.orig ? ` <s>₹${Number(p.orig).toLocaleString('en-IN')}</s>` : ''}</div>
         <div class="pa-actions">
@@ -1186,6 +1189,7 @@ const App = (() => {
     f.desc.value = p ? (p.desc || '') : '';
     f.price.value = p ? p.price : '';
     f.orig.value = (p && p.orig) ? p.orig : '';
+    f.minQty.value = (p && p.minQty) ? p.minQty : 1;
     f.cat.value = p ? p.cat : 'handmade';
     f.icon.value = p ? p.icon : 'i-gift';
     f.badge.value = (p && p.badge) ? p.badge : '';
@@ -1216,6 +1220,7 @@ const App = (() => {
         name: fd.get('name'), desc: fd.get('desc'),
         price: Number(fd.get('price')) || 0,
         orig: fd.get('orig') ? Number(fd.get('orig')) : null,
+        minQty: Math.max(1, Math.round(Number(fd.get('minQty'))) || 1),
         cat: fd.get('cat'), icon: fd.get('icon'),
         badge: (fd.get('badge') || '').trim() || null
       };

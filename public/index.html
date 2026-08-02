@@ -721,7 +721,7 @@
 </defs></svg>
 
 <!-- Announcement -->
-<div class="announcement"><span class="announcement-track"><svg class="icon"><use href="#i-gift"/></svg> Free gift wrapping on all orders above ₹999 &nbsp;|&nbsp; <svg class="icon"><use href="#i-truck"/></svg> Pan-India delivery available &nbsp;|&nbsp; <svg class="icon"><use href="#i-sparkle"/></svg> Festive &amp; occasion hampers — order early to avoid the rush</span></div>
+<div class="announcement"><span class="announcement-track"><svg class="icon"><use href="#i-sparkle"/></svg> Varamahalakshmi Festival hampers now open — shop pooja trays &amp; gift sets &nbsp;|&nbsp; <svg class="icon"><use href="#i-gift"/></svg> Free gift wrapping on all orders above ₹999 &nbsp;|&nbsp; <svg class="icon"><use href="#i-truck"/></svg> Pan-India delivery available &nbsp;|&nbsp; <svg class="icon"><use href="#i-sparkle"/></svg> Festive &amp; occasion hampers — order early to avoid the rush</span></div>
 
 <!-- Header -->
 <header id="siteHeader">
@@ -1566,13 +1566,14 @@
   // ── Cart ──
   function addToCart(id) {
     const product = products.find(p => p.id === id);
+    const minQty = Math.max(1, Number(product.minQty) || 1);
     const existing = cart.find(i => i.id === id);
     if (existing) existing.qty++;
-    else cart.push({ ...product, qty: 1 });
+    else cart.push({ ...product, qty: minQty });
     updateCartUI();
     bumpCart();
     track('add', product);
-    showToast('Added to your bag', 'i-check');
+    showToast(minQty > 1 ? `Added ${minQty} to your bag (min order qty)` : 'Added to your bag', 'i-check');
   }
 
   function bumpCart() {
@@ -1590,9 +1591,15 @@
   function changeQty(id, delta) {
     const item = cart.find(i => i.id === id);
     if (!item) return;
-    item.qty += delta;
-    if (item.qty <= 0) removeFromCart(id);
-    else updateCartUI();
+    const minQty = Math.max(1, Number(item.minQty) || 1);
+    const next = item.qty + delta;
+    if (next < minQty) {
+      if (minQty > 1) showToast(`Minimum order quantity is ${minQty}`, 'i-check');
+      else removeFromCart(id);
+      return;
+    }
+    item.qty = next;
+    updateCartUI();
   }
 
   function updateCartUI() {
